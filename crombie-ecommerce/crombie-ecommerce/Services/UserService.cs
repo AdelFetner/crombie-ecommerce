@@ -15,28 +15,28 @@ namespace crombie_ecommerce.Services
 
 
          //Create a new user:
-        public User AddUser(User user) { 
+        public async Task AddUserAsync(User user) { 
            
             _context.Users.Add(user);
-            _context.SaveChanges();
-            return user;
+            await _context.SaveChangesAsync();
+            
         }
 
 
         //Read user by id:
-        public User GetUserById(int id) { 
-            return _context.Users.Find(id);
+        public async Task<User> GetUserByIdAsync(int id) { 
+            return await _context.Users.FindAsync(id);
         }
 
         //Read all users:
-        public List<User> GetAllUsers() {
-            return _context.Users.ToList();
+        public async Task<List<User>> GetAllUsersAsync() {
+            return await _context.Users.ToListAsync();
         }
 
 
         //Update user:
-        public User UpdateUser(User user) { 
-            var oldUser = _context.Users.Find(user.UserId);
+        public async Task UpdateUserAsync(User user) { 
+            var oldUser = await _context.Users.FindAsync(user.UserId);
             if (oldUser != null)
             {
                 oldUser.Name = user.Name;
@@ -47,19 +47,19 @@ namespace crombie_ecommerce.Services
                 }
 
                 _context.Users.Update(user);
-                _context.SaveChanges();
+                await _context.SaveChangesAsync();
 
             }
-            return user;
+            
         }
 
         //Delete user:
-        public void DeleteUser(int id) {
-            var user2 = _context.Users.Find(id);
+        public async Task DeleteUserAsync(int id) {
+            var user2 = await _context.Users.FindAsync(id);
             if (user2 != null)
             {
                 _context.Users.Remove(user2);
-                _context.SaveChanges();
+                await _context.SaveChangesAsync();
                 
             }
             
