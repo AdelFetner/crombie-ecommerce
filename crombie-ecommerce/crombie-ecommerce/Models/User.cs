@@ -14,20 +14,19 @@ namespace crombie_ecommerce.Models
         [MinLength(4)]
         [StringLength(50)]
         public string Name { get; set; }
+
         [Required]
         public string Email { get; set; }
+        
         [Required]
         [MinLength(8)]
         public string Password { get; set; }
         public bool IsVerified { get; set; }
 
-        //[ForeignKey("ProductId")]
-       // public Guid? ProductId { get; set; }
-       // public virtual Product Product {  get; set; }
+        public Guid ProductId { get; set; }
+        public virtual Product Product { get; set; }
 
-        //[ForeignKey("WishlistId")]
-        //public Guid? WishlistId { get; set; }
-        //public virtual Wishlist Wishlist { get; set; }
-
+        public Guid WishlistId { get; set; }
+        public virtual Wishlist Wishlist { get; set; }
     }
 }
