@@ -25,7 +25,7 @@ namespace crombie_ecommerce.Services
 
         //Read user by id:
         public User GetUserById(int id) { 
-            return _context.Users.Find(x => x.Id == id);
+            return _context.Users.Find(id);
         }
 
         //Read all users:
