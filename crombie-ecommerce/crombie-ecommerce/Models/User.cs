@@ -23,10 +23,10 @@ namespace crombie_ecommerce.Models
         public string Password { get; set; }
         public bool IsVerified { get; set; }
 
-        public Guid ProductId { get; set; }
+        public Guid? ProductId { get; set; }
         public virtual Product Product { get; set; }
 
-        public Guid WishlistId { get; set; }
+        public Guid? WishlistId { get; set; }
         public virtual Wishlist Wishlist { get; set; }
     }
 }
