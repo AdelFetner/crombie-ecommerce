@@ -95,7 +95,7 @@ namespace crombie_ecommerce.Services
         //}
 
         //Method to add a product to a wishlist
-        public async Task<bool> AddProductToWishlist(Guid wishlistId, Product product)
+        public async Task<bool> AddProductToWishlist(Guid wishlistId, Guid productId)
         {
             var wishlist = await _context.Wishlists.FindAsync(wishlistId);
             if (wishlist == null)
