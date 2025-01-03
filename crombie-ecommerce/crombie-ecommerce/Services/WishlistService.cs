@@ -75,25 +75,6 @@ namespace crombie_ecommerce.Services
             await _context.SaveChangesAsync();
             return await _context.Wishlists.ToListAsync();
         }
-
-        //Second method to delete a wishlist (ask if this is necessary)
-        //public List<Wishlist> DeleteWishlist(Guid wishlistId)
-        //{
-        //    var wishlist = _context.Wishlists.Find(wishlistId);
-        //    if (wishlist == null)
-        //    {
-        //        return null;
-
-        //(ask if this is necessary)
-        //throw new KeyNotFoundException($"Wishlist with ID {wishlistId} not found.");
-        //    }
-
-        //    _context.Wishlists.Remove(wishlist);
-        //    _context.SaveChanges();
-
-        //    return _context.Wishlists.ToList();
-        //}
-
         //Method to add a product to a wishlist
         public async Task<bool> AddProductToWishlist(Guid wishlistId, Guid productId)
         {
@@ -102,12 +83,16 @@ namespace crombie_ecommerce.Services
             {
                 return false;
             }
-
+            var product = await _context.Products.FindAsync(productId);
+            if (product == null)
+            {
+                return false;
+            }
             product.WishlistId = wishlistId;
-            _context.Products.Add(product);
             await _context.SaveChangesAsync();
             return true;
         }
+
         //Method to remove a product from a wishlist
         public async Task<bool> RemoveProductFromWishlist(Guid wishlistId, Guid productId)
         {
