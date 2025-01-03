@@ -58,7 +58,7 @@ namespace crombie_ecommerce.Services
             return existingProduct;
         }
 
-        public async Task<string> DeleteProduct(Guid id)
+        public async Task DeleteProduct(Guid id)
         {
             var existingProduct = await GetProductById(id);
             if (existingProduct == null)
@@ -68,12 +68,6 @@ namespace crombie_ecommerce.Services
 
             _context.Products.Remove(existingProduct);
             await _context.SaveChangesAsync();
-
-            if(await GetProductById(id) == null)
-                return "Product deleted successfully";
-            else
-                return "Product deletion failed";
         }
-
     }
 }
