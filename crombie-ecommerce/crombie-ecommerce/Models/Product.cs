@@ -24,10 +24,10 @@ namespace crombie_ecommerce.Models
         [StringLength(50)]
         public string Category { get; set; }
 
-        public Guid UserId { get; set; }
+        public Guid? UserId { get; set; }
         public virtual User User { get; set; }
 
-        public Guid WishlistId { get; set; }
+        public Guid? WishlistId { get; set; }
         public virtual Wishlist Wishlist { get; set; }
     }
 }
