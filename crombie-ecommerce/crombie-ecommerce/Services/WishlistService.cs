@@ -93,5 +93,33 @@ namespace crombie_ecommerce.Services
 
         //    return _context.Wishlists.ToList();
         //}
+
+        //Method to add a product to a wishlist
+        public async Task<bool> AddProductToWishlist(Guid wishlistId, Product product)
+        {
+            var wishlist = await _context.Wishlists.FindAsync(wishlistId);
+            if (wishlist == null)
+            {
+                return false;
+            }
+
+            product.WishlistId = wishlistId;
+            _context.Products.Add(product);
+            await _context.SaveChangesAsync();
+            return true;
+        }
+        //Method to remove a product from a wishlist
+        public async Task<bool> RemoveProductFromWishlist(Guid wishlistId, Guid productId)
+        {
+            var product = await _context.Products.FirstOrDefaultAsync(p => p.WishlistId == wishlistId && p.Id == productId);
+            if (product == null)
+            {
+                return false;
+            }
+
+            _context.Products.Remove(product);
+            await _context.SaveChangesAsync();
+            return true;
+        }
     }
 }
