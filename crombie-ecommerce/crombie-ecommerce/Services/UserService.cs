@@ -24,7 +24,7 @@ namespace crombie_ecommerce.Services
 
 
         //Read user by id:
-        public async Task<User> GetUserByIdAsync(int id) { 
+        public async Task<User> GetUserByIdAsync(Guid id) { 
             return await _context.Users.FindAsync(id);
         }
 
@@ -54,7 +54,7 @@ namespace crombie_ecommerce.Services
         }
 
         //Delete user:
-        public async Task DeleteUserAsync(int id) {
+        public async Task DeleteUserAsync(Guid id) {
             var user2 = await _context.Users.FindAsync(id);
             if (user2 != null)
             {

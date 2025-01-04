@@ -1,4 +1,5 @@
 using crombie_ecommerce.Contexts;
+using crombie_ecommerce.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -9,6 +10,8 @@ builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 builder.Services.AddSqlServer<ShopContext>(builder.Configuration.GetConnectionString("DefaultConnection"));
+builder.Services.AddScoped<UserService>();
+
 
 var app = builder.Build();
 
