@@ -16,11 +16,9 @@ namespace crombie_ecommerce.Controllers
     public class ProductsController : ControllerBase
     {
         private readonly ProductService _productService;
-        private readonly ShopContext _context;
 
-        public ProductsController(ShopContext context, ProductService productService)
+        public ProductsController(ProductService productService)
         {
-            _context = context;
             _productService = productService;
         }
 
@@ -28,7 +26,7 @@ namespace crombie_ecommerce.Controllers
         [HttpGet]
         public async Task<ActionResult<IEnumerable<Product>>> GetProducts()
         {
-            return await _context.Products.ToListAsync();
+            return await _productService.GetAllProducts();
         }
 
         // GET: api/Products/5
@@ -44,29 +42,7 @@ namespace crombie_ecommerce.Controllers
             return Ok(product);
         }
 
-        // PUT: api/Products/5
-        // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
-        [HttpPut("{id}")]
-        public async Task<IActionResult> PutProduct(Guid id, Product product)
-        {
-            if (id != product.Id)
-            {
-                return BadRequest("ID mismatch");
-            }
-
-            try
-            {
-                var updatedProduct = await _productService.UpdateProduct(id, product);
-                return Ok(updatedProduct);
-            }
-            catch (Exception ex)
-            {
-                return BadRequest(ex.Message);
-            }
-        }
-
         // POST: api/Products
-        // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPost]
         public async Task<ActionResult<Product>> PostProduct(Product product)
         {
@@ -74,6 +50,21 @@ namespace crombie_ecommerce.Controllers
             {
                 var createdProduct = await _productService.CreateProduct(product);
                 return CreatedAtAction(nameof(GetProduct), new { id = createdProduct.Id }, createdProduct);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+
+        // PUT: api/Products/5
+        [HttpPut("{id}")]
+        public async Task<IActionResult> PutProduct(Guid id, Product product)
+        {
+            try
+            {
+                var updatedProduct = await _productService.UpdateProduct(id, product);
+                return Ok(updatedProduct);
             }
             catch (Exception ex)
             {
