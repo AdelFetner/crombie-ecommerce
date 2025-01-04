@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using crombie_ecommerce.Contexts;
 using crombie_ecommerce.Models;
+using crombie_ecommerce.Services;
 
 namespace crombie_ecommerce.Controllers
 {
@@ -14,11 +15,13 @@ namespace crombie_ecommerce.Controllers
     [ApiController]
     public class ProductsController : ControllerBase
     {
+        private readonly ProductService _productService;
         private readonly ShopContext _context;
 
-        public ProductsController(ShopContext context)
+        public ProductsController(ShopContext context, ProductService productService)
         {
             _context = context;
+            _productService = productService;
         }
 
         // GET: api/Products
@@ -32,14 +35,13 @@ namespace crombie_ecommerce.Controllers
         [HttpGet("{id}")]
         public async Task<ActionResult<Product>> GetProduct(Guid id)
         {
-            var product = await _context.Products.FindAsync(id);
-
+            var product = await _productService.GetProductById(id);
             if (product == null)
             {
                 return NotFound();
             }
 
-            return product;
+            return Ok(product);
         }
 
         // PUT: api/Products/5
@@ -49,28 +51,18 @@ namespace crombie_ecommerce.Controllers
         {
             if (id != product.Id)
             {
-                return BadRequest();
+                return BadRequest("ID mismatch");
             }
-
-            _context.Entry(product).State = EntityState.Modified;
 
             try
             {
-                await _context.SaveChangesAsync();
+                var updatedProduct = await _productService.UpdateProduct(id, product);
+                return Ok(updatedProduct);
             }
-            catch (DbUpdateConcurrencyException)
+            catch (Exception ex)
             {
-                if (!ProductExists(id))
-                {
-                    return NotFound();
-                }
-                else
-                {
-                    throw;
-                }
+                return BadRequest(ex.Message);
             }
-
-            return NoContent();
         }
 
         // POST: api/Products
@@ -78,31 +70,30 @@ namespace crombie_ecommerce.Controllers
         [HttpPost]
         public async Task<ActionResult<Product>> PostProduct(Product product)
         {
-            _context.Products.Add(product);
-            await _context.SaveChangesAsync();
-
-            return CreatedAtAction("GetProduct", new { id = product.Id }, product);
+            try
+            {
+                var createdProduct = await _productService.CreateProduct(product);
+                return CreatedAtAction(nameof(GetProduct), new { id = createdProduct.Id }, createdProduct);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
         }
 
         // DELETE: api/Products/5
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteProduct(Guid id)
         {
-            var product = await _context.Products.FindAsync(id);
-            if (product == null)
+            try
             {
-                return NotFound();
+                await _productService.DeleteProduct(id);
+                return NoContent();
             }
-
-            _context.Products.Remove(product);
-            await _context.SaveChangesAsync();
-
-            return NoContent();
-        }
-
-        private bool ProductExists(Guid id)
-        {
-            return _context.Products.Any(e => e.Id == id);
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
         }
     }
 }
