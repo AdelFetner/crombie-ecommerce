@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using System.Text.Json.Serialization;
 
 namespace crombie_ecommerce.Models
 {
@@ -24,10 +25,14 @@ namespace crombie_ecommerce.Models
         [StringLength(50)]
         public string Category { get; set; }
 
+        [JsonIgnore]
         public Guid? UserId { get; set; }
+        [JsonIgnore]
         public virtual User User { get; set; }
 
+        [JsonIgnore]
         public Guid? WishlistId { get; set; }
+        [JsonIgnore]
         public virtual Wishlist Wishlist { get; set; }
     }
 }
