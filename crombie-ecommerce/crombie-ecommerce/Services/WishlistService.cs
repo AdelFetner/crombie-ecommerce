@@ -89,6 +89,7 @@ namespace crombie_ecommerce.Services
                 return false;
             }
             product.WishlistId = wishlistId;
+            wishlist.ProductId = productId;
             await _context.SaveChangesAsync();
             return true;
         }
@@ -96,13 +97,13 @@ namespace crombie_ecommerce.Services
         //Method to remove a product from a wishlist
         public async Task<bool> RemoveProductFromWishlist(Guid wishlistId, Guid productId)
         {
-            var product = await _context.Products.FirstOrDefaultAsync(p => p.WishlistId == wishlistId && p.Id == productId);
-            if (product == null)
+            var wishlistEntry = await _context.Wishlists
+                .FirstOrDefaultAsync(w => w.WishlistId == wishlistId && w.ProductId == productId);
+            if (wishlistEntry == null)
             {
                 return false;
             }
-
-            _context.Products.Remove(product);
+            wishlistEntry.ProductId = null;
             await _context.SaveChangesAsync();
             return true;
         }
