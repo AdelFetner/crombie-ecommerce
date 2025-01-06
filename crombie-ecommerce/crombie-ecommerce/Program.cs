@@ -12,6 +12,7 @@ builder.Services.AddSwaggerGen();
 builder.Services.AddScoped<ProductService>();
 builder.Services.AddSqlServer<ShopContext>(builder.Configuration.GetConnectionString("DefaultConnection"));
 builder.Services.AddScoped<WishlistService>();
+builder.Services.AddScoped<TagsService>();
 
 var app = builder.Build();
 

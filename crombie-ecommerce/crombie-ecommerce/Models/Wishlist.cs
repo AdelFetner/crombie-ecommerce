@@ -1,5 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using System.Text.Json.Serialization;
 
 namespace crombie_ecommerce.Models
 
@@ -11,19 +12,21 @@ namespace crombie_ecommerce.Models
         public Guid WishlistId { get; set; }
 
         [Required]
-        [StringLength(50)]
-        [MinLength(3)]
+        [MaxLength(50)]
         public string Name { get; set; }
 
-        [Required]
-        [StringLength(100)]
-        [MinLength(3)]
-        public string Tag { get; set; }
-
+        [MaxLength(100)]
+        public string Description { get; set; }
+        [JsonIgnore]
         public Guid? UserId { get; set; }
         public virtual User User { get; set; }
 
+        [JsonIgnore]
         public Guid? ProductId { get; set; }
         public virtual Product Product { get; set; }
+
+        [JsonIgnore]
+        public Guid? TagsId { get; set; }
+        public virtual ICollection<Tags> Tags { get; set; }
     }
 }
