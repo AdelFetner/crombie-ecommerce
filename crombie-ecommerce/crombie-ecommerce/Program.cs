@@ -1,9 +1,7 @@
 using crombie_ecommerce.Contexts;
 using crombie_ecommerce.Services;
-<<<<<<< HEAD
 using System.Text.Json.Serialization;
-=======
->>>>>>> 141dfa9bf68ed9a9243d0405caf993792e57ee00
+
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -20,11 +18,9 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 builder.Services.AddScoped<ProductService>();
 builder.Services.AddSqlServer<ShopContext>(builder.Configuration.GetConnectionString("DefaultConnection"));
-<<<<<<< HEAD
+
 builder.Services.AddScoped<UserService>();
-=======
-builder.Services.AddScoped<WishlistService>();
->>>>>>> 141dfa9bf68ed9a9243d0405caf993792e57ee00
+
 
 var app = builder.Build();
 
