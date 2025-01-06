@@ -42,5 +42,6 @@ namespace crombie_ecommerce.Models
         {
             Id = Guid.NewGuid(); // Generate a new GUID for the Id
         }
+
     }
 }
