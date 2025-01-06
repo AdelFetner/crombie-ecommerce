@@ -30,7 +30,6 @@ namespace crombie_ecommerce.Contexts
                     .HasForeignKey<Wishlist>(w => w.UserId)
                     .OnDelete(DeleteBehavior.Cascade)
                     .IsRequired(false);
-                
 
                 user.HasOne(u => u.Product)
                     .WithOne(p => p.User)
@@ -38,6 +37,7 @@ namespace crombie_ecommerce.Contexts
                     .IsRequired(false);
 
                
+
             });
 
             // builder for product entity
@@ -46,6 +46,7 @@ namespace crombie_ecommerce.Contexts
                 product.ToTable("Product");
 
                 product.HasKey(p => p.Id);
+                product.Property(p => p.Id).HasDefaultValueSql("NEWID()");
                 product.Property(p => p.Name).IsRequired().HasMaxLength(50);
                 product.Property(p => p.Description).HasMaxLength(100); 
                 product.Property(p => p.Price).HasColumnType("decimal(18,2)");
@@ -55,7 +56,9 @@ namespace crombie_ecommerce.Contexts
                 // product to user
                 product.HasOne(p => p.User)
                     .WithOne(u => u.Product)
+
                     .HasForeignKey<User>(u => u.ProductId)
+
                     .IsRequired(false);
 
                 // product to wl
@@ -76,14 +79,18 @@ namespace crombie_ecommerce.Contexts
                 // wl to user has a one to one relationship
                 wishlist.HasOne(w => w.User)
                         .WithOne(u => u.Wishlist)
+
                         .HasForeignKey<Wishlist>(w => w.WishlistId)
+
                         .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired(false);
 
                 // wl to product has a  one to one relationship
                 wishlist.HasOne(w => w.Product)
                         .WithOne(p => p.Wishlist)
+
                         .HasForeignKey<Wishlist>(w => w.WishlistId)
+
                         .IsRequired(false);
             });
 

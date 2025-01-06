@@ -1,11 +1,13 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using System.Text.Json.Serialization;
 
 namespace crombie_ecommerce.Models
 {
     public class Product
     {
         [Key]
-        public Guid Id { get; set; }
+        [JsonIgnore]
+        public Guid Id { get; set; } 
 
         [Required]
         [MinLength(4)]
@@ -24,10 +26,22 @@ namespace crombie_ecommerce.Models
         [StringLength(50)]
         public string Category { get; set; }
 
+        [JsonIgnore]
         public Guid? UserId { get; set; }
-        public virtual User User { get; set; }
+        [JsonIgnore]
+        public virtual User? User { get; set; }
 
+        [JsonIgnore]
         public Guid? WishlistId { get; set; }
-        public virtual Wishlist Wishlist { get; set; }
+        [JsonIgnore]
+        public virtual Wishlist? Wishlist { get; set; }
+
+
+        //create a new guid each time this is initialized
+        public Product()
+        {
+            Id = Guid.NewGuid(); // Generate a new GUID for the Id
+        }
+
     }
 }

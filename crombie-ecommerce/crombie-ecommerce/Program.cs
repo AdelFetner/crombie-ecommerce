@@ -1,5 +1,6 @@
 using crombie_ecommerce.Contexts;
 using crombie_ecommerce.Services;
+
 using System.Text.Json.Serialization;
 
 
@@ -18,6 +19,7 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 builder.Services.AddScoped<ProductService>();
 builder.Services.AddSqlServer<ShopContext>(builder.Configuration.GetConnectionString("DefaultConnection"));
+builder.Services.AddScoped<WishlistService>();
 
 builder.Services.AddScoped<UserService>();
 

@@ -19,16 +19,16 @@ namespace crombie_ecommerce.Services
             return await _context.Products.ToListAsync();
         }
 
+        public async Task<Product> GetProductById(Guid id)
+        {
+            return await _context.Products.FindAsync(id);
+        }
+
         public async Task<Product> CreateProduct(Product product)
         {
             _context.Products.Add(product);
             await _context.SaveChangesAsync();
             return product;
-        }
-
-        public async Task<Product> GetProductById(Guid id)
-        {
-            return await _context.Products.FirstOrDefaultAsync(p => p.Id == id);
         }
 
         public async Task<Product> UpdateProduct(Guid id, Product updatedProduct)
