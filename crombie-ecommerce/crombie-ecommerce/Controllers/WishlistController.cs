@@ -48,6 +48,13 @@ namespace crombie_ecommerce.Controllers
                 return BadRequest(new {errors = ModelState});
             }
 
+            var newWishlist = new Wishlist
+            {
+                WishlistId = Guid.NewGuid(),
+                Name = wishlist.Name,
+                Description = wishlist.Description
+            };
+
             var wishlists = await _wishlistService.CreateWishlist(wishlist);
             return Ok(new { message = "Wishlist created successfully.", wishlists});
         }

@@ -17,8 +17,9 @@ namespace crombie_ecommerce.Models
         [MaxLength(100)]
         public string Description { get; set; }
 
-        [JsonIgnore]
+        [JsonIgnore] 
         public Guid? WishlistId { get; set; }
-        public virtual Wishlist Wishlist { get; set; }
+        [JsonIgnore] 
+        public virtual Wishlist? Wishlist { get; set; }
     }
 }

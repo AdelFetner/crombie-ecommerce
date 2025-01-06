@@ -44,6 +44,14 @@ namespace crombie_ecommerce.Controllers
                 return BadRequest(ModelState);
             }
 
+            var newTag = new Tags
+            {
+                TagId = Guid.NewGuid(),
+                Name = tag.Name,
+                Description = tag.Description,
+                WishlistId = tag.WishlistId
+            };
+
             var tags = await _tagsService.CreateTag(tag);
             return CreatedAtAction(nameof(GetTagById), new { tagId = tag.TagId }, tags);
         }

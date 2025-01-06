@@ -19,14 +19,17 @@ namespace crombie_ecommerce.Models
         public string Description { get; set; }
         [JsonIgnore]
         public Guid? UserId { get; set; }
-        public virtual User User { get; set; }
+        [JsonIgnore]
+        public virtual User? User { get; set; }
 
         [JsonIgnore]
         public Guid? ProductId { get; set; }
-        public virtual Product Product { get; set; }
+        [JsonIgnore]
+        public virtual Product? Product { get; set; }
 
         [JsonIgnore]
         public Guid? TagsId { get; set; }
-        public virtual ICollection<Tags> Tags { get; set; }
+        [JsonIgnore]
+        public virtual ICollection<Tags>? Tags { get; set; }
     }
 }

@@ -82,6 +82,13 @@ namespace crombie_ecommerce.Contexts
                         .WithOne(p => p.Wishlist)
                         .HasForeignKey<Wishlist>(w => w.ProductId)
                         .IsRequired(false);
+
+                // wl to tags has a many to many relationship
+                wishlist.HasMany(w => w.Tags)
+                     .WithOne(t => t.Wishlist)
+                     .HasForeignKey(t => t.WishlistId)
+                     .OnDelete(DeleteBehavior.Cascade)
+                     .IsRequired(false);
             });
 
             // builder for tags entity 
@@ -91,11 +98,6 @@ namespace crombie_ecommerce.Contexts
                 tag.HasKey(t => t.TagId);
                 tag.Property(t => t.Name).IsRequired().HasMaxLength(50);
                 tag.Property(t => t.Description).HasMaxLength(100); 
-                tag.HasOne(t => t.Wishlist)
-                   .WithMany(w => w.Tags)
-                   .HasForeignKey(t => t.WishlistId)
-                   .OnDelete(DeleteBehavior.Cascade)
-                   .IsRequired(false);
             });
 
             base.OnModelCreating(modelBuilder);
