@@ -30,7 +30,6 @@ namespace crombie_ecommerce.Contexts
                     .HasForeignKey<Wishlist>(w => w.UserId)
                     .OnDelete(DeleteBehavior.Cascade)
                     .IsRequired(false);
-<<<<<<< HEAD
                 
 
                 user.HasOne(u => u.Product)
@@ -38,14 +37,7 @@ namespace crombie_ecommerce.Contexts
                     .HasForeignKey<Product>(u => u.UserId)
                     .IsRequired(false);
 
-                
-=======
-
-                user.HasOne(u => u.Product)
-                    .WithOne(p => p.User)
-                    .HasForeignKey<User>(u => u.ProductId)
-                    .IsRequired(false);
->>>>>>> 141dfa9bf68ed9a9243d0405caf993792e57ee00
+               
             });
 
             // builder for product entity
@@ -53,7 +45,7 @@ namespace crombie_ecommerce.Contexts
             {
                 product.ToTable("Product");
 <<<<<<< HEAD
-                product.HasKey(p => p.ProductId);
+                product.HasKey(p => p.Id);
 =======
                 product.HasKey(p => p.Id);
                 product.Property(p => p.Id).HasDefaultValueSql("NEWID()");
@@ -67,11 +59,7 @@ namespace crombie_ecommerce.Contexts
                 // product to user
                 product.HasOne(p => p.User)
                     .WithOne(u => u.Product)
-<<<<<<< HEAD
                     .HasForeignKey<User>(u => u.ProductId)
-=======
-                    .HasForeignKey<User>(u => u.UserId)
->>>>>>> 141dfa9bf68ed9a9243d0405caf993792e57ee00
                     .IsRequired(false);
 
                 // product to wl
@@ -92,22 +80,14 @@ namespace crombie_ecommerce.Contexts
                 // wl to user has a one to one relationship
                 wishlist.HasOne(w => w.User)
                         .WithOne(u => u.Wishlist)
-<<<<<<< HEAD
                         .HasForeignKey<Wishlist>(w => w.WishlistId)
-=======
-                        .HasForeignKey<Wishlist>(w => w.UserId)
->>>>>>> 141dfa9bf68ed9a9243d0405caf993792e57ee00
                         .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired(false);
 
                 // wl to product has a  one to one relationship
                 wishlist.HasOne(w => w.Product)
                         .WithOne(p => p.Wishlist)
-<<<<<<< HEAD
                         .HasForeignKey<Wishlist>(w => w.WishlistId)
-=======
-                        .HasForeignKey<Wishlist>(w => w.ProductId)
->>>>>>> 141dfa9bf68ed9a9243d0405caf993792e57ee00
                         .IsRequired(false);
             });
 
