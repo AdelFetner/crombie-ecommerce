@@ -6,46 +6,81 @@ namespace crombie_ecommerce.Services
 {
     public class TagsService
     {
-            private readonly ShopContext _context;
+        private readonly ShopContext _context;
 
-            public TagsService(ShopContext context)
+        public TagsService(ShopContext context)
+        {
+            _context = context;
+        }
+
+        // Method to get all tags
+        public async Task<List<Tags>> GetAllTags()
+        {
+            return await _context.Tags.ToListAsync();
+        }
+
+        // Method to get a tag by its ID
+        public async Task<Tags?> GetTagById(Guid tagId)
+        {
+            return await _context.Tags.FindAsync(tagId);
+        }
+
+        // Method to create a new tag
+        public async Task<List<Tags>> CreateTag(Tags tag)
+        {
+            _context.Tags.Add(tag);
+            await _context.SaveChangesAsync();
+            return await _context.Tags.ToListAsync();
+        }
+
+        // Method to delete a tag
+        public async Task<List<Tags>> DeleteTag(Guid tagId)
+        {
+            var tag = await _context.Tags.FindAsync(tagId);
+            if (tag == null)
             {
-                _context = context;
+                return null;
             }
 
-            // Method to get all tags
-            public async Task<List<Tags>> GetAllTags()
+            _context.Tags.Remove(tag);
+            await _context.SaveChangesAsync();
+            return await _context.Tags.ToListAsync();
+        }
+
+        // Method to associate a tag with a wishlist
+        public async Task<bool> AddTagToWishlist(Guid tagId, Guid wishlistId)
+        {
+            var tag = await _context.Tags.FindAsync(tagId);
+            if (tag == null)
             {
-                return await _context.Tags.ToListAsync();
+                return false;
             }
 
-            // Method to get a tag by its ID
-            public async Task<Tags?> GetTagById(Guid tagId)
+            var wishlist = await _context.Wishlists.FindAsync(wishlistId);
+            if (wishlist == null)
             {
-                return await _context.Tags.FindAsync(tagId);
+                return false;
             }
 
-            // Method to create a new tag
-            public async Task<List<Tags>> CreateTag(Tags tag)
+            tag.WishlistId = wishlistId;
+            wishlist.TagsId = tagId;
+            await _context.SaveChangesAsync();
+            return true;
+        }
+
+        // Method to dissociate a tag from a wishlist
+        public async Task<bool> RemoveTagFromWishlist(Guid tagId)
+        {
+            var tag = await _context.Tags.FindAsync(tagId);
+            if (tag == null || tag.WishlistId == null)
             {
-                _context.Tags.Add(tag);
-                await _context.SaveChangesAsync();
-                return await _context.Tags.ToListAsync();
+                return false;
             }
 
-            // Method to delete a tag
-            public async Task<List<Tags>> DeleteTag(Guid tagId)
-            {
-                var tag = await _context.Tags.FindAsync(tagId);
-                if (tag == null)
-                {
-                    return null;
-                }
-
-                _context.Tags.Remove(tag);
-                await _context.SaveChangesAsync();
-                return await _context.Tags.ToListAsync();
-            }
+            tag.WishlistId = null;
+            await _context.SaveChangesAsync();
+            return true;
         }
     }
+}
 
