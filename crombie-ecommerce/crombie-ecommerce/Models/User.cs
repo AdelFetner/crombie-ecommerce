@@ -24,14 +24,14 @@ namespace crombie_ecommerce.Models
         public string Password { get; set; }
         public bool IsVerified { get; set; }
 
-        [JsonIgnore]
+        
         public Guid? ProductId { get; set; }
-        [JsonIgnore]
-        public virtual Product Product { get; set; }
-
-        [JsonIgnore]
+        
+        public  Product? Product { get; set; }
+        
         public Guid? WishlistId { get; set; }
-        [JsonIgnore]
-        public virtual Wishlist Wishlist { get; set; }
+        
+        public  Wishlist? Wishlist { get; set; }
+       
     }
 }

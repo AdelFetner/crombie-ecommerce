@@ -9,6 +9,7 @@ using crombie_ecommerce.Contexts;
 using crombie_ecommerce.Models;
 using crombie_ecommerce.Services;
 using Microsoft.Identity.Client;
+using crombie_ecommerce.Models.Dto;
 
 namespace crombie_ecommerce.Controller
 {
@@ -49,34 +50,54 @@ namespace crombie_ecommerce.Controller
         // PUT: api/User/5
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPut("{id}")]
-        public async Task<IActionResult> UpdateUser(Guid id, [FromBody]User user)
+        public async Task<IActionResult> UpdateUser(Guid id, [FromBody] User user)
         {
-            if (id != user.UserId)
+            try
             {
-                return BadRequest();
+                var updatedUser = await _userService.UpdateUserAsync(id, user);
+                return Ok(updatedUser);
             }
-
-            await _userService.UpdateUserAsync(user);
-          
-            return NoContent();
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
         }
 
-        // POST: api/User
-        // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
-        [HttpPost]
-        public async Task<ActionResult<User>> CreateUser([FromBody]User user)
-        {
-            await _userService.AddUserAsync(user);
            
-            return CreatedAtAction("GetUser", new { id = user.UserId }, user);
+          
+
+        [HttpPost]
+        public IActionResult CreateUser([FromBody] UserDto userDto)
+        {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
         }
+
+            var user = new User
+        {
+                UserId = Guid.NewGuid(), 
+                Name = userDto.Name,
+                Email = userDto.Email,
+                Password = userDto.Password,
+                IsVerified = userDto.IsVerified,
+                ProductId = userDto.ProductId,
+                WishlistId = userDto.WishlistId
+            };
+
+            _userService.PostUser(user);
+           
+           
+            return Ok(user);
+        }
+
 
         // DELETE: api/User/5
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteUser(Guid id)
         {
             await _userService.DeleteUserAsync(id);
-            return NoContent();
+            return Ok(new { message = "The user was successfully deleted" });
         }
 
         

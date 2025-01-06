@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using crombie_ecommerce.Contexts;
 
@@ -11,9 +12,11 @@ using crombie_ecommerce.Contexts;
 namespace crombie_ecommerce.Migrations
 {
     [DbContext(typeof(ShopContext))]
-    partial class ShopContextModelSnapshot : ModelSnapshot
+    [Migration("20250106034225_addDto")]
+    partial class addDto
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -26,8 +29,7 @@ namespace crombie_ecommerce.Migrations
                 {
                     b.Property<Guid>("ProductId")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier")
-                        .HasDefaultValueSql("NEWID()");
+                        .HasColumnType("uniqueidentifier");
 
                     b.Property<string>("Brand")
                         .IsRequired()
@@ -133,11 +135,7 @@ namespace crombie_ecommerce.Migrations
                 {
                     b.HasOne("crombie_ecommerce.Models.Product", "Product")
                         .WithOne("User")
-<<<<<<< HEAD
                         .HasForeignKey("crombie_ecommerce.Models.User", "ProductId");
-=======
-                        .HasForeignKey("crombie_ecommerce.Models.User", "UserId");
->>>>>>> 141dfa9bf68ed9a9243d0405caf993792e57ee00
 
                     b.Navigation("Product");
                 });
@@ -162,7 +160,8 @@ namespace crombie_ecommerce.Migrations
                 {
                     b.Navigation("User");
 
-                    b.Navigation("Wishlist");
+                    b.Navigation("Wishlist")
+                        .IsRequired();
                 });
 
             modelBuilder.Entity("crombie_ecommerce.Models.User", b =>
