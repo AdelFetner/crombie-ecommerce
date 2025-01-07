@@ -235,7 +235,7 @@ namespace crombie_ecommerce.Migrations
                         .WithOne("Wishlist")
                         .HasForeignKey("crombie_ecommerce.Models.Wishlist", "WishlistId")
 
-                        .HasForeignKey("crombie_ecommerce.Models.Wishlist", "ProductId");
+                        .HasForeignKey("crombie_ecommerce.Models.Wishlist", "ProductId")
 
                         .OnDelete(DeleteBehavior.NoAction);
 

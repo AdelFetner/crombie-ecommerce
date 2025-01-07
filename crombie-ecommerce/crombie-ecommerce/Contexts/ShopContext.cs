@@ -52,7 +52,6 @@ namespace crombie_ecommerce.Contexts
                 product.Property(p => p.Name).IsRequired().HasMaxLength(50);
                 product.Property(p => p.Description).HasMaxLength(100);
                 product.Property(p => p.Price).HasColumnType("decimal(18,2)");
-                product.Property(p => p.Category).HasMaxLength(50);
 
                 // product to user
                 product.HasOne(p => p.User)
@@ -74,6 +73,24 @@ namespace crombie_ecommerce.Contexts
                     .HasForeignKey(p => p.BrandId)
                     .OnDelete(DeleteBehavior.Cascade)
                     .IsRequired();
+
+                // product to categories, using a many to many relationship (doing a join table named ProductCategory)
+                product.HasMany(p => p.Categories)
+                    .WithMany(c => c.Products)
+                    // join table
+                    .UsingEntity<Dictionary<string, object>>(
+                        "ProductCategory",
+                        // join table relation to category and product
+                        j => j.HasOne<Category>().WithMany().HasForeignKey("CategoryId"),
+                        j => j.HasOne<Product>().WithMany().HasForeignKey("ProductId"),
+                        // makes a CreatedAt for the table
+                        j =>
+                        {
+                            j.Property<DateTime>("CreatedAt").HasDefaultValueSql("CURRENT_TIMESTAMP");
+                            j.HasKey("ProductId", "CategoryId");
+                        }
+                    );
+
             });
 
             // builder for wishlist entity

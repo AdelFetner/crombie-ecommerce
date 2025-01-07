@@ -45,7 +45,6 @@ namespace crombie_ecommerce.Services
             existingProduct.Description = updatedProduct.Description;
             existingProduct.Price = updatedProduct.Price;
             existingProduct.BrandId = updatedProduct.BrandId;
-            existingProduct.Category = updatedProduct.Category;
 
             _context.Products.Update(existingProduct);
             await _context.SaveChangesAsync();
