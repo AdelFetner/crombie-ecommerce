@@ -1,0 +1,28 @@
+﻿using System.ComponentModel.DataAnnotations.Schema;
+using System.ComponentModel.DataAnnotations;
+
+namespace crombie_ecommerce.Models
+{
+    [Table("Notifications")]
+    public class Notification
+    {
+        [Key]
+        public Guid Id { get; set; }
+
+        [Required]
+        [MaxLength(50)]
+        public string NotificationType { get; set; }
+        [Required]
+        public DateTime CreatedDate { get; set; }
+
+        public bool IsRead { get; set; } = false;
+
+        [Required]
+        public Guid WishlistId { get; set; }
+        public virtual Wishlist? Wishlist { get; set; }
+
+        [Required]
+        public Guid ProductId { get; set; }
+        public virtual Product? Product { get; set; }
+    }
+}
