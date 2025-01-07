@@ -19,11 +19,10 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 builder.Services.AddScoped<WishlistService>()
     .AddScoped<ProductService>()
-    .AddScoped<BrandService>();
+    .AddScoped<BrandService>()
+    .AddScoped<TagsService>()
+    .AddScoped<UserService>();
 builder.Services.AddSqlServer<ShopContext>(builder.Configuration.GetConnectionString("DefaultConnection"));
-
-builder.Services.AddScoped<UserService>();
-
 
 var app = builder.Build();
 

@@ -8,6 +8,7 @@ namespace crombie_ecommerce.Contexts
         public DbSet<User> Users { get; set; }
         public DbSet<Product> Products { get; set; }
         public DbSet<Wishlist> Wishlists { get; set; }
+        public DbSet<Tags> Tags { get; set; }
         public DbSet<Brand> Brands { get; set; }
 
         public ShopContext(DbContextOptions<ShopContext> options) : base(options)
@@ -81,7 +82,6 @@ namespace crombie_ecommerce.Contexts
                 wishlist.ToTable("Wishlist");
                 wishlist.HasKey(w => w.WishlistId);
                 wishlist.Property(w => w.Name).IsRequired().HasMaxLength(50);
-                wishlist.Property(w => w.Tag).IsRequired().HasMaxLength(100);
 
                 // wl to user has a one to one relationship
                 wishlist.HasOne(w => w.User)
@@ -92,10 +92,25 @@ namespace crombie_ecommerce.Contexts
 
                 // wl to product has a  one to one relationship
                 wishlist.HasOne(w => w.Product)
-                    .WithOne(p => p.Wishlist)
-                    .HasForeignKey<Wishlist>(w => w.ProductId)
-                    .IsRequired(false);
+                        .WithOne(p => p.Wishlist)
+                        .HasForeignKey<Wishlist>(w => w.ProductId)
+                        .IsRequired(false);
 
+                // wl to tags has a many to many relationship
+                wishlist.HasMany(w => w.Tags)
+                     .WithOne(t => t.Wishlist)
+                     .HasForeignKey(t => t.WishlistId)
+                     .OnDelete(DeleteBehavior.Cascade)
+                     .IsRequired(false);
+            });
+
+            // builder for tags entity 
+            modelBuilder.Entity<Tags>(tag =>
+            {
+                tag.ToTable("Tags");
+                tag.HasKey(t => t.TagId);
+                tag.Property(t => t.Name).IsRequired().HasMaxLength(50);
+                tag.Property(t => t.Description).HasMaxLength(100); 
             });
 
             // builder for brand entity
