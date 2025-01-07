@@ -12,6 +12,11 @@ namespace crombie_ecommerce.Contexts
         public DbSet<Brand> Brands { get; set; }
         public DbSet<Category> Categories { get; set; }
 
+        public DbSet<Order> Orders { get; set; }
+
+        public DbSet<OrderDetail> OrderDetails { get; set; }
+
+
         public ShopContext(DbContextOptions<ShopContext> options) : base(options)
         { }
 
@@ -161,6 +166,45 @@ namespace crombie_ecommerce.Contexts
                     .HasMaxLength(1000);
             });
 
+            //builder for order entity
+            modelBuilder.Entity<Order>(order =>
+            {   
+                order.ToTable("Order");
+                order.HasKey(o=>o.OrderId);
+                order.Property(o => o.OrderId).HasDefaultValueSql("NEWID()");
+                order.Property(o => o.OrderDate).IsRequired();
+                order.Property(o=>o.Status).IsRequired();
+                order.Property(o => o.TotalAmount).IsRequired();
+                order.Property(o => o.ShippingAddress).HasMaxLength(100);
+                order.Property(o => o.PaymentMethod).IsRequired();
+
+                //Ask how should be the relations with user here 
+               /* order.HasOne(o => o.User)
+                .WithMany(u => u.Orders)
+                .HasForeignKey(o => o.UserId);*/
+            });
+
+            //builder for order detail entity
+            modelBuilder.Entity<OrderDetail>(orderD => 
+            {
+                orderD.ToTable("OrderDetails");
+                orderD.HasKey(od => od.DetailsId);
+                orderD.Property(od => od.OrderId).HasDefaultValueSql("NEWID()");
+                orderD.Property(od=>od.Quantity).IsRequired();
+                orderD.Property(od => od.Price).IsRequired();
+                orderD.Property(od => od.Subtotal).IsRequired();
+
+                //relations with order 
+                orderD.HasOne(od=>od.Order)
+                .WithMany(o=>o.OrderDetails)
+                .HasForeignKey(od => od.OrderId);
+
+
+                //Ask how should be the relations with product 
+                /*orderD.HasOne(od=>od.Product)
+                .WithMany(p=>p.OrderDetails)
+                .HasForeignKey(od => od.ProductId);*/
+            });
 
             base.OnModelCreating(modelBuilder);
         }
