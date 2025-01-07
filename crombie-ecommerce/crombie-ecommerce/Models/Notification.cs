@@ -1,5 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations.Schema;
 using System.ComponentModel.DataAnnotations;
+using System.Text.Json.Serialization;
 
 namespace crombie_ecommerce.Models
 {
@@ -17,11 +18,10 @@ namespace crombie_ecommerce.Models
 
         public bool IsRead { get; set; } = false;
 
-        [Required]
+        [JsonIgnore]
         public Guid WishlistId { get; set; }
         public virtual Wishlist? Wishlist { get; set; }
-
-        [Required]
+        [JsonIgnore]
         public Guid ProductId { get; set; }
         public virtual Product? Product { get; set; }
     }
