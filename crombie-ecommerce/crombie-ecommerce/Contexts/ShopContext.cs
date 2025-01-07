@@ -34,14 +34,18 @@ namespace crombie_ecommerce.Contexts
 
                 user.HasOne(u => u.Product)
                     .WithOne(p => p.User)
-                    .HasForeignKey<User>(u => u.ProductId)
+                    .HasForeignKey<Product>(u => u.UserId)
                     .IsRequired(false);
+
+               
+
             });
 
             // builder for product entity
             modelBuilder.Entity<Product>(product =>
             {
                 product.ToTable("Product");
+
                 product.HasKey(p => p.Id);
                 product.Property(p => p.Id).HasDefaultValueSql("NEWID()");
                 product.Property(p => p.Name).IsRequired().HasMaxLength(50);
@@ -52,7 +56,9 @@ namespace crombie_ecommerce.Contexts
                 // product to user
                 product.HasOne(p => p.User)
                     .WithOne(u => u.Product)
-                    .HasForeignKey<User>(u => u.UserId)
+
+                    .HasForeignKey<User>(u => u.ProductId)
+
                     .IsRequired(false);
 
                 // product to wl

@@ -1,11 +1,19 @@
 using crombie_ecommerce.Contexts;
 using crombie_ecommerce.Services;
 
+using System.Text.Json.Serialization;
+
+
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 
-builder.Services.AddControllers();
+builder.Services.AddControllers()
+ .AddJsonOptions(options =>
+{
+    options.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.IgnoreCycles;
+    options.JsonSerializerOptions.WriteIndented = true;
+});
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
@@ -13,6 +21,9 @@ builder.Services.AddScoped<WishlistService>()
     .AddScoped<ProductService>()
     .AddScoped<BrandService>();
 builder.Services.AddSqlServer<ShopContext>(builder.Configuration.GetConnectionString("DefaultConnection"));
+
+builder.Services.AddScoped<UserService>();
+
 
 var app = builder.Build();
 
