@@ -8,6 +8,7 @@ namespace crombie_ecommerce.Contexts
         public DbSet<User> Users { get; set; }
         public DbSet<Product> Products { get; set; }
         public DbSet<Wishlist> Wishlists { get; set; }
+        public DbSet<Brand> Brands { get; set; }
 
         public ShopContext(DbContextOptions<ShopContext> options) : base(options)
         { }
@@ -48,9 +49,8 @@ namespace crombie_ecommerce.Contexts
                 product.HasKey(p => p.Id);
                 product.Property(p => p.Id).HasDefaultValueSql("NEWID()");
                 product.Property(p => p.Name).IsRequired().HasMaxLength(50);
-                product.Property(p => p.Description).HasMaxLength(100); 
+                product.Property(p => p.Description).HasMaxLength(100);
                 product.Property(p => p.Price).HasColumnType("decimal(18,2)");
-                product.Property(p => p.Brand).HasMaxLength(50);
                 product.Property(p => p.Category).HasMaxLength(50);
 
                 // product to user
@@ -66,6 +66,13 @@ namespace crombie_ecommerce.Contexts
                     .WithOne(w => w.Product)
                     .HasForeignKey<Wishlist>(w => w.ProductId)
                     .IsRequired(false);
+
+                // product to brand
+                product.HasOne(p => p.Brand)
+                    .WithMany(b => b.Products)
+                    .HasForeignKey(p => p.BrandId)
+                    .OnDelete(DeleteBehavior.Cascade)
+                    .IsRequired();
             });
 
             // builder for wishlist entity
@@ -78,21 +85,35 @@ namespace crombie_ecommerce.Contexts
 
                 // wl to user has a one to one relationship
                 wishlist.HasOne(w => w.User)
-                        .WithOne(u => u.Wishlist)
-
-                        .HasForeignKey<Wishlist>(w => w.WishlistId)
-
-                        .OnDelete(DeleteBehavior.NoAction)
-                        .IsRequired(false);
+                    .WithOne(u => u.Wishlist)
+                    .HasForeignKey<Wishlist>(w => w.UserId)
+                    .OnDelete(DeleteBehavior.NoAction)
+                    .IsRequired(false);
 
                 // wl to product has a  one to one relationship
                 wishlist.HasOne(w => w.Product)
-                        .WithOne(p => p.Wishlist)
+                    .WithOne(p => p.Wishlist)
+                    .HasForeignKey<Wishlist>(w => w.ProductId)
+                    .IsRequired(false);
 
-                        .HasForeignKey<Wishlist>(w => w.WishlistId)
-
-                        .IsRequired(false);
             });
+
+            // builder for brand entity
+            modelBuilder.Entity<Brand>(brand =>
+            {
+                brand.ToTable("Brand");
+                brand.HasKey(b => b.BrandId);
+                brand.Property(b => b.Name).IsRequired().HasMaxLength(100);
+                brand.Property(b => b.Description).HasMaxLength(1000);
+                brand.Property(b => b.WebsiteUrl).HasMaxLength(255);
+
+                // brand to products (one-to-many relationship)
+                brand.HasMany(b => b.Products)
+                    .WithOne(p => p.Brand)
+                    .HasForeignKey(p => p.BrandId)
+                    .OnDelete(DeleteBehavior.Cascade);
+            });
+
 
             base.OnModelCreating(modelBuilder);
         }

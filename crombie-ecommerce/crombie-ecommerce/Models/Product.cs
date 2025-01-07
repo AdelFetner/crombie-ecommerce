@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.Text.Json.Serialization;
 
 namespace crombie_ecommerce.Models
@@ -20,8 +21,12 @@ namespace crombie_ecommerce.Models
         [Range(0, double.MaxValue)]
         public decimal Price { get; set; }
 
-        [StringLength(50)]
-        public string Brand { get; set; }
+        [Required]
+        [JsonIgnore]
+        public Guid BrandId { get; set; }
+
+        [JsonIgnore]
+        public virtual Brand Brand { get; set; }
 
         [StringLength(50)]
         public string Category { get; set; }
