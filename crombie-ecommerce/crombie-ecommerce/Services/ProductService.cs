@@ -33,11 +33,6 @@ namespace crombie_ecommerce.Services
 
         public async Task<Product> UpdateProduct(Guid id, Product updatedProduct)
         {
-            if (string.IsNullOrEmpty(updatedProduct.Name))
-            {
-                throw new ArgumentException("Product name is required.");
-            }
-
             // look up for the first product with the given id by reusing previous get by id method
             var existingProduct = await GetProductById(id);
             if (existingProduct == null)
@@ -49,7 +44,7 @@ namespace crombie_ecommerce.Services
             existingProduct.Name = updatedProduct.Name;
             existingProduct.Description = updatedProduct.Description;
             existingProduct.Price = updatedProduct.Price;
-            existingProduct.Brand = updatedProduct.Brand;
+            existingProduct.BrandId = updatedProduct.BrandId;
             existingProduct.Category = updatedProduct.Category;
 
             _context.Products.Update(existingProduct);

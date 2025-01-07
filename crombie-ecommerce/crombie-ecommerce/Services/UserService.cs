@@ -15,16 +15,17 @@ namespace crombie_ecommerce.Services
 
 
          //Create a new user:
-        public async Task AddUserAsync(User user) { 
+        public async Task<User> PostUser(User user) { 
            
             _context.Users.Add(user);
-            await _context.SaveChangesAsync();
+            _context.SaveChanges();
+            return user;
             
         }
 
 
         //Read user by id:
-        public async Task<User> GetUserByIdAsync(int id) { 
+        public async Task<User> GetUserByIdAsync(Guid id) { 
             return await _context.Users.FindAsync(id);
         }
 
@@ -35,26 +36,34 @@ namespace crombie_ecommerce.Services
 
 
         //Update user:
-        public async Task UpdateUserAsync(User user) { 
-            var oldUser = await _context.Users.FindAsync(user.UserId);
-            if (oldUser != null)
+        public async Task<User> UpdateUserAsync(Guid Id, User updatedUser) {
+            if (string.IsNullOrEmpty(updatedUser.Name))
             {
-                oldUser.Name = user.Name;
-                oldUser.Email = user.Email;
-                //Should update password too? then:
-                if (!string.IsNullOrEmpty(user.Password)) { 
-                    oldUser.Password = user.Password;
-                }
-
-                _context.Users.Update(user);
-                await _context.SaveChangesAsync();
-
+                throw new ArgumentException("User name is required.");
             }
-            
+
+            // look up for the first user with the given id by reusing previous get by id method
+            var existingUser = await GetUserByIdAsync(Id);
+            if (existingUser == null)
+            {
+                throw new Exception("User not found");
+            }
+
+            // update
+            existingUser.Name = updatedUser.Name;
+            existingUser.Email = updatedUser.Email;
+            existingUser.Password = updatedUser.Password; 
+            existingUser.IsVerified = updatedUser.IsVerified;
+
+            _context.Users.Update(existingUser);
+            await _context.SaveChangesAsync();
+
+            return existingUser;
+
         }
 
         //Delete user:
-        public async Task DeleteUserAsync(int id) {
+        public async Task DeleteUserAsync(Guid id) {
             var user2 = await _context.Users.FindAsync(id);
             if (user2 != null)
             {

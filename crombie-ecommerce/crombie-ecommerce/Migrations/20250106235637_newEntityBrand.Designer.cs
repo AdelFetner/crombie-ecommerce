@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using crombie_ecommerce.Contexts;
 
@@ -11,9 +12,11 @@ using crombie_ecommerce.Contexts;
 namespace crombie_ecommerce.Migrations
 {
     [DbContext(typeof(ShopContext))]
-    partial class ShopContextModelSnapshot : ModelSnapshot
+    [Migration("20250106235637_newEntityBrand")]
+    partial class newEntityBrand
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -48,7 +51,7 @@ namespace crombie_ecommerce.Migrations
 
             modelBuilder.Entity("crombie_ecommerce.Models.Product", b =>
                 {
-                    b.Property<Guid>("ProductId")
+                    b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier")
                         .HasDefaultValueSql("NEWID()");
@@ -80,43 +83,16 @@ namespace crombie_ecommerce.Migrations
                     b.Property<Guid?>("WishlistId")
                         .HasColumnType("uniqueidentifier");
 
-                    b.HasKey("ProductId");
+                    b.HasKey("Id");
 
                     b.HasIndex("BrandId");
 
                     b.ToTable("Product", (string)null);
                 });
 
-            modelBuilder.Entity("crombie_ecommerce.Models.Tags", b =>
-                {
-                    b.Property<Guid>("TagId")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<string>("Description")
-                        .IsRequired()
-                        .HasMaxLength(100)
-                        .HasColumnType("nvarchar(100)");
-
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasMaxLength(50)
-                        .HasColumnType("nvarchar(50)");
-
-                    b.Property<Guid?>("WishlistId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.HasKey("TagId");
-
-                    b.HasIndex("WishlistId");
-
-                    b.ToTable("Tags", (string)null);
-                });
-
             modelBuilder.Entity("crombie_ecommerce.Models.User", b =>
                 {
                     b.Property<Guid>("UserId")
-                        .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<string>("Email")
@@ -146,22 +122,14 @@ namespace crombie_ecommerce.Migrations
 
                     b.HasKey("UserId");
 
-                    b.HasIndex("ProductId")
-                        .IsUnique()
-                        .HasFilter("[ProductId] IS NOT NULL");
-
                     b.ToTable("User", (string)null);
                 });
 
             modelBuilder.Entity("crombie_ecommerce.Models.Wishlist", b =>
                 {
                     b.Property<Guid>("WishlistId")
+                        .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
-
-                    b.Property<string>("Description")
-                        .IsRequired()
-                        .HasMaxLength(100)
-                        .HasColumnType("nvarchar(100)");
 
                     b.Property<string>("Name")
                         .IsRequired()
@@ -171,8 +139,10 @@ namespace crombie_ecommerce.Migrations
                     b.Property<Guid?>("ProductId")
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<Guid?>("TagsId")
-                        .HasColumnType("uniqueidentifier");
+                    b.Property<string>("Tag")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
 
                     b.Property<Guid?>("UserId")
                         .HasColumnType("uniqueidentifier");
@@ -187,18 +157,7 @@ namespace crombie_ecommerce.Migrations
                         .IsUnique()
                         .HasFilter("[UserId] IS NOT NULL");
 
-
                     b.ToTable("Wishlist", (string)null);
-                });
-
-            modelBuilder.Entity("crombie_ecommerce.Models.Tags", b =>
-                {
-                    b.HasOne("crombie_ecommerce.Models.Wishlist", "Wishlist")
-                        .WithMany("Tags")
-                        .HasForeignKey("WishlistId")
-                        .OnDelete(DeleteBehavior.Cascade);
-
-                    b.Navigation("Wishlist");
                 });
 
             modelBuilder.Entity("crombie_ecommerce.Models.Product", b =>
@@ -216,10 +175,7 @@ namespace crombie_ecommerce.Migrations
                 {
                     b.HasOne("crombie_ecommerce.Models.Product", "Product")
                         .WithOne("User")
-
-                        .HasForeignKey("crombie_ecommerce.Models.User", "ProductId");
-
-
+                        .HasForeignKey("crombie_ecommerce.Models.User", "UserId");
 
                     b.Navigation("Product");
                 });
@@ -228,15 +184,11 @@ namespace crombie_ecommerce.Migrations
                 {
                     b.HasOne("crombie_ecommerce.Models.Product", "Product")
                         .WithOne("Wishlist")
-
-                        .HasForeignKey("crombie_ecommerce.Models.Wishlist", "WishlistId");
+                        .HasForeignKey("crombie_ecommerce.Models.Wishlist", "ProductId");
 
                     b.HasOne("crombie_ecommerce.Models.User", "User")
                         .WithOne("Wishlist")
-                        .HasForeignKey("crombie_ecommerce.Models.Wishlist", "WishlistId")
-
-                        .HasForeignKey("crombie_ecommerce.Models.Wishlist", "ProductId");
-
+                        .HasForeignKey("crombie_ecommerce.Models.Wishlist", "UserId")
                         .OnDelete(DeleteBehavior.NoAction);
 
                     b.Navigation("Product");
@@ -258,12 +210,8 @@ namespace crombie_ecommerce.Migrations
 
             modelBuilder.Entity("crombie_ecommerce.Models.User", b =>
                 {
-                    b.Navigation("Wishlist");
-                });
-
-            modelBuilder.Entity("crombie_ecommerce.Models.Wishlist", b =>
-                {
-                    b.Navigation("Tags");
+                    b.Navigation("Wishlist")
+                        .IsRequired();
                 });
 #pragma warning restore 612, 618
         }
