@@ -7,7 +7,7 @@ namespace crombie_ecommerce.Models
     public class Notification
     {
         [Key]
-        public Guid Id { get; set; }
+        public Guid NotfId { get; set; }
 
         [Required]
         [MaxLength(50)]

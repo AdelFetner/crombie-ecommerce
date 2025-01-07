@@ -11,6 +11,7 @@ namespace crombie_ecommerce.Contexts
         public DbSet<Tags> Tags { get; set; }
         public DbSet<Brand> Brands { get; set; }
         public DbSet<Category> Categories { get; set; }
+        public DbSet<Notification> Notifications { get; set; }
 
         public ShopContext(DbContextOptions<ShopContext> options) : base(options)
         { }
@@ -161,7 +162,26 @@ namespace crombie_ecommerce.Contexts
                     .HasMaxLength(1000);
             });
 
+            //builder for notifications entity
+            modelBuilder.Entity<Notification>(entity =>
+            {
+                entity.HasKey(n => n.NotfId);
+                entity.Property(n => n.NotificationType).HasMaxLength(50).IsRequired();
+                entity.Property(n => n.CreatedDate).IsRequired();
+                entity.Property(n => n.IsRead);
 
+                entity.HasOne(n => n.Wishlist)
+                      .WithMany(w => w.Notifications)
+                      .HasForeignKey(n => n.WishlistId)
+                      .OnDelete(DeleteBehavior.Cascade)
+                      .IsRequired(false);
+
+                entity.HasOne(n => n.Product)
+                      .WithMany(p => p.Notifications)
+                      .HasForeignKey(n => n.ProductId)
+                      .OnDelete(DeleteBehavior.Cascade)
+                      .IsRequired(false);
+            });
             base.OnModelCreating(modelBuilder);
         }
     }
