@@ -136,15 +136,29 @@ namespace crombie_ecommerce.Contexts
             {
                 brand.ToTable("Brand");
                 brand.HasKey(b => b.BrandId);
+                brand.Property(b => b.BrandId).HasDefaultValueSql("NEWID()");
                 brand.Property(b => b.Name).IsRequired().HasMaxLength(100);
                 brand.Property(b => b.Description).HasMaxLength(1000);
                 brand.Property(b => b.WebsiteUrl).HasMaxLength(255);
 
-                // brand to products (one-to-many relationship)
+                // brand to products has a one to many relationship
                 brand.HasMany(b => b.Products)
                     .WithOne(p => p.Brand)
                     .HasForeignKey(p => p.BrandId)
                     .OnDelete(DeleteBehavior.Cascade);
+            });
+
+            // builder for category entity
+            modelBuilder.Entity<Category>(category =>
+            {
+                category.ToTable("Category");
+                category.HasKey(c => c.CategoryId)
+                category.Property(c => c.CategoryId).HasDefaultValueSql("NEWID()");
+                category.Property(c => c.Name)
+                    .IsRequired()
+                    .HasMaxLength(100);
+                category.Property(c => c.Description)
+                    .HasMaxLength(1000);
             });
 
 

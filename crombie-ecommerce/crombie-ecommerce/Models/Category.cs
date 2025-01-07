@@ -16,11 +16,7 @@ namespace crombie_ecommerce.Models
         [MaxLength(1000)]
         public string? Description { get; set; }
 
+        [JsonIgnore]
         public ICollection<Product> Products { get; set; } = new List<Product>();
-
-        public Category()
-        {
-            CategoryId = Guid.NewGuid();
-        }
     }
 }

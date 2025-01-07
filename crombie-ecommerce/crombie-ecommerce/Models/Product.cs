@@ -39,13 +39,5 @@ namespace crombie_ecommerce.Models
         public Guid? WishlistId { get; set; }
         [JsonIgnore]
         public virtual Wishlist? Wishlist { get; set; }
-
-
-        //create a new guid each time this is initialized
-        public Product()
-        {
-            Id = Guid.NewGuid(); // Generate a new GUID for the Id
-        }
-
     }
 }

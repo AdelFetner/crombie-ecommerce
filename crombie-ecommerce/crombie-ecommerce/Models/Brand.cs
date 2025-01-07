@@ -22,10 +22,5 @@ namespace crombie_ecommerce.Models
 
         [JsonIgnore]
         public virtual ICollection<Product> Products { get; set; } = new List<Product>();
-
-        public Brand()
-        {
-            BrandId = Guid.NewGuid();
-        }
     }
 }
