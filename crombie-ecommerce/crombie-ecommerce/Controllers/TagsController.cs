@@ -67,5 +67,29 @@ namespace crombie_ecommerce.Controllers
             }
             return Ok(tags);
         }
+
+        // Associate a tag with a wishlist
+        [HttpPost("{tagId:guid}/wishlist/{wishlistId:guid}")]
+        public async Task<IActionResult> AddTagToWishlist(Guid tagId, Guid wishlistId)
+        {
+            var result = await _tagsService.AddTagToWishlist(tagId, wishlistId);
+            if (!result)
+            {
+                return BadRequest(new { message = "Tag not found" });
+            }
+            return Ok(new { message = "Tag successfully associated with wishlist" });
+        }
+
+        // Disassociate a tag from a wishlist
+        [HttpDelete("{tagId:guid}/wishlist")]
+        public async Task<IActionResult> RemoveTagFromWishlist(Guid tagId)
+        {
+            var result = await _tagsService.RemoveTagFromWishlist(tagId);
+            if (!result)
+            {
+                return BadRequest(new { message = "Tag not found" });
+            }
+            return Ok(new { message = "Tag successfully disassociated from wishlist" });
+        }
     }
 }
