@@ -48,8 +48,8 @@ namespace crombie_ecommerce.Contexts
             {
                 product.ToTable("Product");
 
-                product.HasKey(p => p.Id);
-                product.Property(p => p.Id).HasDefaultValueSql("NEWID()");
+                product.HasKey(p => p.ProductId);
+                product.Property(p => p.ProductId).HasDefaultValueSql("NEWID()");
                 product.Property(p => p.Name).IsRequired().HasMaxLength(50);
                 product.Property(p => p.Description).HasMaxLength(100);
                 product.Property(p => p.Price).HasColumnType("decimal(18,2)");
@@ -152,7 +152,7 @@ namespace crombie_ecommerce.Contexts
             modelBuilder.Entity<Category>(category =>
             {
                 category.ToTable("Category");
-                category.HasKey(c => c.CategoryId)
+                category.HasKey(c => c.CategoryId);
                 category.Property(c => c.CategoryId).HasDefaultValueSql("NEWID()");
                 category.Property(c => c.Name)
                     .IsRequired()

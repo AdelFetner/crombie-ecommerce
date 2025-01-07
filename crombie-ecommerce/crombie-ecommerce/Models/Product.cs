@@ -8,7 +8,7 @@ namespace crombie_ecommerce.Models
     {
         [Key]
         [JsonIgnore]
-        public Guid Id { get; set; } 
+        public Guid ProductId { get; set; } 
 
         [Required]
         [MinLength(4)]
@@ -22,7 +22,6 @@ namespace crombie_ecommerce.Models
         public decimal Price { get; set; }
 
         [Required]
-        [JsonIgnore]
         public Guid BrandId { get; set; }
 
         [JsonIgnore]
