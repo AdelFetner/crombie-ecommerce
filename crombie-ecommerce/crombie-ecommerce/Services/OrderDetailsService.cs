@@ -13,6 +13,7 @@ namespace crombie_ecommerce.Services
         }
 
         //create order detail
-        
+        //update order detail
+        //delete order detail
     }
 }
