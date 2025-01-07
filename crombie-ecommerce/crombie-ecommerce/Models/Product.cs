@@ -8,7 +8,7 @@ namespace crombie_ecommerce.Models
     {
         [Key]
         [JsonIgnore]
-        public Guid Id { get; set; } 
+        public Guid ProductId { get; set; } 
 
         [Required]
         [MinLength(4)]
@@ -22,14 +22,12 @@ namespace crombie_ecommerce.Models
         public decimal Price { get; set; }
 
         [Required]
-        [JsonIgnore]
         public Guid BrandId { get; set; }
 
         [JsonIgnore]
         public virtual Brand Brand { get; set; }
 
-        [StringLength(50)]
-        public string Category { get; set; }
+        public ICollection<Category> Categories { get; set; } = new List<Category>();
 
         [JsonIgnore]
         public Guid? UserId { get; set; }
@@ -40,13 +38,5 @@ namespace crombie_ecommerce.Models
         public Guid? WishlistId { get; set; }
         [JsonIgnore]
         public virtual Wishlist? Wishlist { get; set; }
-
-
-        //create a new guid each time this is initialized
-        public Product()
-        {
-            Id = Guid.NewGuid(); // Generate a new GUID for the Id
-        }
-
     }
 }

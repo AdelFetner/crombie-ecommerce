@@ -3,11 +3,11 @@ using System.Text.Json.Serialization;
 
 namespace crombie_ecommerce.Models
 {
-    public class Brand
+    public class Category
     {
         [Key]
         [JsonIgnore]
-        public Guid BrandId { get; set; }
+        public Guid CategoryId { get; set; }
 
         [Required]
         [MaxLength(100)]
@@ -16,11 +16,7 @@ namespace crombie_ecommerce.Models
         [MaxLength(1000)]
         public string? Description { get; set; }
 
-        [Url]
-        [MaxLength(255)]
-        public string? WebsiteUrl { get; set; }
-
         [JsonIgnore]
-        public virtual ICollection<Product> Products { get; set; } = new List<Product>();
+        public ICollection<Product> Products { get; set; } = new List<Product>();
     }
 }

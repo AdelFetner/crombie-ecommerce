@@ -10,6 +10,7 @@ namespace crombie_ecommerce.Contexts
         public DbSet<Wishlist> Wishlists { get; set; }
         public DbSet<Tags> Tags { get; set; }
         public DbSet<Brand> Brands { get; set; }
+        public DbSet<Category> Categories { get; set; }
 
         public ShopContext(DbContextOptions<ShopContext> options) : base(options)
         { }
@@ -47,12 +48,11 @@ namespace crombie_ecommerce.Contexts
             {
                 product.ToTable("Product");
 
-                product.HasKey(p => p.Id);
-                product.Property(p => p.Id).HasDefaultValueSql("NEWID()");
+                product.HasKey(p => p.ProductId);
+                product.Property(p => p.ProductId).HasDefaultValueSql("NEWID()");
                 product.Property(p => p.Name).IsRequired().HasMaxLength(50);
                 product.Property(p => p.Description).HasMaxLength(100);
                 product.Property(p => p.Price).HasColumnType("decimal(18,2)");
-                product.Property(p => p.Category).HasMaxLength(50);
 
                 // product to user
                 product.HasOne(p => p.User)
@@ -74,6 +74,24 @@ namespace crombie_ecommerce.Contexts
                     .HasForeignKey(p => p.BrandId)
                     .OnDelete(DeleteBehavior.Cascade)
                     .IsRequired();
+
+                // product to categories, using a many to many relationship (doing a join table named ProductCategory)
+                product.HasMany(p => p.Categories)
+                    .WithMany(c => c.Products)
+                    // join table
+                    .UsingEntity<Dictionary<string, object>>(
+                        "ProductCategory",
+                        // join table relation to category and product
+                        j => j.HasOne<Category>().WithMany().HasForeignKey("CategoryId"),
+                        j => j.HasOne<Product>().WithMany().HasForeignKey("ProductId"),
+                        // makes a CreatedAt for the table
+                        j =>
+                        {
+                            j.Property<DateTime>("CreatedAt").HasDefaultValueSql("CURRENT_TIMESTAMP");
+                            j.HasKey("ProductId", "CategoryId");
+                        }
+                    );
+
             });
 
             // builder for wishlist entity
@@ -118,15 +136,29 @@ namespace crombie_ecommerce.Contexts
             {
                 brand.ToTable("Brand");
                 brand.HasKey(b => b.BrandId);
+                brand.Property(b => b.BrandId).HasDefaultValueSql("NEWID()");
                 brand.Property(b => b.Name).IsRequired().HasMaxLength(100);
                 brand.Property(b => b.Description).HasMaxLength(1000);
                 brand.Property(b => b.WebsiteUrl).HasMaxLength(255);
 
-                // brand to products (one-to-many relationship)
+                // brand to products has a one to many relationship
                 brand.HasMany(b => b.Products)
                     .WithOne(p => p.Brand)
                     .HasForeignKey(p => p.BrandId)
                     .OnDelete(DeleteBehavior.Cascade);
+            });
+
+            // builder for category entity
+            modelBuilder.Entity<Category>(category =>
+            {
+                category.ToTable("Category");
+                category.HasKey(c => c.CategoryId);
+                category.Property(c => c.CategoryId).HasDefaultValueSql("NEWID()");
+                category.Property(c => c.Name)
+                    .IsRequired()
+                    .HasMaxLength(100);
+                category.Property(c => c.Description)
+                    .HasMaxLength(1000);
             });
 
 

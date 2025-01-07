@@ -49,7 +49,7 @@ namespace crombie_ecommerce.Controllers
             try
             {
                 var createdProduct = await _productService.CreateProduct(product);
-                return CreatedAtAction(nameof(GetProduct), new { id = createdProduct.Id }, createdProduct);
+                return CreatedAtAction(nameof(GetProduct), new { id = createdProduct.ProductId }, createdProduct);
             }
             catch (Exception ex)
             {
