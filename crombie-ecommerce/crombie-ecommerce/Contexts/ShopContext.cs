@@ -10,6 +10,7 @@ namespace crombie_ecommerce.Contexts
         public DbSet<Wishlist> Wishlists { get; set; }
         public DbSet<Tags> Tags { get; set; }
         public DbSet<Brand> Brands { get; set; }
+        public DbSet<Category> Categories { get; set; }
 
         public ShopContext(DbContextOptions<ShopContext> options) : base(options)
         { }
