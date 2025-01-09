@@ -1,6 +1,7 @@
 ﻿using crombie_ecommerce.Models;
 using crombie_ecommerce.Contexts;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.AspNetCore.Identity;
 
 namespace crombie_ecommerce.Services
 {
@@ -8,6 +9,7 @@ namespace crombie_ecommerce.Services
     {
         private readonly ShopContext _context;
 
+        
         public UserService (ShopContext context)
         {
             _context = context;

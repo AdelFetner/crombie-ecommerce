@@ -1,6 +1,9 @@
 using crombie_ecommerce.Contexts;
 using crombie_ecommerce.Services;
-
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.IdentityModel.Tokens;
+using System.Text;
 using System.Text.Json.Serialization;
 
 
@@ -25,6 +28,25 @@ builder.Services.AddScoped<WishlistService>()
     .AddScoped<CategoryService>();
 builder.Services.AddSqlServer<ShopContext>(builder.Configuration.GetConnectionString("DefaultConnection"));
 
+
+
+builder.Services.AddAuthentication();
+builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme).AddJwtBearer(o =>
+{
+    o.RequireHttpsMetadata = false;
+    o.TokenValidationParameters = new TokenValidationParameters
+    {
+        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(builder.Configuration["JWT:SECRET"])),
+        ValidIssuer = builder.Configuration["JWT:ISSUER"],
+        ValidAudience = builder.Configuration["JWT:AUDIENCE"],
+        RoleClaimType = "Role",
+        ClockSkew = TimeSpan.Zero,
+
+    };
+
+});
+
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
@@ -45,6 +67,7 @@ else
 app.UseHttpsRedirection();
 
 app.UseAuthorization();
+app.UseAuthentication();
 
 app.MapControllers();
 

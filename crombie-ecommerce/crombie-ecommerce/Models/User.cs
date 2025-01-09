@@ -24,6 +24,8 @@ namespace crombie_ecommerce.Models
         public string Password { get; set; }
         public bool IsVerified { get; set; }
 
+        public string Role { get; set; }
+
         
         public Guid? ProductId { get; set; }
         
