@@ -28,22 +28,26 @@ namespace crombie_ecommerce.Services
             return await _context.Orders.FindAsync(id);
         }
 
-        //get all orders from an id
+        //get all orders from an user id
         public async Task<IEnumerable<Order>> GetOrdersByUserId(Guid userId) 
         {
             return await _context.Orders.Where(o => o.UserId == userId).Include(o=>o.OrderDetails).ToListAsync();
         }
 
         //update order status
-        public async Task<bool> UpdateOrderStatus(Guid id, string newStatus) 
+        public async Task<Order> UpdateOrder(Guid id, Order order) 
         {
-            var order = await _context.Orders.FindAsync(id);
-            if (order == null) return false;
+            var createdOrder = await _context.Orders.FindAsync(id);
+           
+           
+            createdOrder.Status = order.Status;
+            createdOrder.TotalAmount = order.TotalAmount;
+            createdOrder.ShippingAddress = order.ShippingAddress;
+            createdOrder.PaymentMethod = order.PaymentMethod;
 
-            order.Status = newStatus;
             await _context.SaveChangesAsync();
 
-            return true;
+            return createdOrder;
         
                 
         }

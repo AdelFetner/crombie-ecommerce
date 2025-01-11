@@ -22,6 +22,8 @@ namespace crombie_ecommerce.Models
         [Required]
         [MinLength(8)]
         public string Password { get; set; }
+
+        //public string Adress {get; set;}??
         public bool IsVerified { get; set; }
 
         
