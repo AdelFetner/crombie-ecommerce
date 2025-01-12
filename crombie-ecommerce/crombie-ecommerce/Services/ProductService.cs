@@ -50,7 +50,7 @@ namespace crombie_ecommerce.Services
             return product;
         }
 
-        public async Task<Product> UpdateProduct(Guid id, Product updatedProduct)
+        public async Task<Product> UpdateProduct(Guid id, ProductDto updatedProductDto)
         {
             // look up for the first product with the given id by reusing previous get by id method
             var existingProduct = await GetProductById(id);
@@ -59,10 +59,15 @@ namespace crombie_ecommerce.Services
                 throw new Exception("Product not found");
             }
 
+            var categories = await _context.Categories
+                .Where(c => updatedProductDto.CategoryIds.Contains(c.CategoryId))
+                .ToListAsync();
+
             // prop update
-            existingProduct.Name = updatedProduct.Name;
-            existingProduct.Description = updatedProduct.Description;
-            existingProduct.Price = updatedProduct.Price;
+            existingProduct.Name = updatedProductDto.Name;
+            existingProduct.Description = updatedProductDto.Description;
+            existingProduct.Price = updatedProductDto.Price;
+            existingProduct.Categories = categories;
 
             _context.Products.Update(existingProduct);
             await _context.SaveChangesAsync();

@@ -60,11 +60,11 @@ namespace crombie_ecommerce.Controllers
 
         // PUT: api/Products/5
         [HttpPut("{id}")]
-        public async Task<IActionResult> PutProduct(Guid id, Product product)
+        public async Task<IActionResult> PutProduct(Guid id, ProductDto productDto)
         {
             try
             {
-                var updatedProduct = await _productService.UpdateProduct(id, product);
+                var updatedProduct = await _productService.UpdateProduct(id, productDto);
                 return Ok(updatedProduct);
             }
             catch (Exception ex)
