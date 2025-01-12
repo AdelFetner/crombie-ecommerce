@@ -178,10 +178,10 @@ namespace crombie_ecommerce.Contexts
                 order.Property(o => o.ShippingAddress).HasMaxLength(100);
                 order.Property(o => o.PaymentMethod).IsRequired();
 
-                //Ask how should be the relations with user here 
-               /* order.HasOne(o => o.User)
+                //relation user - order (one to many)
+                order.HasOne(o => o.User)
                 .WithMany(u => u.Orders)
-                .HasForeignKey(o => o.UserId);*/
+                .HasForeignKey(o => o.UserId);
             });
 
             //builder for order detail entity
@@ -194,16 +194,16 @@ namespace crombie_ecommerce.Contexts
                 orderD.Property(od => od.Price).IsRequired();
                 orderD.Property(od => od.Subtotal).IsRequired();
 
-                //relations with order 
+                //relation order - orderDetails (one to many)
                 orderD.HasOne(od=>od.Order)
                 .WithMany(o=>o.OrderDetails)
                 .HasForeignKey(od => od.OrderId);
 
 
-                //Ask how should be the relations with product 
-                /*orderD.HasOne(od=>od.Product)
+                //relation orderDetails -  product (many to one)
+                orderD.HasOne(od=>od.Product)
                 .WithMany(p=>p.OrderDetails)
-                .HasForeignKey(od => od.ProductId);*/
+                .HasForeignKey(od => od.ProductId);
             });
 
             base.OnModelCreating(modelBuilder);

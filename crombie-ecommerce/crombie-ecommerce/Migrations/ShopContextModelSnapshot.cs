@@ -39,7 +39,7 @@ namespace crombie_ecommerce.Migrations
 
                     b.HasIndex("CategoryId");
 
-                    b.ToTable("ProductCategory");
+                    b.ToTable("ProductCategory", (string)null);
                 });
 
             modelBuilder.Entity("crombie_ecommerce.Models.Brand", b =>

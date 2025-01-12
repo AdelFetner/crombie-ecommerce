@@ -34,6 +34,8 @@ namespace crombie_ecommerce.Models
         public Guid? WishlistId { get; set; }
         
         public  Wishlist? Wishlist { get; set; }
-       
+
+        public ICollection<Order> Orders { get; set; }
+
     }
 }
