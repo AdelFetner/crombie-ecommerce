@@ -8,6 +8,7 @@ using Microsoft.EntityFrameworkCore;
 using crombie_ecommerce.Contexts;
 using crombie_ecommerce.Models;
 using crombie_ecommerce.Services;
+using crombie_ecommerce.Models.Dto;
 
 namespace crombie_ecommerce.Controllers
 {
@@ -44,11 +45,11 @@ namespace crombie_ecommerce.Controllers
 
         // POST: api/Products
         [HttpPost]
-        public async Task<ActionResult<Product>> PostProduct(Product product)
+        public async Task<ActionResult<Product>> PostProduct(ProductDto productDto)
         {
             try
             {
-                var createdProduct = await _productService.CreateProduct(product);
+                var createdProduct = await _productService.CreateProduct(productDto);
                 return CreatedAtAction(nameof(GetProduct), new { id = createdProduct.ProductId }, createdProduct);
             }
             catch (Exception ex)
@@ -85,6 +86,13 @@ namespace crombie_ecommerce.Controllers
             {
                 return BadRequest(ex.Message);
             }
+        }
+
+        [HttpGet("pages")]
+        public async Task<ActionResult<IEnumerable<Product>>> GetPage([FromQuery] int page, [FromQuery] int pageSize)
+        {
+            var products = await _productService.GetPage(page, pageSize);
+            return Ok(products);
         }
     }
 }
