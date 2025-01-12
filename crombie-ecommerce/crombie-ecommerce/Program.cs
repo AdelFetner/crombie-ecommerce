@@ -23,7 +23,7 @@ builder.Services.AddScoped<WishlistService>()
     .AddScoped<TagsService>()
     .AddScoped<UserService>()
     .AddScoped<CategoryService>();
-builder.Services.AddSqlServer<ShopContext>(builder.Configuration.GetConnectionString("DefaultConnection"));
+builder.Services.AddSqlServer<ShopContext>(builder.Configuration["ConnectionString"]);
 
 var app = builder.Build();
 
