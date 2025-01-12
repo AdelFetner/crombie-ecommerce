@@ -90,7 +90,11 @@ namespace crombie_ecommerce.Services
         //pagination logic
         public async Task<List<Product>> GetPage(int page, int quantity)
         {
-            return await _context.Products.Skip((page - 1) * quantity).Take(quantity).ToListAsync();
+            return await _context.Products
+                .Skip((page - 1) * quantity)
+                .Take(quantity)
+                .Include(p => p.Categories)
+                .ToListAsync();
         }
     }
 }
