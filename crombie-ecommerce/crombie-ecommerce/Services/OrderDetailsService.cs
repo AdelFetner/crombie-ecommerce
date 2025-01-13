@@ -38,18 +38,19 @@ namespace crombie_ecommerce.Services
         }
 
         //update order detail
-        public async Task<bool> UpdateDetails(Guid id, OrderDetail orderd)
+        public async Task<OrderDetail> UpdateDetails(Guid id, OrderDetail orderd)
         {
             var details = await _context.OrderDetails.FindAsync(id);
-            if (details == null) return false;
+            
 
             details.Quantity = orderd.Quantity;
             details.Price = orderd.Price;
             details.Subtotal = orderd.Subtotal;
             
-            await _context.SaveChangesAsync();
+            _context.OrderDetails.Update(details);
+            await _context.SaveChangesAsync().ConfigureAwait(false);
 
-            return true;
+            return details;
 
 
         }

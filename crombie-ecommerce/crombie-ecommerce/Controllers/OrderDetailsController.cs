@@ -51,7 +51,7 @@ namespace crombie_ecommerce.Controllers
         {
             try
             {
-                var updatedOrderDetail = _orderDetailsService.UpdateDetails(id, orderDetail);
+                var updatedOrderDetail = await _orderDetailsService.UpdateDetails(id, orderDetail);
                 return Ok(updatedOrderDetail);
             }
             catch (Exception ex)
@@ -66,8 +66,8 @@ namespace crombie_ecommerce.Controllers
         [HttpPost]
         public async Task<ActionResult<OrderDetail>> PostOrderDetail(OrderDetail orderDetail)
         {
-            var createdDetail = _orderDetailsService.CreateDetails(orderDetail);
-            return CreatedAtAction(nameof(GetOrderDetailById), new {id = createdDetail.Id}, createdDetail);
+            var createdDetail = await _orderDetailsService.CreateDetails(orderDetail);
+            return CreatedAtAction(nameof(GetOrderDetailById), new {id = createdDetail.DetailsId}, createdDetail);
             
         }
 
@@ -75,14 +75,8 @@ namespace crombie_ecommerce.Controllers
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteOrderDetail(Guid id)
         {
-            var orderDetail =  _orderDetailsService.DeleteDetails(id);
-            if (orderDetail == null)
-            {
-                return NotFound();
-            }
-
-
-            return NoContent();
+            await _orderDetailsService.DeleteDetails(id);
+            return Ok(new { message = "The ORDER DETAILS was successfully deleted" });
         }
 
     }
