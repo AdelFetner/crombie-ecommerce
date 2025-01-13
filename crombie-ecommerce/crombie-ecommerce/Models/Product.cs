@@ -25,9 +25,9 @@ namespace crombie_ecommerce.Models
         public Guid BrandId { get; set; }
 
         [JsonIgnore]
-        public virtual Brand Brand { get; set; }
+        public virtual Brand? Brand { get; set; }
 
-        public ICollection<Category> Categories { get; set; } = new List<Category>();
+        public virtual List<Category> Categories { get; set; } = new List<Category>();
 
         [JsonIgnore]
         public Guid? UserId { get; set; }
