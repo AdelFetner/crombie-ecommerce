@@ -15,8 +15,21 @@ namespace crombie_ecommerce.Services
             _context = context;
         }
 
+        //get User by email (for the auth)
+        public async Task<User> GetUserByEmail(string email)
+        {
+            var user = await _context.Users
+                .FirstOrDefaultAsync(u => u.Email == email);
 
-         //Create a new user:
+            if (user == null)
+            {
+                throw new Exception("User not found");
+            }
+
+            return user;
+        }
+
+        //Create a new user:
         public async Task<User> PostUser(User user) { 
            
             _context.Users.Add(user);

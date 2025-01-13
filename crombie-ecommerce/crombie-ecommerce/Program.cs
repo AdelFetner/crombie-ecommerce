@@ -30,7 +30,7 @@ builder.Services.AddSqlServer<ShopContext>(builder.Configuration.GetConnectionSt
 
 
 
-builder.Services.AddAuthentication();
+
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme).AddJwtBearer(o =>
 {
     o.RequireHttpsMetadata = false;
@@ -45,6 +45,8 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme).AddJw
     };
 
 });
+
+builder.Services.AddAuthorization();
 
 
 var app = builder.Build();
@@ -66,8 +68,9 @@ else
 
 app.UseHttpsRedirection();
 
-app.UseAuthorization();
 app.UseAuthentication();
+app.UseAuthorization();
+
 
 app.MapControllers();
 

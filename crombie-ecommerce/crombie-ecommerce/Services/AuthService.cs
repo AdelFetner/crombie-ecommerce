@@ -13,37 +13,57 @@ namespace crombie_ecommerce.Services
         private readonly PasswordHasher<User> _passwordHasher;
         private readonly UserService _userService;
         private readonly IConfiguration _configuration;
+
         public AuthService(UserService userService, IConfiguration configuration)
         {
-            this._userService = userService;
-            this._configuration = configuration;
-            this._passwordHasher = new PasswordHasher<User>();  
+            _userService = userService;
+            _configuration = configuration;
+            _passwordHasher = new PasswordHasher<User>();
+        }
 
-            //Por que da error?
-            User NewUser = new User();
-            NewUser.UserId = Guid.NewGuid();
-            NewUser.Password = this._passwordHasher.HashPassword(NewUser, user.Password);
-            NewUser.Name = user.Name;
-            NewUser.Email = user.Email;
-            NewUser.CreatedDate = DateTime.Now;
-            NewUser.Role = user.Role?.ToLower();
-            await this._userService.CreateUser(NewUser);
-            return NewUser;
-
-
-            //Donde va esta parte?
-            PasswordVerificationResult IsCorrectPassword = this._passwordHasher.VerifyHashedPassword(logginUser, logginUser.Password, credentials.Password);
-
-            if (IsCorrectPassword == PasswordVerificationResult.Success) 
+        //  user registration
+        public async Task<User> Register(User user)
+        {
+            var newUser = new User
             {
-                return this.CreateJWTAuthToken(logginUser);
-            } else 
+                UserId = Guid.NewGuid(),
+                Name = user.Name,
+                Email = user.Email,
+                CreatedDate = DateTime.Now,
+                Role = user.Role?.ToLower()
+            };
+
+            // Hash password
+            newUser.Password = _passwordHasher.HashPassword(newUser, user.Password);
+
+            // Save user 
+            await _userService.PostUser(newUser);
+            return newUser;
+        }
+
+        // Add this method for login
+        public async Task<string> Login(LoginCredentials credentials)
+        {
+            // Assume you have a method to get user by email
+            var user = await _userService.GetUserByEmail(credentials.Email);
+
+            if (user == null)
             {
-                throw new Exception("Unable to authenticate");
+                throw new Exception("User not found");
             }
 
+            var passwordVerificationResult = _passwordHasher.VerifyHashedPassword(
+                user,
+                user.Password,
+                credentials.Password
+            );
 
+            if (passwordVerificationResult == PasswordVerificationResult.Success)
+            {
+                return CreateJWTAuthToken(user);
+            }
 
+            throw new Exception("Invalid credentials");
         }
 
         public string CreateJWTAuthToken(User user)
@@ -77,14 +97,10 @@ namespace crombie_ecommerce.Services
 
             string token = handler.CreateToken(tokenDescriptor);
 
-            return token;   
+            return token;
         }
-        
-
-      
-
-       
-        
-
     }
 }
+
+
+

@@ -19,6 +19,8 @@ namespace crombie_ecommerce.Models
         [Required]
         public string Email { get; set; }
 
+        public DateTime CreatedDate { get; set; }
+
         [Required]
         [MinLength(8)]
         public string Password { get; set; }
