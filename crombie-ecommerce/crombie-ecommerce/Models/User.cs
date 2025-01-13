@@ -30,8 +30,8 @@ namespace crombie_ecommerce.Models
         public  Product? Product { get; set; }
         
         public Guid? WishlistId { get; set; }
-        
-        public  Wishlist? Wishlist { get; set; }
-       
+
+        public ICollection<Wishlist> Wishlist { get; set; } = new List<Wishlist>();
+
     }
 }

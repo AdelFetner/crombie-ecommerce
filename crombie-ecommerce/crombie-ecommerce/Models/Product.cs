@@ -37,6 +37,6 @@ namespace crombie_ecommerce.Models
         [JsonIgnore]
         public Guid? WishlistId { get; set; }
         [JsonIgnore]
-        public virtual Wishlist? Wishlist { get; set; }
+        public ICollection<Wishlist> Wishlist { get; set; } = new List<Wishlist>();
     }
 }

@@ -27,13 +27,6 @@ namespace crombie_ecommerce.Contexts
                 user.Property(u => u.Password).IsRequired().HasMaxLength(100);
                 user.Property(u => u.IsVerified).HasDefaultValue(false);
 
-                // user to wl has a one to one relationship
-                user.HasOne(u => u.Wishlist)
-                    .WithOne(w => w.User)
-                    .HasForeignKey<Wishlist>(w => w.UserId)
-                    .OnDelete(DeleteBehavior.Cascade)
-                    .IsRequired(false);
-
                 user.HasOne(u => u.Product)
                     .WithOne(p => p.User)
                     .HasForeignKey<Product>(u => u.UserId)
@@ -60,12 +53,6 @@ namespace crombie_ecommerce.Contexts
 
                     .HasForeignKey<User>(u => u.ProductId)
 
-                    .IsRequired(false);
-
-                // product to wl
-                product.HasOne(p => p.Wishlist)
-                    .WithOne(w => w.Product)
-                    .HasForeignKey<Wishlist>(w => w.ProductId)
                     .IsRequired(false);
 
                 // product to brand
@@ -101,21 +88,28 @@ namespace crombie_ecommerce.Contexts
                 wishlist.HasKey(w => w.WishlistId);
                 wishlist.Property(w => w.Name).IsRequired().HasMaxLength(50);
 
-                // wl to user has a one to one relationship
-                wishlist.HasOne(w => w.User)
-                    .WithOne(u => u.Wishlist)
-                    .HasForeignKey<Wishlist>(w => w.UserId)
-                    .OnDelete(DeleteBehavior.NoAction)
-                    .IsRequired(false);
+                // user to wishlist has a many to many relationship
+                wishlist.HasMany(w => w.User)
+                    .WithMany(u => u.Wishlist)
+                    // join table for user and wishlist
+                    .UsingEntity<Dictionary<string, object>>(
+                        "WishlistUser",
+                        w => w.HasOne<User>().WithMany().HasForeignKey("UserId"),
+                        u => u.HasOne<Wishlist>().WithMany().HasForeignKey("WishlistId")
+                    );
 
-                // wl to product has a  one to one relationship
-                wishlist.HasOne(w => w.Product)
-                        .WithOne(p => p.Wishlist)
-                        .HasForeignKey<Wishlist>(w => w.ProductId)
-                        .IsRequired(false);
+                // product to wishlist has a many to many relationship
+                wishlist.HasMany(w => w.Product)
+                    .WithMany(p => p.Wishlist)
+                    // join table for product and wishlist
+                    .UsingEntity<Dictionary<string, object>>(
+                        "WishlistProduct",
+                        w => w.HasOne<Product>().WithMany().HasForeignKey("ProductId"),
+                        p => p.HasOne<Wishlist>().WithMany().HasForeignKey("WishlistId")
+                    );
 
-                // wl to tags has a many to many relationship
-                wishlist.HasMany(w => w.Tags)
+            // wl to tags has a one to many relationship
+            wishlist.HasMany(w => w.Tags)
                      .WithOne(t => t.Wishlist)
                      .HasForeignKey(t => t.WishlistId)
                      .OnDelete(DeleteBehavior.Cascade)

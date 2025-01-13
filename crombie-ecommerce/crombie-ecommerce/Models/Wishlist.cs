@@ -20,12 +20,12 @@ namespace crombie_ecommerce.Models
         [JsonIgnore]
         public Guid? UserId { get; set; }
         [JsonIgnore]
-        public virtual User? User { get; set; }
+        public ICollection<User> User { get; set; } = new List<User>();
 
         [JsonIgnore]
         public Guid? ProductId { get; set; }
         [JsonIgnore]
-        public virtual Product? Product { get; set; }
+        public ICollection<Product> Product { get; set; } = new List<Product>();
 
         [JsonIgnore]
         public Guid? TagsId { get; set; }
