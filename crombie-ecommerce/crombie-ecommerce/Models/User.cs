@@ -22,20 +22,17 @@ namespace crombie_ecommerce.Models
         [Required]
         [MinLength(8)]
         public string Password { get; set; }
-
-        //public string Adress {get; set;}??
+        public string Adress {get; set;}
         public bool IsVerified { get; set; }
 
-        
-        public Guid? ProductId { get; set; }
-        
-        public  Product? Product { get; set; }
-        
-        public Guid? WishlistId { get; set; }
-        
-        public  Wishlist? Wishlist { get; set; }
 
-        public ICollection<Order> Orders { get; set; }
+        /*public Guid? WishlistId { get; set; }
+        
+        public  Wishlist? Wishlist { get; set; }*/
+
+        public virtual ICollection<Order>? Orders { get; set; } = new List<Order>();
+
+        public virtual ICollection<Wishlist>? Wishlists { get; set; } = new List<Wishlist>();
 
     }
 }

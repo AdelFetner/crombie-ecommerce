@@ -1,4 +1,6 @@
-﻿namespace crombie_ecommerce.Models
+﻿using System.Text.Json.Serialization;
+
+namespace crombie_ecommerce.Models
 {
     public class Order
     {
@@ -11,8 +13,10 @@
         public string PaymentMethod { get; set; }
 
         public Guid? UserId { get; set; }
+        [JsonIgnore]
         public User? User { get; set; }
-        
-        public ICollection<OrderDetail> OrderDetails { get; set; }
+
+        [JsonIgnore]
+        public virtual ICollection<OrderDetail>? OrderDetails { get; set; } = new List<OrderDetail>();
     }
 }

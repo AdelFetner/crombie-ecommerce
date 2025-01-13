@@ -37,6 +37,7 @@ namespace crombie_ecommerce.Services
         //update order status
         public async Task<Order> UpdateOrder(Guid id, Order order) 
         {
+
             var createdOrder = await _context.Orders.FindAsync(id);
            
            
@@ -45,7 +46,8 @@ namespace crombie_ecommerce.Services
             createdOrder.ShippingAddress = order.ShippingAddress;
             createdOrder.PaymentMethod = order.PaymentMethod;
 
-            await _context.SaveChangesAsync();
+            _context.Orders.Update(createdOrder);
+            await _context.SaveChangesAsync().ConfigureAwait(false);
 
             return createdOrder;
         

@@ -41,7 +41,7 @@ namespace crombie_ecommerce.Controllers
         [HttpGet("user/{userId}")]
         public async Task<ActionResult<Order>> GetOrdersByUserId(Guid userId)
         {
-            var orders = _orderService.GetOrdersByUserId(userId);
+            var orders = await _orderService.GetOrdersByUserId(userId);
             return Ok(orders);
         }
 
@@ -52,8 +52,8 @@ namespace crombie_ecommerce.Controllers
         {
             try
             {
-                var updatedUser = _orderService.UpdateOrder(id, order);
-                return Ok(updatedUser);
+                var updatedOrder = await _orderService.UpdateOrder(id, order);
+                return Ok(updatedOrder);
             }
             catch (Exception ex)
             {
@@ -77,13 +77,8 @@ namespace crombie_ecommerce.Controllers
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteOrder(Guid id)
         {
-            var order =  _orderService.DeleteOrder(id);
-            if (order == null)
-            {
-                return NotFound();
-            }
-
-            return NoContent();
+            await _orderService.DeleteOrder(id);
+            return Ok(new { message = "The order was successfully deleted" });
         }
 
        
