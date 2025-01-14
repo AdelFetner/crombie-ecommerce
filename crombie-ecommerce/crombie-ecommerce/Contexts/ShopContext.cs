@@ -12,6 +12,11 @@ namespace crombie_ecommerce.Contexts
         public DbSet<Brand> Brands { get; set; }
         public DbSet<Category> Categories { get; set; }
 
+        public DbSet<Order> Orders { get; set; }
+
+        public DbSet<OrderDetail> OrderDetails { get; set; }
+
+
         public ShopContext(DbContextOptions<ShopContext> options) : base(options)
         { }
 
@@ -27,19 +32,18 @@ namespace crombie_ecommerce.Contexts
                 user.Property(u => u.Password).IsRequired().HasMaxLength(100);
                 user.Property(u => u.IsVerified).HasDefaultValue(false);
 
-                // user to wl has a one to one relationship
-                user.HasOne(u => u.Wishlist)
+                // user to wl has a one to many relationship
+                user.HasMany(u => u.Wishlists)
                     .WithOne(w => w.User)
-                    .HasForeignKey<Wishlist>(w => w.UserId)
-                    .OnDelete(DeleteBehavior.Cascade)
-                    .IsRequired(false);
+                    .HasForeignKey(w => w.UserId)
+                    .OnDelete(DeleteBehavior.Cascade);
 
-                user.HasOne(u => u.Product)
-                    .WithOne(p => p.User)
-                    .HasForeignKey<Product>(u => u.UserId)
-                    .IsRequired(false);
 
-               
+                // user to orders has a one to many raltionship
+                user.HasMany(u => u.Orders)
+                    .WithOne(o => o.User)
+                    .HasForeignKey(o => o.UserId)
+                    .OnDelete(DeleteBehavior.Cascade);
 
             });
 
@@ -54,13 +58,13 @@ namespace crombie_ecommerce.Contexts
                 product.Property(p => p.Description).HasMaxLength(100);
                 product.Property(p => p.Price).HasColumnType("decimal(18,2)");
 
-                // product to user
-                product.HasOne(p => p.User)
+                // product to user (doesn't exist anymore)
+                /*product.HasOne(p => p.User)
                     .WithOne(u => u.Product)
 
                     .HasForeignKey<User>(u => u.ProductId)
 
-                    .IsRequired(false);
+                    .IsRequired(false);*/
 
                 // product to wl
                 product.HasOne(p => p.Wishlist)
@@ -102,11 +106,11 @@ namespace crombie_ecommerce.Contexts
                 wishlist.Property(w => w.Name).IsRequired().HasMaxLength(50);
 
                 // wl to user has a one to one relationship
-                wishlist.HasOne(w => w.User)
+                /*wishlist.HasOne(w => w.User)
                     .WithOne(u => u.Wishlist)
                     .HasForeignKey<Wishlist>(w => w.UserId)
                     .OnDelete(DeleteBehavior.NoAction)
-                    .IsRequired(false);
+                    .IsRequired(false);*/
 
                 // wl to product has a  one to one relationship
                 wishlist.HasOne(w => w.Product)
@@ -161,6 +165,45 @@ namespace crombie_ecommerce.Contexts
                     .HasMaxLength(1000);
             });
 
+            //builder for order entity
+            modelBuilder.Entity<Order>(order =>
+            {   
+                order.ToTable("Order");
+                order.HasKey(o=>o.OrderId);
+                order.Property(o => o.OrderId).HasDefaultValueSql("NEWID()");
+                order.Property(o => o.OrderDate).IsRequired();
+                order.Property(o=>o.Status).IsRequired();
+                order.Property(o => o.TotalAmount).IsRequired();
+                order.Property(o => o.ShippingAddress).HasMaxLength(100);
+                order.Property(o => o.PaymentMethod).IsRequired();
+
+                //relation user - order (one to many)
+                order.HasOne(o => o.User)
+                .WithMany(u => u.Orders)
+                .HasForeignKey(o => o.UserId);
+            });
+
+            //builder for order detail entity
+            modelBuilder.Entity<OrderDetail>(orderD => 
+            {
+                orderD.ToTable("OrderDetails");
+                orderD.HasKey(od => od.DetailsId);
+                orderD.Property(od => od.OrderId).HasDefaultValueSql("NEWID()");
+                orderD.Property(od=>od.Quantity).IsRequired();
+                orderD.Property(od => od.Price).IsRequired();
+                orderD.Property(od => od.Subtotal).IsRequired();
+
+                //relation order - orderDetails (one to many)
+                orderD.HasOne(od=>od.Order)
+                .WithMany(o=>o.OrderDetails)
+                .HasForeignKey(od => od.OrderId);
+
+
+                //relation orderDetails -  product (many to one)
+                orderD.HasOne(od=>od.Product)
+                .WithMany(p=>p.OrderDetails)
+                .HasForeignKey(od => od.ProductId);
+            });
 
             base.OnModelCreating(modelBuilder);
         }
