@@ -26,7 +26,8 @@ builder.Services.AddScoped<WishlistService>()
     .AddScoped<OrderDetailsService>()
     .AddScoped<OrderService>();
 
-builder.Services.AddSqlServer<ShopContext>(builder.Configuration.GetConnectionString("DefaultConnection"));
+builder.Services.AddSqlServer<ShopContext>(builder.Configuration["ConnectionString"]);
+
 
 var app = builder.Build();
 
