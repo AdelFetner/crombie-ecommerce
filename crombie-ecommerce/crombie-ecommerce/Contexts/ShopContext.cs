@@ -1,5 +1,6 @@
 ﻿using crombie_ecommerce.Models;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.VisualStudio.Web.CodeGeneration.EntityFrameworkCore;
 
 namespace crombie_ecommerce.Contexts
 {
@@ -12,11 +13,21 @@ namespace crombie_ecommerce.Contexts
         public DbSet<Brand> Brands { get; set; }
         public DbSet<Category> Categories { get; set; }
 
+        public DbSet<LoginCredentials> LoginCredentials { get; set; }
+
         public ShopContext(DbContextOptions<ShopContext> options) : base(options)
         { }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
+
+            modelBuilder.Entity<LoginCredentials>(credentials =>
+            {
+                credentials.ToTable("LoginCredentials");
+                credentials.HasNoKey();
+                credentials.Property(c=>c.Email).IsRequired();
+                credentials.Property(c=> c.Password).IsRequired();
+            });
             // builder for user entity
             modelBuilder.Entity<User>(user =>
             {

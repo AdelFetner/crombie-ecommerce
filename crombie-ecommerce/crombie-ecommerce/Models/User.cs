@@ -30,11 +30,13 @@ namespace crombie_ecommerce.Models
 
         
         public Guid? ProductId { get; set; }
-        
+
+        [JsonIgnore]
         public  Product? Product { get; set; }
         
         public Guid? WishlistId { get; set; }
-        
+
+        [JsonIgnore]
         public  Wishlist? Wishlist { get; set; }
        
     }

@@ -1,4 +1,5 @@
 ﻿using crombie_ecommerce.Models;
+using crombie_ecommerce.Contexts;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.IdentityModel.Tokens;
 using System.IdentityModel.Tokens.Jwt;
@@ -14,6 +15,7 @@ namespace crombie_ecommerce.Services
         private readonly UserService _userService;
         private readonly IConfiguration _configuration;
 
+        public AuthService() { }
         public AuthService(UserService userService, IConfiguration configuration)
         {
             _userService = userService;
@@ -44,13 +46,8 @@ namespace crombie_ecommerce.Services
         // Add this method for login
         public async Task<string> Login(LoginCredentials credentials)
         {
-            // Assume you have a method to get user by email
+            
             var user = await _userService.GetUserByEmail(credentials.Email);
-
-            if (user == null)
-            {
-                throw new Exception("User not found");
-            }
 
             var passwordVerificationResult = _passwordHasher.VerifyHashedPassword(
                 user,
