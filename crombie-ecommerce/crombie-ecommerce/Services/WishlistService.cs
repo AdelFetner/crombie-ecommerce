@@ -30,11 +30,11 @@ namespace crombie_ecommerce.Services
         }
 
         //Method to create a new wishlist
-        public async Task<List<Wishlist>> CreateWishlist(Wishlist wishlist)
+        public async Task<Wishlist> CreateWishlist(Wishlist wishlist)
         {
             _context.Wishlists.Add(wishlist);
             await _context.SaveChangesAsync();
-            return await _context.Wishlists.ToListAsync();
+            return wishlist;
         }
 
         //Method to delete a wishlist

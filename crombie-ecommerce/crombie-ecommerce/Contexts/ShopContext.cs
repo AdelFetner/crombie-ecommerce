@@ -27,6 +27,13 @@ namespace crombie_ecommerce.Contexts
                 user.Property(u => u.Password).IsRequired().HasMaxLength(100);
                 user.Property(u => u.IsVerified).HasDefaultValue(false);
 
+                // user to wishlist
+                user.HasMany(u => u.Wishlist)
+                    .WithOne(w => w.User)
+                    .HasForeignKey(w => w.UserId)
+                    .OnDelete(DeleteBehavior.Cascade);
+
+                // user to product
                 user.HasOne(u => u.Product)
                     .WithOne(p => p.User)
                     .HasForeignKey<Product>(u => u.UserId)
@@ -88,32 +95,33 @@ namespace crombie_ecommerce.Contexts
                 wishlist.HasKey(w => w.WishlistId);
                 wishlist.Property(w => w.Name).IsRequired().HasMaxLength(50);
 
-                // user to wishlist has a many to many relationship
-                wishlist.HasMany(w => w.User)
+                // user to wishlist has a one to many relationship
+                wishlist.HasOne(w => w.User)
                     .WithMany(u => u.Wishlist)
-                    // join table for user and wishlist
-                    .UsingEntity<Dictionary<string, object>>(
-                        "WishlistUser",
-                        w => w.HasOne<User>().WithMany().HasForeignKey("UserId"),
-                        u => u.HasOne<Wishlist>().WithMany().HasForeignKey("WishlistId")
-                    );
+                    .HasForeignKey(w => w.UserId)
+                    .OnDelete(DeleteBehavior.Cascade);
 
                 // product to wishlist has a many to many relationship
                 wishlist.HasMany(w => w.Product)
                     .WithMany(p => p.Wishlist)
-                    // join table for product and wishlist
+                    // join table for product and wishlist 
                     .UsingEntity<Dictionary<string, object>>(
                         "WishlistProduct",
                         w => w.HasOne<Product>().WithMany().HasForeignKey("ProductId"),
-                        p => p.HasOne<Wishlist>().WithMany().HasForeignKey("WishlistId")
+                        p => p.HasOne<Wishlist>().WithMany().HasForeignKey("WishlistId"),
+                        t =>
+                        {
+                            t.Property<DateTime>("CreatedAt").HasDefaultValueSql("CURRENT_TIMESTAMP");
+                            t.HasKey("ProductId", "WishlistId");
+                        }
                     );
 
-            // wl to tags has a one to many relationship
-            wishlist.HasMany(w => w.Tags)
-                     .WithOne(t => t.Wishlist)
-                     .HasForeignKey(t => t.WishlistId)
-                     .OnDelete(DeleteBehavior.Cascade)
-                     .IsRequired(false);
+                // wl to tags has a one to many relationship
+                wishlist.HasMany(w => w.Tags)
+                         .WithOne(t => t.Wishlist)
+                         .HasForeignKey(t => t.WishlistId)
+                         .OnDelete(DeleteBehavior.Cascade)
+                         .IsRequired(false);
             });
 
             // builder for tags entity 

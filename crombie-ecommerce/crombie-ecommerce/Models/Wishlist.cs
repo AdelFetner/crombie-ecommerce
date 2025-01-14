@@ -17,19 +17,18 @@ namespace crombie_ecommerce.Models
 
         [MaxLength(100)]
         public string Description { get; set; }
-        [JsonIgnore]
         public Guid? UserId { get; set; }
         [JsonIgnore]
-        public ICollection<User> User { get; set; } = new List<User>();
+        public virtual User User { get; set; }
 
         [JsonIgnore]
         public Guid? ProductId { get; set; }
         [JsonIgnore]
-        public ICollection<Product> Product { get; set; } = new List<Product>();
+        public virtual ICollection<Product>? Product { get; set; } = new List<Product>();
 
         [JsonIgnore]
         public Guid? TagsId { get; set; }
         [JsonIgnore]
-        public virtual ICollection<Tags>? Tags { get; set; }
+        public virtual ICollection<Tags>? Tags { get; set; } = new List<Tags>();
     }
 }
