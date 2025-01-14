@@ -28,10 +28,10 @@ namespace crombie_ecommerce.Contexts
                 user.Property(u => u.IsVerified).HasDefaultValue(false);
 
                 // user to wishlist
-                user.HasMany(u => u.Wishlist)
-                    .WithOne(w => w.User)
-                    .HasForeignKey(w => w.UserId)
-                    .OnDelete(DeleteBehavior.Cascade);
+                 user.HasOne(u => u.Wishlist)
+                     .WithOne(w => w.User)
+                     .HasForeignKey<Wishlist>(w => w.UserId)
+                     .OnDelete(DeleteBehavior.Cascade);
 
                 // user to product
                 user.HasOne(u => u.Product)
@@ -95,10 +95,10 @@ namespace crombie_ecommerce.Contexts
                 wishlist.HasKey(w => w.WishlistId);
                 wishlist.Property(w => w.Name).IsRequired().HasMaxLength(50);
 
-                // user to wishlist has a one to many relationship
+                // user to wishlist has a one-to-one relationship
                 wishlist.HasOne(w => w.User)
-                    .WithMany(u => u.Wishlist)
-                    .HasForeignKey(w => w.UserId)
+                    .WithOne(u => u.Wishlist)
+                    .HasForeignKey<Wishlist>(w => w.UserId)
                     .OnDelete(DeleteBehavior.Cascade);
 
                 // product to wishlist has a many to many relationship

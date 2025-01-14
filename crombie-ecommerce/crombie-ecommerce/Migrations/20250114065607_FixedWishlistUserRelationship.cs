@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace crombie_ecommerce.Migrations
 {
     /// <inheritdoc />
-    public partial class FixWishlistMigrations : Migration
+    public partial class FixedWishlistUserRelationship : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -18,6 +18,28 @@ namespace crombie_ecommerce.Migrations
             migrationBuilder.DropForeignKey(
                 name: "FK_Wishlist_User_UserId",
                 table: "Wishlist");
+
+            migrationBuilder.DropIndex(
+                name: "IX_Wishlist_ProductId",
+                table: "Wishlist");
+
+            migrationBuilder.DropIndex(
+                name: "IX_Wishlist_UserId",
+                table: "Wishlist");
+
+            migrationBuilder.DropColumn(
+                name: "WishlistId",
+                table: "User");
+
+            migrationBuilder.AlterColumn<Guid>(
+                name: "UserId",
+                table: "Wishlist",
+                type: "uniqueidentifier",
+                nullable: false,
+                defaultValue: new Guid("00000000-0000-0000-0000-000000000000"),
+                oldClrType: typeof(Guid),
+                oldType: "uniqueidentifier",
+                oldNullable: true);
 
             migrationBuilder.CreateTable(
                 name: "WishlistProduct",
@@ -47,7 +69,8 @@ namespace crombie_ecommerce.Migrations
             migrationBuilder.CreateIndex(
                 name: "IX_Wishlist_UserId",
                 table: "Wishlist",
-                column: "UserId");
+                column: "UserId",
+                unique: true);
 
             migrationBuilder.CreateIndex(
                 name: "IX_WishlistProduct_WishlistId",
@@ -72,6 +95,38 @@ namespace crombie_ecommerce.Migrations
 
             migrationBuilder.DropTable(
                 name: "WishlistProduct");
+
+            migrationBuilder.DropIndex(
+                name: "IX_Wishlist_UserId",
+                table: "Wishlist");
+
+            migrationBuilder.AlterColumn<Guid>(
+                name: "UserId",
+                table: "Wishlist",
+                type: "uniqueidentifier",
+                nullable: true,
+                oldClrType: typeof(Guid),
+                oldType: "uniqueidentifier");
+
+            migrationBuilder.AddColumn<Guid>(
+                name: "WishlistId",
+                table: "User",
+                type: "uniqueidentifier",
+                nullable: true);
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Wishlist_ProductId",
+                table: "Wishlist",
+                column: "ProductId",
+                unique: true,
+                filter: "[ProductId] IS NOT NULL");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Wishlist_UserId",
+                table: "Wishlist",
+                column: "UserId",
+                unique: true,
+                filter: "[UserId] IS NOT NULL");
 
             migrationBuilder.AddForeignKey(
                 name: "FK_Wishlist_Product_ProductId",

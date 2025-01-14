@@ -12,8 +12,8 @@ using crombie_ecommerce.Contexts;
 namespace crombie_ecommerce.Migrations
 {
     [DbContext(typeof(ShopContext))]
-    [Migration("20250113204902_FixWishlistMigrations")]
-    partial class FixWishlistMigrations
+    [Migration("20250114065607_FixedWishlistUserRelationship")]
+    partial class FixedWishlistUserRelationship
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -201,9 +201,6 @@ namespace crombie_ecommerce.Migrations
                     b.Property<Guid?>("ProductId")
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<Guid?>("WishlistId")
-                        .HasColumnType("uniqueidentifier");
-
                     b.HasKey("UserId");
 
                     b.HasIndex("ProductId")
@@ -235,12 +232,13 @@ namespace crombie_ecommerce.Migrations
                     b.Property<Guid?>("TagsId")
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<Guid?>("UserId")
+                    b.Property<Guid>("UserId")
                         .HasColumnType("uniqueidentifier");
 
                     b.HasKey("WishlistId");
 
-                    b.HasIndex("UserId");
+                    b.HasIndex("UserId")
+                        .IsUnique();
 
                     b.ToTable("Wishlist", (string)null);
                 });
@@ -308,9 +306,10 @@ namespace crombie_ecommerce.Migrations
             modelBuilder.Entity("crombie_ecommerce.Models.Wishlist", b =>
                 {
                     b.HasOne("crombie_ecommerce.Models.User", "User")
-                        .WithMany("Wishlist")
-                        .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Cascade);
+                        .WithOne("Wishlist")
+                        .HasForeignKey("crombie_ecommerce.Models.Wishlist", "UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.Navigation("User");
                 });

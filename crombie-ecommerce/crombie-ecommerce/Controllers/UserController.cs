@@ -81,8 +81,7 @@ namespace crombie_ecommerce.Controller
                 Email = userDto.Email,
                 Password = userDto.Password,
                 IsVerified = userDto.IsVerified,
-                ProductId = userDto.ProductId,
-                WishlistId = userDto.WishlistId
+                ProductId = userDto.ProductId
             };
 
             _userService.PostUser(user);

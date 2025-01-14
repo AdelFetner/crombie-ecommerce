@@ -44,32 +44,23 @@ namespace crombie_ecommerce.Controllers
         [HttpPost]
         public async Task<IActionResult> CreateWishlist([FromBody] WishlistDto wishlistDto)
         {
-            try
+            if (!ModelState.IsValid)
             {
-                if (!ModelState.IsValid)
-                {
-                    return BadRequest(ModelState);
-                }
+                return BadRequest(new { errors = ModelState });
+            }
+            var wishlist = new Wishlist
+            {
+                Name = wishlistDto.Name,
+                Description = wishlistDto.Description,
+                UserId = wishlistDto.UserId
+            };
+            var createdWishlists = await _wishlistService.CreateWishlist(wishlist);
 
-                var wishlist = new Wishlist
-                {
-                    WishlistId = Guid.NewGuid(),
-                    Name = wishlistDto.Name,
-                    Description = wishlistDto.Description,
-                    UserId = wishlistDto.UserId
-                };
-                var createdWishlist = await _wishlistService.CreateWishlist(wishlist);
-                return CreatedAtAction(nameof(GetWishlistById), new { id = createdWishlist.WishlistId }, createdWishlist);
-            }
-            catch (DbUpdateException dbEx)
+            return Ok(new
             {
-                var innerException = dbEx.InnerException?.Message ?? dbEx.Message;
-                return StatusCode(500);
-            }
-            catch (Exception ex)
-            {
-                return StatusCode(500, ex.Message);
-            }
+                message = "Wishlist created successfully.",
+                wishlists = createdWishlists
+            });
         }
 
         // Delete a wishlist

@@ -17,7 +17,7 @@ namespace crombie_ecommerce.Models
 
         [MaxLength(100)]
         public string Description { get; set; }
-        public Guid? UserId { get; set; }
+        public Guid UserId { get; set; }
         [JsonIgnore]
         public virtual User User { get; set; }
 
