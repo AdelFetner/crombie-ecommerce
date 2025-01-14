@@ -1,12 +1,13 @@
 ﻿using crombie_ecommerce.Contexts;
 using crombie_ecommerce.Models;
 using crombie_ecommerce.Models.Dto;
+using crombie_ecommerce.Services.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
 namespace crombie_ecommerce.Services
 {
-    public class ProductService
+    public class ProductService : IProductService
     {
         private readonly ShopContext _context;
 
