@@ -28,16 +28,6 @@ namespace crombie_ecommerce.Controllers
             return CreatedAtAction(nameof(Register), new { id = newUser.UserId }, newUser);
 
 
-
-            /* try
-             {
-                 var newUser = await _authService.Register(user);
-                 return Ok(newUser);
-
-             }
-             catch (Exception ex)
-             {
-                 return BadRequest(ex.Message);*/
         }
 
 
@@ -62,15 +52,7 @@ namespace crombie_ecommerce.Controllers
 
 
 
-            /*try
-            {
-                var token = await _authService.Login(credentials);
-                return Ok(new { token });
-
-            }
-            catch (Exception ex)
-            {
-                return Unauthorized(ex.Message);*/
+           
         }
 
     }

@@ -2,6 +2,7 @@ using crombie_ecommerce.Contexts;
 using crombie_ecommerce.Services;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
 using System.Text.Json.Serialization;
@@ -28,9 +29,11 @@ builder.Services.AddScoped<WishlistService>()
     .AddScoped<CategoryService>()
     .AddScoped<AuthService>();
 
-builder.Services.AddSqlServer<ShopContext>(builder.Configuration["ConnectionString"]);
+//.Services.AddSqlServer<ShopContext>(builder.Configuration["ConnectionString"]);
+builder.Services.AddDbContext<ShopContext>(options =>
+    options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
 
-
+builder.Configuration.AddUserSecrets<Program>(); 
 
 
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme).AddJwtBearer(o =>
