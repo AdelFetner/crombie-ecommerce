@@ -234,8 +234,11 @@ namespace crombie_ecommerce.Migrations
 
                     b.HasKey("WishlistId");
 
+                    b.HasIndex("ProductId")
+                        .HasDatabaseName("IX_Wishlist_ProductId");
+
                     b.HasIndex("UserId")
-                        .IsUnique();
+                        .HasDatabaseName("IX_Wishlist_UserId");
 
                     b.ToTable("Wishlist", (string)null);
                 });

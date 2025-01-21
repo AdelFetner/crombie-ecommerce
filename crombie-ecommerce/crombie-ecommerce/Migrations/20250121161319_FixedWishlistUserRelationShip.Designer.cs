@@ -12,8 +12,8 @@ using crombie_ecommerce.Contexts;
 namespace crombie_ecommerce.Migrations
 {
     [DbContext(typeof(ShopContext))]
-    [Migration("20250114065607_FixedWishlistUserRelationship")]
-    partial class FixedWishlistUserRelationship
+    [Migration("20250121161319_FixedWishlistUserRelationShip")]
+    partial class FixedWishlistUserRelationShip
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -237,8 +237,11 @@ namespace crombie_ecommerce.Migrations
 
                     b.HasKey("WishlistId");
 
+                    b.HasIndex("ProductId")
+                        .HasDatabaseName("IX_Wishlist_ProductId");
+
                     b.HasIndex("UserId")
-                        .IsUnique();
+                        .HasDatabaseName("IX_Wishlist_UserId");
 
                     b.ToTable("Wishlist", (string)null);
                 });

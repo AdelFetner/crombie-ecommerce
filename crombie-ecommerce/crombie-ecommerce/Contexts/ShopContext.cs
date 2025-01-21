@@ -27,12 +27,6 @@ namespace crombie_ecommerce.Contexts
                 user.Property(u => u.Password).IsRequired().HasMaxLength(100);
                 user.Property(u => u.IsVerified).HasDefaultValue(false);
 
-                // user to wishlist
-                 user.HasOne(u => u.Wishlist)
-                     .WithOne(w => w.User)
-                     .HasForeignKey<Wishlist>(w => w.UserId)
-                     .OnDelete(DeleteBehavior.Cascade);
-
                 // user to product
                 user.HasOne(u => u.Product)
                     .WithOne(p => p.User)
@@ -115,6 +109,15 @@ namespace crombie_ecommerce.Contexts
                             t.HasKey("ProductId", "WishlistId");
                         }
                     );
+
+                // delete indexes for product and user
+                wishlist.HasIndex(w => w.ProductId)
+                    .HasDatabaseName("IX_Wishlist_ProductId")
+                    .IsUnique(false);
+
+                wishlist.HasIndex(w => w.UserId)
+                    .HasDatabaseName("IX_Wishlist_UserId")
+                    .IsUnique(false);
 
                 // wl to tags has a one to many relationship
                 wishlist.HasMany(w => w.Tags)

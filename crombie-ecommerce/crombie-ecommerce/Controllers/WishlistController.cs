@@ -48,19 +48,26 @@ namespace crombie_ecommerce.Controllers
             {
                 return BadRequest(new { errors = ModelState });
             }
-            var wishlist = new Wishlist
+            try
             {
-                Name = wishlistDto.Name,
-                Description = wishlistDto.Description,
-                UserId = wishlistDto.UserId
-            };
-            var createdWishlists = await _wishlistService.CreateWishlist(wishlist);
-
-            return Ok(new
+                var wishlist = new Wishlist
+                {
+                    WishlistId = Guid.NewGuid(),
+                    Name = wishlistDto.Name,
+                    Description = wishlistDto.Description,
+                    UserId = wishlistDto.UserId
+                };
+                var createdWishlists = await _wishlistService.CreateWishlist(wishlist);
+                return Ok(new
+                {
+                    message = "Wishlist created successfully.",
+                    wishlists = createdWishlists
+                });
+            }
+            catch (Exception ex)
             {
-                message = "Wishlist created successfully.",
-                wishlists = createdWishlists
-            });
+                return BadRequest(new { message = ex.Message });
+            }
         }
 
         // Delete a wishlist

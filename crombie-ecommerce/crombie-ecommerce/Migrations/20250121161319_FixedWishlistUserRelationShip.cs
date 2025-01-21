@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace crombie_ecommerce.Migrations
 {
     /// <inheritdoc />
-    public partial class FixedWishlistUserRelationship : Migration
+    public partial class FixedWishlistUserRelationShip : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -67,10 +67,14 @@ namespace crombie_ecommerce.Migrations
                 });
 
             migrationBuilder.CreateIndex(
+                name: "IX_Wishlist_ProductId",
+                table: "Wishlist",
+                column: "ProductId");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_Wishlist_UserId",
                 table: "Wishlist",
-                column: "UserId",
-                unique: true);
+                column: "UserId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_WishlistProduct_WishlistId",
@@ -95,6 +99,10 @@ namespace crombie_ecommerce.Migrations
 
             migrationBuilder.DropTable(
                 name: "WishlistProduct");
+
+            migrationBuilder.DropIndex(
+                name: "IX_Wishlist_ProductId",
+                table: "Wishlist");
 
             migrationBuilder.DropIndex(
                 name: "IX_Wishlist_UserId",
