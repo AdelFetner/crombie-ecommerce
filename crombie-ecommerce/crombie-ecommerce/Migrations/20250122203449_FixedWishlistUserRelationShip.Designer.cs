@@ -12,7 +12,7 @@ using crombie_ecommerce.Contexts;
 namespace crombie_ecommerce.Migrations
 {
     [DbContext(typeof(ShopContext))]
-    [Migration("20250121161319_FixedWishlistUserRelationShip")]
+    [Migration("20250122203449_FixedWishlistUserRelationShip")]
     partial class FixedWishlistUserRelationShip
     {
         /// <inheritdoc />
