@@ -10,6 +10,8 @@ using crombie_ecommerce.Models;
 using crombie_ecommerce.Services;
 using Microsoft.Identity.Client;
 using crombie_ecommerce.Models.Dto;
+using Microsoft.AspNetCore.Authorization.Infrastructure;
+using Microsoft.AspNetCore.Authorization;
 
 namespace crombie_ecommerce.Controller
 {
@@ -25,6 +27,7 @@ namespace crombie_ecommerce.Controller
         }
 
         // GET: api/User
+        [Authorize(Roles = "admin")]
         [HttpGet]
         public async Task<ActionResult<IEnumerable<User>>> GetAllUsers()
         {
@@ -34,6 +37,7 @@ namespace crombie_ecommerce.Controller
         }
 
         // GET: api/User/5
+        [Authorize(Roles = "admin")]
         [HttpGet("{id}")]
         public async Task<ActionResult<User>> GetUserById(Guid id)
         {
@@ -93,6 +97,7 @@ namespace crombie_ecommerce.Controller
 
 
         // DELETE: api/User/5
+        [Authorize(Roles="admin")]
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteUser(Guid id)
         {

@@ -29,9 +29,9 @@ builder.Services.AddScoped<WishlistService>()
     .AddScoped<CategoryService>()
     .AddScoped<AuthService>();
 
-//.Services.AddSqlServer<ShopContext>(builder.Configuration["ConnectionString"]);
-builder.Services.AddDbContext<ShopContext>(options =>
-    options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
+builder.Services.AddSqlServer<ShopContext>(builder.Configuration["ConnectionString"]);
+//builder.Services.AddDbContext<ShopContext>(options =>
+    //options.UseSqlServer(builder.Configuration.GetConnectionString("ConnectionString")));
 
 builder.Configuration.AddUserSecrets<Program>(); 
 
