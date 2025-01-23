@@ -11,7 +11,7 @@ using crombie_ecommerce.Services;
 using Microsoft.Identity.Client;
 using crombie_ecommerce.Models.Dto;
 
-namespace crombie_ecommerce.Controller
+namespace crombie_ecommerce.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
