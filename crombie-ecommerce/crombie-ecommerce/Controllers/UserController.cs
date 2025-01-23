@@ -10,7 +10,10 @@ using crombie_ecommerce.Models;
 using crombie_ecommerce.Services;
 using Microsoft.Identity.Client;
 using crombie_ecommerce.Models.Dto;
+<<<<<<< HEAD
 using Microsoft.AspNetCore.Authorization.Infrastructure;
+=======
+>>>>>>> 85eaf4f01d7b5459f00ba4142cb0c19bc1c77b20
 using Microsoft.AspNetCore.Authorization;
 
 namespace crombie_ecommerce.Controller
@@ -27,7 +30,11 @@ namespace crombie_ecommerce.Controller
         }
 
         // GET: api/User
+<<<<<<< HEAD
         [Authorize(Roles = "admin")]
+=======
+        [Authorize]
+>>>>>>> 85eaf4f01d7b5459f00ba4142cb0c19bc1c77b20
         [HttpGet]
         public async Task<ActionResult<IEnumerable<User>>> GetAllUsers()
         {
@@ -37,7 +44,11 @@ namespace crombie_ecommerce.Controller
         }
 
         // GET: api/User/5
+<<<<<<< HEAD
         [Authorize(Roles = "admin")]
+=======
+        [Authorize]
+>>>>>>> 85eaf4f01d7b5459f00ba4142cb0c19bc1c77b20
         [HttpGet("{id}")]
         public async Task<ActionResult<User>> GetUserById(Guid id)
         {
@@ -97,7 +108,11 @@ namespace crombie_ecommerce.Controller
 
 
         // DELETE: api/User/5
+<<<<<<< HEAD
         [Authorize(Roles="admin")]
+=======
+        [Authorize(Roles ="admin")]
+>>>>>>> 85eaf4f01d7b5459f00ba4142cb0c19bc1c77b20
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteUser(Guid id)
         {
