@@ -49,5 +49,32 @@ namespace crombie_ecommerce.Services
             return await _amazonS3.GetObjectAsync(request);
         }
 
+        public async Task<string> DeleteObjectFromBucketAsync(string fileName)
+        {
+            try
+            {
+                var request = new GetObjectMetadataRequest
+                {
+                    BucketName = _bucketName,
+                    Key = fileName
+                };
+
+                // Check if file exists first
+                await _amazonS3.GetObjectMetadataAsync(request);
+
+                var deleteRequest = new DeleteObjectRequest
+                {
+                    BucketName = _bucketName,
+                    Key = fileName
+                };
+                var response = await _amazonS3.DeleteObjectAsync(deleteRequest);
+
+                return $"Successfully deleted {fileName} from {_bucketName}.";
+            }
+            catch (AmazonS3Exception ex) when (ex.StatusCode == System.Net.HttpStatusCode.NotFound)
+            {
+                return $"File {fileName} not found in {_bucketName}.";
+            }
+        }
     }
 }

@@ -1,4 +1,5 @@
-﻿using crombie_ecommerce.Services;
+﻿using Amazon.S3;
+using crombie_ecommerce.Services;
 using Microsoft.AspNetCore.Mvc;
 
 namespace crombie_ecommerce.Controllers
@@ -79,6 +80,31 @@ namespace crombie_ecommerce.Controllers
             catch (Exception ex)
             {
                 return BadRequest(ex.Message);
+            }
+        }
+        [HttpDelete("delete")]
+        public async Task<IActionResult> DeleteObject(string fileName)
+        {
+            try
+            {
+                if (string.IsNullOrEmpty(fileName))
+                {
+                    return BadRequest("File name is required");
+                }
+
+                var result = await _s3Service.DeleteObjectFromBucketAsync(fileName);
+                if (result.Contains("Successfully"))
+                {
+                    return Ok(result);
+                }
+                else
+                {
+                    return BadRequest(result);
+                }
+            }
+            catch (Exception ex)
+            {
+                return BadRequest($"Error deleting file: {ex.Message}");
             }
         }
     }
