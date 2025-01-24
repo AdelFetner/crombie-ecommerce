@@ -52,6 +52,7 @@ namespace crombie_ecommerce.Contexts
                 product.ToTable("Product");
 
                 product.HasKey(p => p.ProductId);
+                product.Property(p => p.Image);
                 product.Property(p => p.ProductId).HasDefaultValueSql("NEWID()");
                 product.Property(p => p.Name).IsRequired().HasMaxLength(50);
                 product.Property(p => p.Description).HasMaxLength(100);

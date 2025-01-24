@@ -1,4 +1,5 @@
-﻿using crombie_ecommerce.Contexts;
+﻿using Amazon.S3.Model;
+using crombie_ecommerce.Contexts;
 using crombie_ecommerce.Models;
 using crombie_ecommerce.Models.Dto;
 using crombie_ecommerce.Services.Interfaces;
@@ -10,10 +11,12 @@ namespace crombie_ecommerce.Services
     public class ProductService : IProductService
     {
         private readonly ShopContext _context;
+        private readonly s3Service _s3Service;
 
-        public ProductService(ShopContext context)
+        public ProductService(ShopContext context, s3Service s3Service)
         {
             _context = context;
+            _s3Service = s3Service;
         }
 
         public async Task<List<Product>> GetAllProducts()
@@ -30,12 +33,16 @@ namespace crombie_ecommerce.Services
                 .FirstOrDefaultAsync(p => p.ProductId == id); // Couldn't make previous FindAsync work 
         }
 
-        public async Task<Product> CreateProduct(ProductDto productDto)
+        public async Task<Product> CreateProduct(ProductDto productDto, IFormFile fileImage)
         {
             // gets categories from db. Todo: improve this, only way I thought of making the categories work without declaring other attributes aside from id
             var categories = await _context.Categories
                 .Where(c => productDto.CategoryIds.Contains(c.CategoryId))
                 .ToListAsync();
+
+            using var stream = fileImage.OpenReadStream();
+
+            var upload = await _s3Service.UploadFileAsync(stream, fileImage.FileName, fileImage.ContentType);
 
             var product = new Product
             {
@@ -43,7 +50,8 @@ namespace crombie_ecommerce.Services
                 Description = productDto.Description,
                 Price = productDto.Price,
                 BrandId = productDto.BrandId,
-                Categories = categories
+                Categories = categories,
+                Image = fileImage.FileName
             };
 
             _context.Products.Add(product);

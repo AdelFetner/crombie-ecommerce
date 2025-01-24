@@ -5,7 +5,7 @@ namespace crombie_ecommerce.Services.Interfaces
 {
     public interface IProductService
     {
-        Task<Product> CreateProduct(ProductDto productDto);
+        Task<Product> CreateProduct(ProductDto productDto, IFormFile fileImage);
         Task DeleteProduct(Guid id);
         Task<List<Product>> GetAllProducts();
         Task<List<Product>> GetPage(int page, int quantity);
