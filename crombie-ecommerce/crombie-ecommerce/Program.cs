@@ -25,7 +25,8 @@ builder.Services.AddScoped<WishlistService>()
     .AddScoped<CategoryService>()
     .AddScoped<OrderDetailsService>()
     .AddScoped<OrderService>()
-    .AddScoped<s3Service>();
+    .AddScoped<s3Service>()
+    .AddScoped<NotificationsService>();
 
 builder.Services.AddSqlServer<ShopContext>(builder.Configuration["ConnectionString"]);
 
