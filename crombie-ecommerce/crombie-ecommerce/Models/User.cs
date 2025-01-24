@@ -22,6 +22,7 @@ namespace crombie_ecommerce.Models
         [Required]
         [MinLength(8)]
         public string Password { get; set; }
+        public string Adress {get; set;}
         public bool IsVerified { get; set; }
 
         [JsonIgnore]
@@ -29,7 +30,8 @@ namespace crombie_ecommerce.Models
         [JsonIgnore]
         public  Product? Product { get; set; }
        
-        public virtual Wishlist? Wishlist { get; set; }
+        public virtual Wishlist? Wishlist { get; set; } = new List<Wishlist>();
 
+        public virtual ICollection<Order>? Orders { get; set; } = new List<Order>();
     }
 }

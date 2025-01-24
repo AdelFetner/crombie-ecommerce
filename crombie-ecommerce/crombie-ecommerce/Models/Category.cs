@@ -17,6 +17,6 @@ namespace crombie_ecommerce.Models
         public string? Description { get; set; }
 
         [JsonIgnore]
-        public ICollection<Product> Products { get; set; } = new List<Product>();
+        public virtual ICollection<Product> Products { get; set; } = new List<Product>();
     }
 }
