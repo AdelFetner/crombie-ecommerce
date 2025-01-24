@@ -55,6 +55,39 @@ namespace crombie_ecommerce.Services
             return true;
         }
 
+        //method to assign notification to wishlist or product
+        public async Task<bool> AssignNotification(Guid notificationId, Guid? wishlistId, Guid? productId)
+        {
+            var notification = await _context.Notifications.FindAsync(notificationId);
+            if (notification == null)
+            {
+                return false;
+            }
+
+            if (wishlistId.HasValue)
+            {
+                var wishlist = await _context.Wishlists.FindAsync(wishlistId.Value);
+                if (wishlist == null)
+                {
+                    return false;
+                }
+                notification.WishlistId = wishlistId.Value;
+            }
+
+            if (productId.HasValue)
+            {
+                var product = await _context.Products.FindAsync(productId.Value);
+                if (product == null)
+                {
+                    return false;
+                }
+                notification.ProductId = productId.Value;
+            }
+
+            await _context.SaveChangesAsync();
+            return true;
+        }
+
         // delete notification
         public async Task<bool> DeleteNotification(Guid notificationId)
         {

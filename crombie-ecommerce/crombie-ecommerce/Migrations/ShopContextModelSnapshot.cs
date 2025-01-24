@@ -108,6 +108,38 @@ namespace crombie_ecommerce.Migrations
                     b.ToTable("Category", (string)null);
                 });
 
+            modelBuilder.Entity("crombie_ecommerce.Models.Notification", b =>
+                {
+                    b.Property<Guid>("NotfId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<DateTime>("CreatedDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<bool>("IsRead")
+                        .HasColumnType("bit");
+
+                    b.Property<string>("NotificationType")
+                        .IsRequired()
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
+
+                    b.Property<Guid>("ProductId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid>("WishlistId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.HasKey("NotfId");
+
+                    b.HasIndex("ProductId");
+
+                    b.HasIndex("WishlistId");
+
+                    b.ToTable("Notifications");
+                });
+
             modelBuilder.Entity("crombie_ecommerce.Models.Order", b =>
                 {
                     b.Property<Guid>("OrderId")
@@ -191,10 +223,17 @@ namespace crombie_ecommerce.Migrations
                         .HasMaxLength(100)
                         .HasColumnType("nvarchar(100)");
 
+                    b.Property<string>("Image")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasMaxLength(50)
                         .HasColumnType("nvarchar(50)");
+
+                    b.Property<Guid?>("NotfId")
+                        .HasColumnType("uniqueidentifier");
 
                     b.Property<decimal>("Price")
                         .HasColumnType("decimal(18,2)");
@@ -209,7 +248,9 @@ namespace crombie_ecommerce.Migrations
 
                     b.HasIndex("BrandId");
 
-                    b.HasIndex("UserId");
+                    b.HasIndex("UserId")
+                        .IsUnique()
+                        .HasFilter("[UserId] IS NOT NULL");
 
                     b.ToTable("Product", (string)null);
                 });
@@ -271,6 +312,7 @@ namespace crombie_ecommerce.Migrations
 
                     b.Property<Guid?>("ProductId")
                         .HasColumnType("uniqueidentifier");
+
                     b.HasKey("UserId");
 
                     b.ToTable("User", (string)null);
@@ -291,6 +333,9 @@ namespace crombie_ecommerce.Migrations
                         .IsRequired()
                         .HasMaxLength(50)
                         .HasColumnType("nvarchar(50)");
+
+                    b.Property<Guid?>("NotfId")
+                        .HasColumnType("uniqueidentifier");
 
                     b.Property<Guid?>("ProductId")
                         .HasColumnType("uniqueidentifier");
@@ -342,15 +387,32 @@ namespace crombie_ecommerce.Migrations
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("crombie_ecommerce.Models.Order", b =>
-            {
-                b.HasOne("crombie_ecommerce.Models.User", "User")
-                    .WithMany("Orders")
-                    .HasForeignKey("UserId")
-                    .OnDelete(DeleteBehavior.Cascade);
+            modelBuilder.Entity("crombie_ecommerce.Models.Notification", b =>
+                {
+                    b.HasOne("crombie_ecommerce.Models.Product", "Product")
+                        .WithMany("Notifications")
+                        .HasForeignKey("ProductId")
+                        .OnDelete(DeleteBehavior.Cascade);
 
-                b.Navigation("User");
-            });
+                    b.HasOne("crombie_ecommerce.Models.Wishlist", "Wishlist")
+                        .WithMany("Notifications")
+                        .HasForeignKey("WishlistId")
+                        .OnDelete(DeleteBehavior.Cascade);
+
+                    b.Navigation("Product");
+
+                    b.Navigation("Wishlist");
+                });
+
+            modelBuilder.Entity("crombie_ecommerce.Models.Order", b =>
+                {
+                    b.HasOne("crombie_ecommerce.Models.User", "User")
+                        .WithMany("Orders")
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade);
+
+                    b.Navigation("User");
+                });
 
             modelBuilder.Entity("crombie_ecommerce.Models.OrderDetail", b =>
                 {
@@ -376,8 +438,8 @@ namespace crombie_ecommerce.Migrations
                         .IsRequired();
 
                     b.HasOne("crombie_ecommerce.Models.User", "User")
-                        .WithMany()
-                        .HasForeignKey("UserId");
+                        .WithOne("Product")
+                        .HasForeignKey("crombie_ecommerce.Models.Product", "UserId");
 
                     b.Navigation("Brand");
 
@@ -417,22 +479,24 @@ namespace crombie_ecommerce.Migrations
 
             modelBuilder.Entity("crombie_ecommerce.Models.Product", b =>
                 {
-                    b.Navigation("User");
+                    b.Navigation("Notifications");
 
                     b.Navigation("OrderDetails");
-
-                    b.Navigation("Wishlist");
                 });
 
             modelBuilder.Entity("crombie_ecommerce.Models.User", b =>
                 {
                     b.Navigation("Orders");
 
-                    b.Navigation("Wishlists");
+                    b.Navigation("Product");
+
+                    b.Navigation("Wishlist");
                 });
 
             modelBuilder.Entity("crombie_ecommerce.Models.Wishlist", b =>
                 {
+                    b.Navigation("Notifications");
+
                     b.Navigation("Tags");
                 });
 #pragma warning restore 612, 618
