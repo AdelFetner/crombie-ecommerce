@@ -32,6 +32,11 @@ namespace crombie_ecommerce.Services
         //Method to create a new wishlist
         public async Task<List<Wishlist>> CreateWishlist(Wishlist wishlist)
         {
+            var userExists = await _context.Users.AnyAsync(u => u.UserId == wishlist.UserId);
+            if (!userExists)
+            {
+                throw new Exception("User not found");
+            }
             _context.Wishlists.Add(wishlist);
             await _context.SaveChangesAsync();
             return await _context.Wishlists.ToListAsync();

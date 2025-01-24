@@ -25,14 +25,13 @@ namespace crombie_ecommerce.Models
         public string Adress {get; set;}
         public bool IsVerified { get; set; }
 
-
-        /*public Guid? WishlistId { get; set; }
-        
-        public  Wishlist? Wishlist { get; set; }*/
+        [JsonIgnore]
+        public Guid? ProductId { get; set; }
+        [JsonIgnore]
+        public  Product? Product { get; set; }
+       
+        public virtual Wishlist? Wishlist { get; set; } = new List<Wishlist>();
 
         public virtual ICollection<Order>? Orders { get; set; } = new List<Order>();
-
-        public virtual ICollection<Wishlist>? Wishlists { get; set; } = new List<Wishlist>();
-
     }
 }

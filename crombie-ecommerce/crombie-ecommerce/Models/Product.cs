@@ -25,9 +25,9 @@ namespace crombie_ecommerce.Models
         public Guid BrandId { get; set; }
 
         [JsonIgnore]
-        public virtual Brand? Brand { get; set; }
+        public virtual Brand Brand { get; set; } 
 
-        public virtual List<Category> Categories { get; set; } = new List<Category>();
+        public virtual ICollection<Category> Categories { get; set; } = new List<Category>();
 
         [JsonIgnore]
         public Guid? UserId { get; set; }
@@ -37,7 +37,7 @@ namespace crombie_ecommerce.Models
         [JsonIgnore]
         public Guid? WishlistId { get; set; }
         [JsonIgnore]
-        public virtual Wishlist? Wishlist { get; set; }
+        public virtual ICollection<Wishlist>? Wishlist { get; set; } = new List<Wishlist>();
 
         public ICollection<OrderDetail> OrderDetails { get; set; }
     }
