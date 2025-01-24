@@ -2,12 +2,12 @@
 {
     public class NotificationDTO
     {
-        public Guid NotfId { get; set; }
-
         public string NotificationType { get; set; }
 
-        public DateTime CreatedDate { get; set; }
+        public string Message { get; set; }
 
         public bool IsRead { get; set; }
+
+        public Guid ProductId { get; set; }
     }
 }

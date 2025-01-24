@@ -39,6 +39,7 @@ namespace crombie_ecommerce.Controllers
                 {
                     NotfId = Guid.NewGuid(),
                     NotificationType = notificationDto.NotificationType,
+                    Message = notificationDto.Message,
                     CreatedDate = DateTime.UtcNow,
                     IsRead = false
                 };

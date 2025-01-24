@@ -223,20 +223,14 @@ namespace crombie_ecommerce.Contexts
             {
                 entity.HasKey(n => n.NotfId);
                 entity.Property(n => n.NotificationType).HasMaxLength(50).IsRequired();
-                entity.Property(n => n.CreatedDate).IsRequired();
+                entity.Property(n => n.Message).HasMaxLength(100).IsRequired();
+                entity.Property(n => n.CreatedDate).IsRequired().HasDefaultValueSql("CURRENT_TIMESTAMP");
                 entity.Property(n => n.IsRead);
-
-                entity.HasOne(n => n.Wishlist)
-                      .WithMany(w => w.Notifications)
-                      .HasForeignKey(n => n.WishlistId)
-                      .OnDelete(DeleteBehavior.Cascade)
-                      .IsRequired(false);
 
                 entity.HasOne(n => n.Product)
                       .WithMany(p => p.Notifications)
                       .HasForeignKey(n => n.ProductId)
-                      .OnDelete(DeleteBehavior.Cascade)
-                      .IsRequired(false);
+                      .OnDelete(DeleteBehavior.Cascade);
             });
             base.OnModelCreating(modelBuilder);
         }

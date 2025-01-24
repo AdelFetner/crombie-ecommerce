@@ -14,6 +14,9 @@ namespace crombie_ecommerce.Models
         [MaxLength(50)]
         public string NotificationType { get; set; }
         [Required]
+        [MaxLength(100)]
+        public string Message { get; set; }
+        [Required]
         public DateTime CreatedDate { get; set; }
 
         public bool IsRead { get; set; } = false;
@@ -23,6 +26,6 @@ namespace crombie_ecommerce.Models
         public virtual Wishlist? Wishlist { get; set; }
         [JsonIgnore]
         public Guid ProductId { get; set; }
-        public virtual Product? Product { get; set; }
+        public virtual Product Product { get; set; }
     }
 }
