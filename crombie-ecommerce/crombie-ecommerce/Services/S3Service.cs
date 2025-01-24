@@ -29,19 +29,19 @@ namespace crombie_ecommerce.Services
         }
 
         public async Task<string> UploadFileAsync(
-            Stream fileStream, string fileName, string contentType)
+            Stream fileStream, string fileName, string contentType, string bucketFolder)
         {
             // sets up the obj request
             var request = new PutObjectRequest
             {
                 BucketName = _bucketName,
-                Key = fileName,
+                Key = $"{bucketFolder}/{fileName}",
                 InputStream = fileStream,
                 ContentType = contentType
             };
 
             var response = await _amazonS3.PutObjectAsync(request);
-            
+
             // checks if the status is a 200
             if (response.HttpStatusCode == System.Net.HttpStatusCode.OK)
             {
