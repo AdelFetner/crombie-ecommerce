@@ -11,13 +11,27 @@ namespace crombie_ecommerce.Services
 
         public s3Service(IConfiguration configuration)
         {
+            // get the bucket and keys from user secrets
             _amazonS3 = new AmazonS3Client(new BasicAWSCredentials(configuration["AccessKeyId"], configuration["SecretAcessKey"]));
             _bucketName = configuration["BucketName"] ?? "";
+        }
+
+        public async Task<GetObjectResponse> GetObjectFromBucketAsync(string fileName)
+        {
+            // sets up the obj request
+            var request = new GetObjectRequest
+            {
+                BucketName = _bucketName,
+                Key = fileName
+            };
+
+            return await _amazonS3.GetObjectAsync(request);
         }
 
         public async Task<string> UploadFileAsync(
             Stream fileStream, string fileName, string contentType)
         {
+            // sets up the obj request
             var request = new PutObjectRequest
             {
                 BucketName = _bucketName,
@@ -27,10 +41,12 @@ namespace crombie_ecommerce.Services
             };
 
             var response = await _amazonS3.PutObjectAsync(request);
+            
+            // checks if the status is a 200
             if (response.HttpStatusCode == System.Net.HttpStatusCode.OK)
             {
                 return $"Successfully uploaded {fileName} to {_bucketName}.";
-                
+
             }
             else
             {
@@ -38,29 +54,19 @@ namespace crombie_ecommerce.Services
             }
         }
 
-        public async Task<GetObjectResponse> DownloadObjectFromBucketAsync(string fileName)
-        {
-            var request = new GetObjectRequest
-            {
-                BucketName = _bucketName,
-                Key = fileName
-            };
-            
-            return await _amazonS3.GetObjectAsync(request);
-        }
-
-        public async Task<string> DeleteObjectFromBucketAsync(string fileName)
+        public async Task<bool> DeleteObjectFromBucketAsync(string fileName)
         {
             try
             {
-                var request = new GetObjectMetadataRequest
+                // sets up the obj request
+                var request = new GetObjectRequest
                 {
                     BucketName = _bucketName,
                     Key = fileName
                 };
 
                 // Check if file exists first
-                await _amazonS3.GetObjectMetadataAsync(request);
+                await _amazonS3.GetObjectAsync(request);
 
                 var deleteRequest = new DeleteObjectRequest
                 {
@@ -69,11 +75,11 @@ namespace crombie_ecommerce.Services
                 };
                 var response = await _amazonS3.DeleteObjectAsync(deleteRequest);
 
-                return $"Successfully deleted {fileName} from {_bucketName}.";
+                return true;
             }
             catch (AmazonS3Exception ex) when (ex.StatusCode == System.Net.HttpStatusCode.NotFound)
             {
-                return $"File {fileName} not found in {_bucketName}.";
+                return false;
             }
         }
     }

@@ -5,14 +5,48 @@ using Microsoft.AspNetCore.Mvc;
 namespace crombie_ecommerce.Controllers
 {
     [ApiController]
-    [Route("api/[controller]")]
     public class S3sController : ControllerBase
     {
         private readonly s3Service _s3Service;
+        private readonly string _bucketName;
 
-        public S3sController(s3Service s3Service)
+        public S3sController(s3Service s3Service, IConfiguration configuration)
         {
             _s3Service = s3Service;
+            _bucketName = configuration["BucketName"] ?? "";
+        }
+
+        [HttpGet("/file/{fileName}")]
+        public async Task<IActionResult> GetObject(string fileName)
+        {
+            try
+            {
+
+                // needed to make files with reserved characters work, image.jpg works, but products/image.png does not, because the / gets changed to %2F. 
+                var objectName = Uri.UnescapeDataString(fileName);
+
+                // checks if its empty
+                if (string.IsNullOrEmpty(objectName))
+                {
+                    return BadRequest("File name is required");
+                }
+
+                
+                var response = await _s3Service.GetObjectFromBucketAsync(objectName);
+                
+                // checks if the response status is anything other than a http 200
+                if (response.HttpStatusCode != System.Net.HttpStatusCode.OK)
+                {
+                    return BadRequest("Error downloading file from S3");
+                }
+
+                // file needs a file stream to read it, and the content type
+                return File(response.ResponseStream, response.Headers.ContentType);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest($"Error downloading file: {ex.Message}");
+            }
         }
 
         [HttpGet("download")]
@@ -20,19 +54,23 @@ namespace crombie_ecommerce.Controllers
         {
             try
             {
+                // checks if its empty or null
                 if (string.IsNullOrEmpty(fileName))
                 {
                     return BadRequest("File name is required");
                 }
 
-                using var response = await _s3Service.DownloadObjectFromBucketAsync(fileName);
+                using var response = await _s3Service.GetObjectFromBucketAsync(fileName);
+
+                // checks if the response status is anything other than a http 200
                 if (response.HttpStatusCode != System.Net.HttpStatusCode.OK)
                 {
                     return BadRequest("Error downloading file from S3");
                 }
 
-                Response.Headers.Add("Content-Disposition", $"attachment; filename={fileName}");
-                Response.Headers.Add("Content-Type", response.Headers.ContentType);
+                // sets the headers for the file
+                Response.Headers.Append("Content-Disposition", $"attachment; filename={fileName}");
+                Response.Headers.Append("Content-Type", response.Headers.ContentType);
 
                 await response.ResponseStream.CopyToAsync(Response.Body);
                 return new EmptyResult();
@@ -87,19 +125,22 @@ namespace crombie_ecommerce.Controllers
         {
             try
             {
+                // checks for null or empty
                 if (string.IsNullOrEmpty(fileName))
                 {
                     return BadRequest("File name is required");
                 }
 
                 var result = await _s3Service.DeleteObjectFromBucketAsync(fileName);
-                if (result.Contains("Successfully"))
+
+                // if the deletion result is true, 200, else 400
+                if (result)
                 {
-                    return Ok(result);
+                    return Ok($"Successfully deleted {fileName} from {_bucketName}.");
                 }
                 else
                 {
-                    return BadRequest(result);
+                    return BadRequest($"File {fileName} not found in {_bucketName}.");
                 }
             }
             catch (Exception ex)
