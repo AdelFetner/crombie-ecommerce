@@ -1,7 +1,8 @@
+using Amazon.CognitoIdentityProvider;
 using crombie_ecommerce.Contexts;
 using crombie_ecommerce.Services;
-
 using System.Text.Json.Serialization;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 
 
 var builder = WebApplication.CreateBuilder(args);
@@ -24,9 +25,34 @@ builder.Services.AddScoped<WishlistService>()
     .AddScoped<UserService>()
     .AddScoped<CategoryService>()
     .AddScoped<OrderDetailsService>()
-    .AddScoped<OrderService>();
+    .AddScoped<OrderService>()
+    .AddScoped<CognitoAuthService>();
 
 builder.Services.AddSqlServer<ShopContext>(builder.Configuration["ConnectionString"]);
+
+builder.Services.AddAuthentication(options =>
+{
+    options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+    options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+})
+.AddJwtBearer(options =>
+{
+    var cognitoIssuer = $"https://cognito-idp.{builder.Configuration["AWS:Region"]}.amazonaws.com/{builder.Configuration["AWS:UserPoolId"]}";
+
+    options.TokenValidationParameters = new Microsoft.IdentityModel.Tokens.TokenValidationParameters
+    {
+        ValidateIssuer = true,
+        ValidIssuer = cognitoIssuer,
+        ValidateAudience = true,
+        ValidAudience = builder.Configuration["AWS:AppClientId"],
+        ValidateLifetime = true,
+        ClockSkew = TimeSpan.Zero
+    };
+
+});
+
+
+
 
 
 var app = builder.Build();
