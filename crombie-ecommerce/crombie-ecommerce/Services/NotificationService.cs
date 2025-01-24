@@ -36,7 +36,7 @@ namespace crombie_ecommerce.Services
         // create notification
         public async Task<Notification> CreateNotification(Notification notification)
         {
-            notification.CreatedDate = DateTime.UtcNow; // Fecha actual en UTC
+            notification.CreatedDate = DateTime.UtcNow;
             _context.Notifications.Add(notification);
             await _context.SaveChangesAsync();
             return notification;
