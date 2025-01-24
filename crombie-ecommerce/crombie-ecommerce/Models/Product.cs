@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using Amazon.Util.Internal;
+using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Text.Json.Serialization;
 
@@ -23,6 +24,9 @@ namespace crombie_ecommerce.Models
 
         [Required]
         public Guid BrandId { get; set; }
+
+        [Required]
+        public string Image { get; set; }
 
         [JsonIgnore]
         public virtual Brand? Brand { get; set; }

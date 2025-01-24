@@ -45,11 +45,11 @@ namespace crombie_ecommerce.Controllers
 
         // POST: api/Products
         [HttpPost]
-        public async Task<ActionResult<Product>> PostProduct(ProductDto productDto)
+        public async Task<ActionResult<Product>> PostProduct([FromForm]ProductDto productDto, IFormFile fileImage)
         {
             try
             {
-                var createdProduct = await _productService.CreateProduct(productDto);
+                var createdProduct = await _productService.CreateProduct(productDto, fileImage);
                 return CreatedAtAction(nameof(GetProduct), new { id = createdProduct.ProductId }, createdProduct);
             }
             catch (Exception ex)
