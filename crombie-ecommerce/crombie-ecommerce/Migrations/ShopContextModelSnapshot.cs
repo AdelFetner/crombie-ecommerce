@@ -340,16 +340,17 @@ namespace crombie_ecommerce.Migrations
                         .HasForeignKey("WishlistId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+                });
 
             modelBuilder.Entity("crombie_ecommerce.Models.Order", b =>
-                {
-                    b.HasOne("crombie_ecommerce.Models.User", "User")
-                        .WithMany("Orders")
-                        .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Cascade);
+            {
+                b.HasOne("crombie_ecommerce.Models.User", "User")
+                    .WithMany("Orders")
+                    .HasForeignKey("UserId")
+                    .OnDelete(DeleteBehavior.Cascade);
 
-                    b.Navigation("User");
-                });
+                b.Navigation("User");
+            });
 
             modelBuilder.Entity("crombie_ecommerce.Models.OrderDetail", b =>
                 {
