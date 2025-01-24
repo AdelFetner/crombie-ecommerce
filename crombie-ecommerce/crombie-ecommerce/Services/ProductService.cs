@@ -5,6 +5,7 @@ using crombie_ecommerce.Models.Dto;
 using crombie_ecommerce.Services.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using System.IO;
 
 namespace crombie_ecommerce.Services
 {
@@ -12,6 +13,7 @@ namespace crombie_ecommerce.Services
     {
         private readonly ShopContext _context;
         private readonly s3Service _s3Service;
+        private readonly string _bucketFolder = "product";
 
         public ProductService(ShopContext context, s3Service s3Service)
         {
@@ -42,7 +44,9 @@ namespace crombie_ecommerce.Services
 
             using var stream = fileImage.OpenReadStream();
 
-            var upload = await _s3Service.UploadFileAsync(stream, fileImage.FileName, fileImage.ContentType);
+            string bucketFolder = "product";
+
+            var upload = await _s3Service.UploadFileAsync(stream, fileImage.FileName, fileImage.ContentType, bucketFolder);
 
             var product = new Product
             {
@@ -51,7 +55,7 @@ namespace crombie_ecommerce.Services
                 Price = productDto.Price,
                 BrandId = productDto.BrandId,
                 Categories = categories,
-                Image = fileImage.FileName
+                Image = $"{bucketFolder}/{fileImage.FileName}"
             };
 
             _context.Products.Add(product);
@@ -91,6 +95,8 @@ namespace crombie_ecommerce.Services
             {
                 throw new Exception("Product not found");
             }
+
+            var upload = await _s3Service.DeleteObjectFromBucketAsync(existingProduct.Image);
 
             _context.Products.Remove(existingProduct);
             await _context.SaveChangesAsync();

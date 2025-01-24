@@ -109,9 +109,9 @@ namespace crombie_ecommerce.Controllers
                 if (!fileObject.ContentType.Equals("image/jpeg") && !fileObject.ContentType.Equals("image/png"))
                     return BadRequest($"File type is not supported, only jpg and png are allowed. Your file type: {fileObject.ContentType}");
 
-                var fileName = $"{folderName}/{Guid.NewGuid()}-{fileObject.FileName}";
+                var fileName = $"{Guid.NewGuid()}-{fileObject.FileName}";
 
-                var url = await _s3Service.UploadFileAsync(stream, fileName, fileObject.ContentType);
+                var url = await _s3Service.UploadFileAsync(stream, fileName, fileObject.ContentType, folderName);
 
                 return Ok($"{url}");
             }

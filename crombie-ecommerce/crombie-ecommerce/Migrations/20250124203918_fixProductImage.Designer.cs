@@ -12,8 +12,8 @@ using crombie_ecommerce.Contexts;
 namespace crombie_ecommerce.Migrations
 {
     [DbContext(typeof(ShopContext))]
-    [Migration("20250122203449_FixedWishlistUserRelationShip")]
-    partial class FixedWishlistUserRelationShip
+    [Migration("20250124203918_fixProductImage")]
+    partial class fixProductImage
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -111,6 +111,74 @@ namespace crombie_ecommerce.Migrations
                     b.ToTable("Category", (string)null);
                 });
 
+            modelBuilder.Entity("crombie_ecommerce.Models.Order", b =>
+                {
+                    b.Property<Guid>("OrderId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier")
+                        .HasDefaultValueSql("NEWID()");
+
+                    b.Property<DateTime>("OrderDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("PaymentMethod")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("ShippingAddress")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
+
+                    b.Property<string>("Status")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<decimal>("TotalAmount")
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<Guid?>("UserId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.HasKey("OrderId");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("Order", (string)null);
+                });
+
+            modelBuilder.Entity("crombie_ecommerce.Models.OrderDetail", b =>
+                {
+                    b.Property<Guid>("DetailsId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid?>("OrderId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier")
+                        .HasDefaultValueSql("NEWID()");
+
+                    b.Property<decimal>("Price")
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<Guid?>("ProductId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<int>("Quantity")
+                        .HasColumnType("int");
+
+                    b.Property<decimal>("Subtotal")
+                        .HasColumnType("decimal(18,2)");
+
+                    b.HasKey("DetailsId");
+
+                    b.HasIndex("OrderId");
+
+                    b.HasIndex("ProductId");
+
+                    b.ToTable("OrderDetails", (string)null);
+                });
+
             modelBuilder.Entity("crombie_ecommerce.Models.Product", b =>
                 {
                     b.Property<Guid>("ProductId")
@@ -125,6 +193,10 @@ namespace crombie_ecommerce.Migrations
                         .IsRequired()
                         .HasMaxLength(100)
                         .HasColumnType("nvarchar(100)");
+
+                    b.Property<string>("Image")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Name")
                         .IsRequired()
@@ -143,6 +215,10 @@ namespace crombie_ecommerce.Migrations
                     b.HasKey("ProductId");
 
                     b.HasIndex("BrandId");
+
+                    b.HasIndex("UserId")
+                        .IsUnique()
+                        .HasFilter("[UserId] IS NOT NULL");
 
                     b.ToTable("Product", (string)null);
                 });
@@ -179,6 +255,10 @@ namespace crombie_ecommerce.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
 
+                    b.Property<string>("Adress")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<string>("Email")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
@@ -202,10 +282,6 @@ namespace crombie_ecommerce.Migrations
                         .HasColumnType("uniqueidentifier");
 
                     b.HasKey("UserId");
-
-                    b.HasIndex("ProductId")
-                        .IsUnique()
-                        .HasFilter("[ProductId] IS NOT NULL");
 
                     b.ToTable("User", (string)null);
                 });
@@ -276,6 +352,31 @@ namespace crombie_ecommerce.Migrations
                         .IsRequired();
                 });
 
+            modelBuilder.Entity("crombie_ecommerce.Models.Order", b =>
+                {
+                    b.HasOne("crombie_ecommerce.Models.User", "User")
+                        .WithMany("Orders")
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade);
+
+                    b.Navigation("User");
+                });
+
+            modelBuilder.Entity("crombie_ecommerce.Models.OrderDetail", b =>
+                {
+                    b.HasOne("crombie_ecommerce.Models.Order", "Order")
+                        .WithMany("OrderDetails")
+                        .HasForeignKey("OrderId");
+
+                    b.HasOne("crombie_ecommerce.Models.Product", "Product")
+                        .WithMany("OrderDetails")
+                        .HasForeignKey("ProductId");
+
+                    b.Navigation("Order");
+
+                    b.Navigation("Product");
+                });
+
             modelBuilder.Entity("crombie_ecommerce.Models.Product", b =>
                 {
                     b.HasOne("crombie_ecommerce.Models.Brand", "Brand")
@@ -284,7 +385,13 @@ namespace crombie_ecommerce.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
+                    b.HasOne("crombie_ecommerce.Models.User", "User")
+                        .WithOne("Product")
+                        .HasForeignKey("crombie_ecommerce.Models.Product", "UserId");
+
                     b.Navigation("Brand");
+
+                    b.Navigation("User");
                 });
 
             modelBuilder.Entity("crombie_ecommerce.Models.Tags", b =>
@@ -295,15 +402,6 @@ namespace crombie_ecommerce.Migrations
                         .OnDelete(DeleteBehavior.Cascade);
 
                     b.Navigation("Wishlist");
-                });
-
-            modelBuilder.Entity("crombie_ecommerce.Models.User", b =>
-                {
-                    b.HasOne("crombie_ecommerce.Models.Product", "Product")
-                        .WithOne("User")
-                        .HasForeignKey("crombie_ecommerce.Models.User", "ProductId");
-
-                    b.Navigation("Product");
                 });
 
             modelBuilder.Entity("crombie_ecommerce.Models.Wishlist", b =>
@@ -322,13 +420,22 @@ namespace crombie_ecommerce.Migrations
                     b.Navigation("Products");
                 });
 
+            modelBuilder.Entity("crombie_ecommerce.Models.Order", b =>
+                {
+                    b.Navigation("OrderDetails");
+                });
+
             modelBuilder.Entity("crombie_ecommerce.Models.Product", b =>
                 {
-                    b.Navigation("User");
+                    b.Navigation("OrderDetails");
                 });
 
             modelBuilder.Entity("crombie_ecommerce.Models.User", b =>
                 {
+                    b.Navigation("Orders");
+
+                    b.Navigation("Product");
+
                     b.Navigation("Wishlist");
                 });
 
