@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace crombie_ecommerce.Models.Dto
+namespace crombie_ecommerce.Models.Models.Dto
 {
     public class ProductDto
     {

@@ -1,4 +1,4 @@
-﻿using crombie_ecommerce.Models;
+﻿using crombie_ecommerce.Models.Models.Entities;
 using crombie_ecommerce.Services;
 using Microsoft.AspNetCore.Mvc;
 

@@ -1,11 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using crombie_ecommerce.Models;
 using crombie_ecommerce.Services;
-using System;
-using System.Collections.Generic;
-using System.Threading.Tasks;
-using Microsoft.EntityFrameworkCore;
-using crombie_ecommerce.Models.Dto;
+using crombie_ecommerce.Models.Models.Dto;
+using crombie_ecommerce.Models.Models.Entities;
 
 namespace crombie_ecommerce.Controllers
 {

@@ -1,5 +1,5 @@
-﻿using crombie_ecommerce.Models;
-using crombie_ecommerce.Models.Dto;
+﻿using crombie_ecommerce.Models.Models.Entities;
+using crombie_ecommerce.Models.Models.Dto;
 
 namespace crombie_ecommerce.Services.Interfaces
 {

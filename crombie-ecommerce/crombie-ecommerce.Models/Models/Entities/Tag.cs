@@ -2,7 +2,7 @@
 using System.ComponentModel.DataAnnotations;
 using System.Text.Json.Serialization;
 
-namespace crombie_ecommerce.Models
+namespace crombie_ecommerce.Models.Models.Entities
 {
     [Table("Tag")]
     public class Tag
@@ -17,9 +17,9 @@ namespace crombie_ecommerce.Models
         [MaxLength(100)]
         public string Description { get; set; }
 
-        [JsonIgnore] 
+        [JsonIgnore]
         public Guid? WishlistId { get; set; }
-        [JsonIgnore] 
+        [JsonIgnore]
         public virtual Wishlist? Wishlist { get; set; }
     }
 }

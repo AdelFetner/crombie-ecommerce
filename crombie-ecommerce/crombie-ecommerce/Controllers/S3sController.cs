@@ -1,5 +1,4 @@
-﻿using Amazon.S3;
-using crombie_ecommerce.Services;
+﻿using crombie_ecommerce.Services;
 using Microsoft.AspNetCore.Mvc;
 
 namespace crombie_ecommerce.Controllers

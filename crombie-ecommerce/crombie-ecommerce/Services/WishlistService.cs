@@ -1,10 +1,6 @@
-﻿using crombie_ecommerce.Models;
-using crombie_ecommerce.Contexts;
+﻿using crombie_ecommerce.Contexts;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.SqlServer;
-using System;
-using System.Collections.Generic;
-using System.Threading.Tasks;
+using crombie_ecommerce.Models.Models.Entities;
 
 namespace crombie_ecommerce.Services
 {

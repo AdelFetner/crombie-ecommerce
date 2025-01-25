@@ -1,4 +1,4 @@
-﻿namespace crombie_ecommerce.Models.Dto
+﻿namespace crombie_ecommerce.Models.Models.Dto
 {
     // this helps with making the filtering flexible, so it doesn't need tons of overloaded methods
     public class ProductFilterDto

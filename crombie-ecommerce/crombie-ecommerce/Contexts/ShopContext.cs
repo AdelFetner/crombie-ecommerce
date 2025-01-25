@@ -1,4 +1,4 @@
-﻿using crombie_ecommerce.Models;
+﻿using crombie_ecommerce.Models.Models.Entities;
 using Microsoft.EntityFrameworkCore;
 
 namespace crombie_ecommerce.Contexts

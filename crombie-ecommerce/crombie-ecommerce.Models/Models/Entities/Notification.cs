@@ -2,7 +2,7 @@
 using System.ComponentModel.DataAnnotations;
 using System.Text.Json.Serialization;
 
-namespace crombie_ecommerce.Models
+namespace crombie_ecommerce.Models.Models.Entities
 {
     [Table("Notification")]
     public class Notification

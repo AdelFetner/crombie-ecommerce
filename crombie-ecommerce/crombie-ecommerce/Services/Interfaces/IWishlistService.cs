@@ -1,4 +1,4 @@
-﻿using crombie_ecommerce.Models;
+﻿using crombie_ecommerce.Models.Models.Entities;
 
 namespace crombie_ecommerce.Services.Interfaces
 {

@@ -1,7 +1,6 @@
 ﻿using crombie_ecommerce.Contexts;
-using crombie_ecommerce.Models;
+using crombie_ecommerce.Models.Models.Entities;
 using Microsoft.EntityFrameworkCore;
-using NuGet.Versioning;
 
 namespace crombie_ecommerce.Services
 {

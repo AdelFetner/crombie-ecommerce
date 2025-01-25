@@ -1,6 +1,6 @@
-﻿using crombie_ecommerce.Models;
-using crombie_ecommerce.Contexts;
+﻿using crombie_ecommerce.Contexts;
 using Microsoft.EntityFrameworkCore;
+using crombie_ecommerce.Models.Models.Entities;
 
 namespace crombie_ecommerce.Services
 {

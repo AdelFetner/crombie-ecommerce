@@ -1,11 +1,8 @@
-﻿using Amazon.S3.Model;
-using crombie_ecommerce.Contexts;
-using crombie_ecommerce.Models;
-using crombie_ecommerce.Models.Dto;
+﻿using crombie_ecommerce.Contexts;
+using crombie_ecommerce.Models.Models.Dto;
+using crombie_ecommerce.Models.Models.Entities;
 using crombie_ecommerce.Services.Interfaces;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using System.IO;
 
 namespace crombie_ecommerce.Services
 {

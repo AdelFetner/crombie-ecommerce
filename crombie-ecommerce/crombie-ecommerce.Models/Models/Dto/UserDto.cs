@@ -1,4 +1,4 @@
-﻿namespace crombie_ecommerce.Models.Dto
+﻿namespace crombie_ecommerce.Models.Models.Dto
 {
     public class UserDto
     {
