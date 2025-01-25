@@ -7,6 +7,5 @@
         public string Password { get; set; }
         public bool IsVerified { get; set; }
         public Guid? ProductId { get; set; }
-        public Guid? WishlistId { get; set; }
     }
 }

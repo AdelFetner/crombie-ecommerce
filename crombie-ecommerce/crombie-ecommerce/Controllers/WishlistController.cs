@@ -5,6 +5,7 @@ using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
+using crombie_ecommerce.Models.Dto;
 
 namespace crombie_ecommerce.Controllers
 {
@@ -41,15 +42,32 @@ namespace crombie_ecommerce.Controllers
 
         // Create a new wishlist
         [HttpPost]
-        public async Task<ActionResult<List<Wishlist>>> CreateWishlist([FromBody] Wishlist wishlist)
+        public async Task<IActionResult> CreateWishlist([FromBody] WishlistDto wishlistDto)
         {
             if (!ModelState.IsValid)
             {
-                return BadRequest(new {errors = ModelState});
+                return BadRequest(new { errors = ModelState });
             }
-
-            var wishlists = await _wishlistService.CreateWishlist(wishlist);
-            return Ok(new { message = "Wishlist created successfully.", wishlists});
+            try
+            {
+                var wishlist = new Wishlist
+                {
+                    WishlistId = Guid.NewGuid(),
+                    Name = wishlistDto.Name,
+                    Description = wishlistDto.Description,
+                    UserId = wishlistDto.UserId
+                };
+                var createdWishlists = await _wishlistService.CreateWishlist(wishlist);
+                return Ok(new
+                {
+                    message = "Wishlist created successfully.",
+                    wishlists = createdWishlists
+                });
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(new { message = ex.Message });
+            }
         }
 
         // Delete a wishlist

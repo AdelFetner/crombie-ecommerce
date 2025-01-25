@@ -1,10 +1,11 @@
 ﻿using crombie_ecommerce.Contexts;
 using crombie_ecommerce.Models;
+using crombie_ecommerce.Services.Interfaces;
 using Microsoft.EntityFrameworkCore;
 
 namespace crombie_ecommerce.Services
 {
-    public class BrandService
+    public class BrandService : IBrandService
     {
         private readonly ShopContext _context;
 

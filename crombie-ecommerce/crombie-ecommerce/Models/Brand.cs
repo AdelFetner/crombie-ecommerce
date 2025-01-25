@@ -6,8 +6,7 @@ namespace crombie_ecommerce.Models
     public class Brand
     {
         [Key]
-        [JsonIgnore]
-        public Guid BrandId { get; set; }
+        public Guid BrandId { get; private set; }
 
         [Required]
         [MaxLength(100)]

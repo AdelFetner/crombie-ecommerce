@@ -22,8 +22,14 @@ builder.Services.AddScoped<WishlistService>()
     .AddScoped<BrandService>()
     .AddScoped<TagsService>()
     .AddScoped<UserService>()
-    .AddScoped<CategoryService>();
-builder.Services.AddSqlServer<ShopContext>(builder.Configuration.GetConnectionString("DefaultConnection"));
+    .AddScoped<CategoryService>()
+    .AddScoped<OrderDetailsService>()
+    .AddScoped<OrderService>()
+    .AddScoped<s3Service>()
+    .AddScoped<NotificationsService>();
+
+builder.Services.AddSqlServer<ShopContext>(builder.Configuration["ConnectionString"]);
+
 
 var app = builder.Build();
 

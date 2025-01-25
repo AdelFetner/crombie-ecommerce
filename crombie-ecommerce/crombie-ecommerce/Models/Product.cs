@@ -1,4 +1,4 @@
-﻿using Microsoft.AspNetCore.Mvc.ModelBinding.Validation;
+using Amazon.Util.Internal;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Text.Json.Serialization;
@@ -8,8 +8,7 @@ namespace crombie_ecommerce.Models
     public class Product
     {
         [Key]
-        [JsonIgnore]
-        public Guid ProductId { get; set; }
+        public Guid ProductId { get; private set; } 
 
         [Required]
         [MinLength(4)]
@@ -25,11 +24,13 @@ namespace crombie_ecommerce.Models
         [Required]
         public Guid BrandId { get; set; }
 
-        [JsonIgnore]
-        [ValidateNever]
-        public virtual Brand Brand { get; set; }
+        [Required]
+        public string Image { get; set; }
 
-        public ICollection<Category> Categories { get; set; } = new List<Category>();
+        [JsonIgnore]
+        public virtual Brand Brand { get; set; } 
+
+        public virtual ICollection<Category> Categories { get; set; } = new List<Category>();
 
         [JsonIgnore]
         public Guid? UserId { get; set; }
@@ -39,6 +40,12 @@ namespace crombie_ecommerce.Models
         [JsonIgnore]
         public Guid? WishlistId { get; set; }
         [JsonIgnore]
-        public virtual Wishlist? Wishlist { get; set; }
+        public virtual ICollection<Wishlist>? Wishlist { get; set; } = new List<Wishlist>();
+
+        public ICollection<OrderDetail> OrderDetails { get; set; }
+
+        [JsonIgnore]
+        public Guid? NotfId { get; set; }
+        public virtual ICollection<Notification>? Notifications { get; set; } = new List<Notification>();
     }
 }

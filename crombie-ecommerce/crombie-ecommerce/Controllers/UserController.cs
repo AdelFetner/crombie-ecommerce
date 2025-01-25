@@ -75,17 +75,16 @@ namespace crombie_ecommerce.Controller
         }
 
             var user = new User
-        {
-                UserId = Guid.NewGuid(), 
+            {
+                UserId = Guid.NewGuid(),
                 Name = userDto.Name,
                 Email = userDto.Email,
                 Password = userDto.Password,
                 IsVerified = userDto.IsVerified,
-                ProductId = userDto.ProductId,
-                WishlistId = userDto.WishlistId
+                ProductId = userDto.ProductId
             };
 
-            _userService.PostUser(user);
+             _userService.PostUser(user);
            
            
             return Ok(user);

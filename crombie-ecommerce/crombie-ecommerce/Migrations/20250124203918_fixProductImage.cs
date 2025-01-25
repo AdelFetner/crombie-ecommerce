@@ -5,7 +5,7 @@
 namespace crombie_ecommerce.Migrations
 {
     /// <inheritdoc />
-    public partial class addDto : Migration
+    public partial class fixProductImage : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
