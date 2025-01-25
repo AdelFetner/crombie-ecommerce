@@ -31,9 +31,9 @@ namespace crombie_ecommerce.Controllers
                     return BadRequest("File name is required");
                 }
 
-                
+
                 var response = await _s3Service.GetObjectFromBucketAsync(objectName);
-                
+
                 // checks if the response status is anything other than a http 200
                 if (response.HttpStatusCode != System.Net.HttpStatusCode.OK)
                 {
@@ -83,7 +83,7 @@ namespace crombie_ecommerce.Controllers
 
 
         [HttpPost("upload")]
-        public async Task<ActionResult<string>> PutObject(IFormFile fileObject,string folderName)
+        public async Task<ActionResult<string>> PutObject(IFormFile fileObject, string folderName)
         {
             try
             {

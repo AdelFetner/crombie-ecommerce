@@ -15,6 +15,8 @@ namespace crombie_ecommerce.Contexts
         public DbSet<Order> Orders { get; set; }
 
         public DbSet<OrderDetail> OrderDetails { get; set; }
+        public DbSet<Notification> Notifications { get; set; }
+
 
 
         public ShopContext(DbContextOptions<ShopContext> options) : base(options)
@@ -216,6 +218,20 @@ namespace crombie_ecommerce.Contexts
                 .HasForeignKey(od => od.ProductId);
             });
 
+            //builder for notifications entity
+            modelBuilder.Entity<Notification>(entity =>
+            {
+                entity.HasKey(n => n.NotfId);
+                entity.Property(n => n.NotificationType).HasMaxLength(50).IsRequired();
+                entity.Property(n => n.Message).HasMaxLength(100).IsRequired();
+                entity.Property(n => n.CreatedDate).IsRequired().HasDefaultValueSql("CURRENT_TIMESTAMP");
+                entity.Property(n => n.IsRead);
+
+                entity.HasOne(n => n.Product)
+                      .WithMany(p => p.Notifications)
+                      .HasForeignKey(n => n.ProductId)
+                      .OnDelete(DeleteBehavior.Cascade);
+            });
             base.OnModelCreating(modelBuilder);
         }
     }
