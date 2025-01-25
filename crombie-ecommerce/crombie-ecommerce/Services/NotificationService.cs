@@ -1,6 +1,4 @@
-﻿using System.Collections.Generic;
-using System.Threading.Tasks;
-using crombie_ecommerce.Contexts;
+﻿using crombie_ecommerce.Contexts;
 using crombie_ecommerce.Models;
 using Microsoft.EntityFrameworkCore;
 

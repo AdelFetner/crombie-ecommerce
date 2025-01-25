@@ -5,6 +5,8 @@ VisualStudioVersion = 17.11.35327.3
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "crombie-ecommerce", "crombie-ecommerce\crombie-ecommerce.csproj", "{558ED4CC-5575-446F-BF32-DFACB68283B3}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "crombie-ecommerce.Models", "crombie-ecommerce.Models\crombie-ecommerce.Models.csproj", "{DE4CBC3B-0DDC-4B65-A48A-20250EFE8413}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -15,6 +17,10 @@ Global
 		{558ED4CC-5575-446F-BF32-DFACB68283B3}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{558ED4CC-5575-446F-BF32-DFACB68283B3}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{558ED4CC-5575-446F-BF32-DFACB68283B3}.Release|Any CPU.Build.0 = Release|Any CPU
+		{DE4CBC3B-0DDC-4B65-A48A-20250EFE8413}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{DE4CBC3B-0DDC-4B65-A48A-20250EFE8413}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{DE4CBC3B-0DDC-4B65-A48A-20250EFE8413}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{DE4CBC3B-0DDC-4B65-A48A-20250EFE8413}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

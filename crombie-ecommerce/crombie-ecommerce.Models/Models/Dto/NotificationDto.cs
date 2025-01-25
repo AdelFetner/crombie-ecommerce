@@ -1,4 +1,6 @@
-﻿namespace crombie_ecommerce.DTOs
+﻿using System.ComponentModel.DataAnnotations;
+
+namespace crombie_ecommerce.Models.Dto
 {
     public class NotificationDTO
     {
@@ -8,6 +10,10 @@
 
         public bool IsRead { get; set; }
 
+        [Required]
         public Guid ProductId { get; set; }
+
+        [Required]
+        public Guid WishlistId { get; set; }
     }
 }

@@ -1,6 +1,4 @@
-﻿using Amazon.Util.Internal;
-using System.ComponentModel.DataAnnotations;
-using System.ComponentModel.DataAnnotations.Schema;
+﻿using System.ComponentModel.DataAnnotations;
 using System.Text.Json.Serialization;
 
 namespace crombie_ecommerce.Models
@@ -45,8 +43,6 @@ namespace crombie_ecommerce.Models
 
         public ICollection<OrderDetail> OrderDetails { get; set; }
 
-        [JsonIgnore]
-        public Guid? NotfId { get; set; }
         public virtual ICollection<Notification>? Notifications { get; set; } = new List<Notification>();
     }
 }

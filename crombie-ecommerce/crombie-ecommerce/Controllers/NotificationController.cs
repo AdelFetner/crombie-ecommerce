@@ -1,9 +1,9 @@
-﻿using System.Collections.Generic;
-using System.Threading.Tasks;
-using crombie_ecommerce.DTOs;
+﻿using crombie_ecommerce.Models.Dto;
 using crombie_ecommerce.Models;
 using crombie_ecommerce.Services;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
+using crombie_ecommerce.Contexts;
 
 namespace crombie_ecommerce.Controllers
 {
@@ -12,10 +12,12 @@ namespace crombie_ecommerce.Controllers
     public class NotificationsController : ControllerBase
     {
         private readonly NotificationsService _notificationsService;
+        private readonly ShopContext _context;
 
-        public NotificationsController(NotificationsService notificationsService)
+        public NotificationsController(NotificationsService notificationsService, ShopContext context)
         {
             _notificationsService = notificationsService;
+            _context = context;
         }
 
         // get all notifications
@@ -29,20 +31,31 @@ namespace crombie_ecommerce.Controllers
         [HttpPost]
         public async Task<IActionResult> CreateNotification([FromBody] NotificationDTO notificationDto)
         {
-            if (!ModelState.IsValid)
-            {
-                return BadRequest(new { errors = ModelState });
-            }
             try
             {
+                if (!ModelState.IsValid)
+                {
+                    return BadRequest(new { errors = ModelState });
+                }
+
+                var wishlistExists = await _context.Wishlists.AnyAsync(w => w.WishlistId == notificationDto.WishlistId);
+
+                if (!wishlistExists)
+                {
+                    return BadRequest("Invalid WishlistId");
+                }
+
                 var notification = new Notification
                 {
                     NotfId = Guid.NewGuid(),
                     NotificationType = notificationDto.NotificationType,
                     Message = notificationDto.Message,
+                    ProductId = notificationDto.ProductId,
+                    WishlistId = notificationDto.WishlistId,
                     CreatedDate = DateTime.UtcNow,
                     IsRead = false
                 };
+
                 var createdNotification = await _notificationsService.CreateNotification(notification);
                 return Ok(new
                 {

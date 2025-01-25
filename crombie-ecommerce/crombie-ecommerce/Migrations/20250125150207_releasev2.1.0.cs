@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace crombie_ecommerce.Migrations
 {
     /// <inheritdoc />
-    public partial class NotfEntity : Migration
+    public partial class releasev210 : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
