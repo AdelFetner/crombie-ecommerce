@@ -22,9 +22,7 @@ namespace crombie_ecommerce.Models.Models.Entities
         public virtual User User { get; set; }
 
         [JsonIgnore]
-        public Guid? ProductId { get; set; }
-        [JsonIgnore]
-        public virtual ICollection<Product>? Product { get; set; } = new List<Product>();
+        public virtual ICollection<Product>? Products { get; set; } = new List<Product>();
 
         [JsonIgnore]
         public Guid? TagsId { get; set; }

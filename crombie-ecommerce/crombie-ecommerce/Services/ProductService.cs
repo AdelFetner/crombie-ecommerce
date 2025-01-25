@@ -115,6 +115,7 @@ namespace crombie_ecommerce.Services
             var query = _context.Products
             .Include(p => p.Categories)
             .Include(p => p.Brand)
+            .Include(p => p.Wishlists)
             .AsQueryable();
 
             // price filtering (min max)
@@ -141,9 +142,9 @@ namespace crombie_ecommerce.Services
             }
 
             // wishlist filtering (placeholder)
-            if (filter.IsOnWishlist.HasValue)
+            if (filter.UserId.HasValue)
             {
-                query = query.Where(p => p.Wishlist.Any() == filter.IsOnWishlist.Value);
+                query = query.Where(p => p.Wishlists.Any(w => w.UserId == filter.UserId));
             }
 
             // search term filtering (find keyword)

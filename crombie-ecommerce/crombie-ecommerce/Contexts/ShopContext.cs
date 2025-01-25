@@ -102,28 +102,26 @@ namespace crombie_ecommerce.Contexts
                     .OnDelete(DeleteBehavior.Cascade);
 
                 // product to wishlist has a many to many relationship
-                wishlist.HasMany(w => w.Product)
-                    .WithMany(p => p.Wishlist)
+                wishlist.HasMany(w => w.Products)
+                    .WithMany(p => p.Wishlists)
                     // join table for product and wishlist 
                     .UsingEntity<Dictionary<string, object>>(
                         "WishlistProduct",
-                        w => w.HasOne<Product>().WithMany().HasForeignKey("ProductId"),
-                        p => p.HasOne<Wishlist>().WithMany().HasForeignKey("WishlistId"),
+                        w => w.HasOne<Product>()
+                            .WithMany()
+                            .HasForeignKey("ProductId")
+                            .OnDelete(DeleteBehavior.Cascade),
+                        p => p.HasOne<Wishlist>()
+                            .WithMany()
+                            .HasForeignKey("WishlistId")
+                            .OnDelete(DeleteBehavior.Cascade),
                         t =>
                         {
-                            t.Property<DateTime>("CreatedAt").HasDefaultValueSql("CURRENT_TIMESTAMP");
+                            t.Property<DateTime>("CreatedAt")
+                                .HasDefaultValueSql("CURRENT_TIMESTAMP");
                             t.HasKey("ProductId", "WishlistId");
                         }
                     );
-
-                // delete indexes for product and user
-                wishlist.HasIndex(w => w.ProductId)
-                    .HasDatabaseName("IX_Wishlist_ProductId")
-                    .IsUnique(false);
-
-                wishlist.HasIndex(w => w.UserId)
-                    .HasDatabaseName("IX_Wishlist_UserId")
-                    .IsUnique(false);
 
                 // wl to tags has a one to many relationship
                 wishlist.HasMany(w => w.Tags)

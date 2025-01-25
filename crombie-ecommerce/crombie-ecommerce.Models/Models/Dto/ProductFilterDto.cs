@@ -7,6 +7,7 @@
         public decimal? MaxPrice { get; set; }
         public List<Guid>? BrandIds { get; set; }
         public List<Guid>? CategoryIds { get; set; }
+        public Guid? UserId { get; set; }
         public bool? IsOnWishlist { get; set; }
         public string? SearchTerm { get; set; }
         public int Page { get; set; } = 1;

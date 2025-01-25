@@ -53,33 +53,50 @@ namespace crombie_ecommerce.Services
         //Method to add a product to a wishlist
         public async Task<bool> AddProductToWishlist(Guid wishlistId, Guid productId)
         {
-            var wishlist = await _context.Wishlists.FindAsync(wishlistId);
+            var wishlist = await _context.Wishlists
+                .Include(w => w.Products)
+                .FirstOrDefaultAsync(w => w.WishlistId == wishlistId);
+
             if (wishlist == null)
             {
-                return false;
+                throw new Exception("Wishlist not found");
             }
+
             var product = await _context.Products.FindAsync(productId);
             if (product == null)
             {
-                return false;
+                throw new Exception("Product not found");
             }
-            product.WishlistId = wishlistId;
-            wishlist.ProductId = productId;
+
+            wishlist.Products.Add(product);
             await _context.SaveChangesAsync();
+
             return true;
         }
 
         //Method to remove a product from a wishlist
         public async Task<bool> RemoveProductFromWishlist(Guid wishlistId, Guid productId)
         {
-            var wishlistEntry = await _context.Wishlists
-                .FirstOrDefaultAsync(w => w.WishlistId == wishlistId && w.ProductId == productId);
-            if (wishlistEntry == null)
+            var wishlist = await _context.Wishlists
+                .Include(w => w.Products)
+                .FirstOrDefaultAsync(w => w.WishlistId == wishlistId);
+
+            if (wishlist == null)
             {
-                return false;
+                throw new Exception("Wishlist not found");
             }
-            wishlistEntry.ProductId = null;
+            
+            var productToRemove = wishlist.Products
+                .FirstOrDefault(p => p.ProductId == productId);
+
+            if (productToRemove == null)
+            {
+                throw new Exception("Product not found in the wishlist");
+            }
+
+            wishlist.Products.Remove(productToRemove);
             await _context.SaveChangesAsync();
+
             return true;
         }
     }
