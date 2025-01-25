@@ -95,11 +95,11 @@ namespace crombie_ecommerce.Contexts
                 wishlist.HasKey(w => w.WishlistId);
                 wishlist.Property(w => w.Name).IsRequired().HasMaxLength(50);
 
-                // user to wishlist has a one-to-one relationship
+                // user to wishlist has a one to many relationship
                 wishlist.HasOne(w => w.User)
-                    .WithOne(u => u.Wishlist)
-                    .HasForeignKey<Wishlist>(w => w.UserId)
-                    .OnDelete(DeleteBehavior.Cascade);
+                     .WithMany(u => u.Wishlists)
+                     .HasForeignKey(w => w.UserId)
+                     .OnDelete(DeleteBehavior.Cascade);
 
                 // product to wishlist has a many to many relationship
                 wishlist.HasMany(w => w.Products)
