@@ -8,8 +8,8 @@ namespace crombie_ecommerce.Models
     public class Product
     {
         [Key]
-        [JsonIgnore]
-        public Guid ProductId { get; set; } 
+        
+        public Guid ProductId { get; private set; } 
 
         [Required]
         [MinLength(4)]

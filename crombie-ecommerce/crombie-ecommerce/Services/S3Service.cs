@@ -1,10 +1,11 @@
 ﻿using Amazon.Runtime;
 using Amazon.S3;
 using Amazon.S3.Model;
+using crombie_ecommerce.Services.Interfaces;
 
 namespace crombie_ecommerce.Services
 {
-    public class s3Service
+    public class s3Service : Is3Service
     {
         private readonly IAmazonS3 _amazonS3;
         private readonly string _bucketName;

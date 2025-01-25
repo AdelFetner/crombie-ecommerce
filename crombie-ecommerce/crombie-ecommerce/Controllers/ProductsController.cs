@@ -9,6 +9,7 @@ using crombie_ecommerce.Contexts;
 using crombie_ecommerce.Models;
 using crombie_ecommerce.Services;
 using crombie_ecommerce.Models.Dto;
+using Microsoft.AspNetCore.Authorization;
 
 namespace crombie_ecommerce.Controllers
 {
@@ -23,11 +24,11 @@ namespace crombie_ecommerce.Controllers
             _productService = productService;
         }
 
-        // GET: api/Products
-        [HttpGet]
-        public async Task<ActionResult<IEnumerable<Product>>> GetProducts()
+        [HttpGet("pages")]
+        public async Task<ActionResult<IEnumerable<Product>>> GetPage([FromQuery] int page, [FromQuery] int pageSize)
         {
-            return await _productService.GetAllProducts();
+            var products = await _productService.GetPage(page, pageSize);
+            return Ok(products);
         }
 
         // GET: api/Products/5
@@ -45,7 +46,7 @@ namespace crombie_ecommerce.Controllers
 
         // POST: api/Products
         [HttpPost]
-        public async Task<ActionResult<Product>> PostProduct([FromForm]ProductDto productDto, IFormFile fileImage)
+        public async Task<ActionResult<Product>> PostProduct([FromForm] ProductDto productDto, IFormFile fileImage)
         {
             try
             {
@@ -88,11 +89,12 @@ namespace crombie_ecommerce.Controllers
             }
         }
 
-        [HttpGet("pages")]
-        public async Task<ActionResult<IEnumerable<Product>>> GetPage([FromQuery] int page, [FromQuery] int pageSize)
+        [HttpGet("filter")]
+        public async Task<ActionResult<List<Product>>> FilterProducts(
+            [FromQuery] ProductFilterDto filter)
         {
-            var products = await _productService.GetPage(page, pageSize);
-            return Ok(products);
+            var result = await _productService.FilterProductsAsync(filter);
+            return Ok(result);
         }
     }
 }
