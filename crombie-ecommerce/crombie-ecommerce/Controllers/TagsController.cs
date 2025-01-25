@@ -8,9 +8,9 @@ namespace crombie_ecommerce.Controllers
     [Route("api/[controller]")]
     public class TagsController : ControllerBase
     {
-        private readonly TagsService _tagsService;
+        private readonly TagService _tagsService;
 
-        public TagsController(TagsService tagsService)
+        public TagsController(TagService tagsService)
         {
             _tagsService = tagsService;
         }
@@ -37,7 +37,7 @@ namespace crombie_ecommerce.Controllers
 
         // Create a new tag
         [HttpPost]
-        public async Task<IActionResult> CreateTag([FromBody] Tags tag)
+        public async Task<IActionResult> CreateTag([FromBody] Tag tag)
         {
             if (!ModelState.IsValid)
             {

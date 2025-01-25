@@ -67,7 +67,7 @@ namespace crombie_ecommerce.Controllers
         public async Task<ActionResult<OrderDetail>> PostOrderDetail(OrderDetail orderDetail)
         {
             var createdDetail = await _orderDetailsService.CreateDetails(orderDetail);
-            return CreatedAtAction(nameof(GetOrderDetailById), new {id = createdDetail.DetailsId}, createdDetail);
+            return CreatedAtAction(nameof(GetOrderDetailById), new {id = createdDetail.DetailId}, createdDetail);
             
         }
 

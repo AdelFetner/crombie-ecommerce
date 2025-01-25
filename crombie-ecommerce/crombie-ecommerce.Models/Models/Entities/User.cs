@@ -22,13 +22,10 @@ namespace crombie_ecommerce.Models
         [Required]
         [MinLength(8)]
         public string Password { get; set; }
-        public string Adress {get; set;}
-        public bool IsVerified { get; set; }
 
-        [JsonIgnore]
-        public Guid? ProductId { get; set; }
-        [JsonIgnore]
-        public  Product? Product { get; set; }
+        public string Adress { get; set; }
+
+        public bool IsVerified { get; set; }
 
         public virtual Wishlist? Wishlist { get; set; } 
 

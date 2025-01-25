@@ -9,14 +9,14 @@ namespace crombie_ecommerce.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class NotificationsController : ControllerBase
+    public class NotificationController : ControllerBase
     {
-        private readonly NotificationsService _notificationsService;
+        private readonly NotificationService _notificationService;
         private readonly ShopContext _context;
 
-        public NotificationsController(NotificationsService notificationsService, ShopContext context)
+        public NotificationController(NotificationService notificationService, ShopContext context)
         {
-            _notificationsService = notificationsService;
+            _notificationService = notificationService;
             _context = context;
         }
 
@@ -24,7 +24,7 @@ namespace crombie_ecommerce.Controllers
         [HttpGet]
         public async Task<ActionResult<List<Notification>>> GetAllNotifications()
         {
-            return Ok(await _notificationsService.GetAllNotifications());
+            return Ok(await _notificationService.GetAllNotifications());
         }
 
         // create notification
@@ -56,7 +56,7 @@ namespace crombie_ecommerce.Controllers
                     IsRead = false
                 };
 
-                var createdNotification = await _notificationsService.CreateNotification(notification);
+                var createdNotification = await _notificationService.CreateNotification(notification);
                 return Ok(new
                 {
                     message = "Notification created successfully.",
@@ -78,7 +78,7 @@ namespace crombie_ecommerce.Controllers
                 return BadRequest("A wishlistId or productId must be provided.");
             }
 
-            var success = await _notificationsService.AssignNotification(notificationId, wishlistId, productId);
+            var success = await _notificationService.AssignNotification(notificationId, wishlistId, productId);
             if (!success)
             {
                 return NotFound("Entity not found.");
@@ -91,7 +91,7 @@ namespace crombie_ecommerce.Controllers
         [HttpDelete("{notificationId}")]
         public async Task<ActionResult> DeleteNotification(Guid notificationId)
         {
-            var success = await _notificationsService.DeleteNotification(notificationId);
+            var success = await _notificationService.DeleteNotification(notificationId);
             if (!success)
             {
                 return NotFound("Notification not found.");

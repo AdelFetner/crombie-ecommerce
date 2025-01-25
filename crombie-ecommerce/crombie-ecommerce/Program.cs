@@ -20,13 +20,13 @@ builder.Services.AddSwaggerGen();
 builder.Services.AddScoped<WishlistService>()
     .AddScoped<ProductService>()
     .AddScoped<BrandService>()
-    .AddScoped<TagsService>()
+    .AddScoped<TagService>()
     .AddScoped<UserService>()
     .AddScoped<CategoryService>()
     .AddScoped<OrderDetailsService>()
     .AddScoped<OrderService>()
     .AddScoped<s3Service>()
-    .AddScoped<NotificationsService>();
+    .AddScoped<NotificationService>();
 
 builder.Services.AddSqlServer<ShopContext>(builder.Configuration["ConnectionString"]);
 

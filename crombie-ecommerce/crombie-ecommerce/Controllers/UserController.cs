@@ -80,8 +80,7 @@ namespace crombie_ecommerce.Controller
                 Name = userDto.Name,
                 Email = userDto.Email,
                 Password = userDto.Password,
-                IsVerified = userDto.IsVerified,
-                ProductId = userDto.ProductId
+                IsVerified = userDto.IsVerified
             };
 
              _userService.PostUser(user);

@@ -8,7 +8,7 @@ namespace crombie_ecommerce.Contexts
         public DbSet<User> Users { get; set; }
         public DbSet<Product> Products { get; set; }
         public DbSet<Wishlist> Wishlists { get; set; }
-        public DbSet<Tags> Tags { get; set; }
+        public DbSet<Tag> Tags { get; set; }
         public DbSet<Brand> Brands { get; set; }
         public DbSet<Category> Categories { get; set; }
 
@@ -33,12 +33,6 @@ namespace crombie_ecommerce.Contexts
                 user.Property(u => u.Email).IsRequired();
                 user.Property(u => u.Password).IsRequired().HasMaxLength(100);
                 user.Property(u => u.IsVerified).HasDefaultValue(false);
-
-                // user to product
-                user.HasOne(u => u.Product)
-                    .WithOne(p => p.User)
-                    .HasForeignKey<Product>(u => u.UserId)
-                    .IsRequired(false);
 
                 // user to orders has a one to many raltionship
                 user.HasMany(u => u.Orders)
@@ -140,9 +134,9 @@ namespace crombie_ecommerce.Contexts
             });
 
             // builder for tags entity 
-            modelBuilder.Entity<Tags>(tag =>
+            modelBuilder.Entity<Tag>(tag =>
             {
-                tag.ToTable("Tags");
+                tag.ToTable("Tag");
                 tag.HasKey(t => t.TagId);
                 tag.Property(t => t.Name).IsRequired().HasMaxLength(50);
                 tag.Property(t => t.Description).HasMaxLength(100); 
@@ -199,8 +193,8 @@ namespace crombie_ecommerce.Contexts
             //builder for order detail entity
             modelBuilder.Entity<OrderDetail>(orderD => 
             {
-                orderD.ToTable("OrderDetails");
-                orderD.HasKey(od => od.DetailsId);
+                orderD.ToTable("OrderDetail");
+                orderD.HasKey(od => od.DetailId);
                 orderD.Property(od => od.OrderId).HasDefaultValueSql("NEWID()");
                 orderD.Property(od=>od.Quantity).IsRequired();
                 orderD.Property(od => od.Price).IsRequired();
@@ -222,7 +216,6 @@ namespace crombie_ecommerce.Contexts
             modelBuilder.Entity<Notification>(entity =>
             {
                 entity.HasKey(n => n.NotfId);
-
                 entity.Property(n => n.NotificationType).HasMaxLength(50).IsRequired();
                 entity.Property(n => n.Message).HasMaxLength(100).IsRequired();
                 entity.Property(n => n.CreatedDate).IsRequired().HasDefaultValueSql("CURRENT_TIMESTAMP");

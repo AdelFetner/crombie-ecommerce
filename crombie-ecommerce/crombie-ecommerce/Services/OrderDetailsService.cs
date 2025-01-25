@@ -17,7 +17,7 @@ namespace crombie_ecommerce.Services
         //create order detail
         public async Task<OrderDetail> CreateDetails(OrderDetail detail)
         {
-            detail.DetailsId = Guid.NewGuid();
+            detail.DetailId = Guid.NewGuid();
             detail.Subtotal= detail.Quantity * detail.Price;
 
             _context.OrderDetails.Add(detail);
@@ -34,7 +34,7 @@ namespace crombie_ecommerce.Services
         //get order detail by id
         public async Task<OrderDetail> GetDetailsById(Guid id)
         {
-            return _context.OrderDetails.Include(od => od.Product).Include(od => od.Order).FirstOrDefault(od => od.DetailsId == id);
+            return _context.OrderDetails.Include(od => od.Product).Include(od => od.Order).FirstOrDefault(od => od.DetailId == id);
         }
 
         //update order detail

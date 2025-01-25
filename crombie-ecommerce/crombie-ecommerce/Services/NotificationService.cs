@@ -4,11 +4,11 @@ using Microsoft.EntityFrameworkCore;
 
 namespace crombie_ecommerce.Services
 {
-    public class NotificationsService
+    public class NotificationService
     {
         private readonly ShopContext _context;
 
-        public NotificationsService(ShopContext context)
+        public NotificationService(ShopContext context)
         {
             _context = context;
         }

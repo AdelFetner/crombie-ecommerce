@@ -4,7 +4,7 @@ using System.Text.Json.Serialization;
 
 namespace crombie_ecommerce.Models
 {
-    [Table("Notifications")]
+    [Table("Notification")]
     public class Notification
     {
         [Key]

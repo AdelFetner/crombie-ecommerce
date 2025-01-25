@@ -29,7 +29,7 @@ namespace crombie_ecommerce.Models
         [JsonIgnore]
         public Guid? TagsId { get; set; }
         [JsonIgnore]
-        public virtual ICollection<Tags>? Tags { get; set; } = new List<Tags>();
+        public virtual ICollection<Tag>? Tags { get; set; } = new List<Tag>();
 
         [JsonIgnore]
         public Guid? NotfId { get; set; }

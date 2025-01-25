@@ -4,8 +4,8 @@ using System.Text.Json.Serialization;
 
 namespace crombie_ecommerce.Models
 {
-    [Table("Tags")]
-    public class Tags
+    [Table("Tag")]
+    public class Tag
     {
         [Key]
         public Guid TagId { get; set; }

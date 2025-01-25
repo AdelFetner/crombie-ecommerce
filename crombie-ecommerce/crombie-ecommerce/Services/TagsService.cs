@@ -4,29 +4,29 @@ using Microsoft.EntityFrameworkCore;
 
 namespace crombie_ecommerce.Services
 {
-    public class TagsService
+    public class TagService
     {
         private readonly ShopContext _context;
 
-        public TagsService(ShopContext context)
+        public TagService(ShopContext context)
         {
             _context = context;
         }
 
         // Method to get all tags
-        public async Task<List<Tags>> GetAllTags()
+        public async Task<List<Tag>> GetAllTags()
         {
             return await _context.Tags.ToListAsync();
         }
 
         // Method to get a tag by its ID
-        public async Task<Tags?> GetTagById(Guid tagId)
+        public async Task<Tag?> GetTagById(Guid tagId)
         {
             return await _context.Tags.FindAsync(tagId);
         }
 
         // Method to create a new tag
-        public async Task<List<Tags>> CreateTag(Tags tag)
+        public async Task<List<Tag>> CreateTag(Tag tag)
         {
             _context.Tags.Add(tag);
             await _context.SaveChangesAsync();
@@ -34,7 +34,7 @@ namespace crombie_ecommerce.Services
         }
 
         // Method to delete a tag
-        public async Task<List<Tags>> DeleteTag(Guid tagId)
+        public async Task<List<Tag>> DeleteTag(Guid tagId)
         {
             var tag = await _context.Tags.FindAsync(tagId);
             if (tag == null)

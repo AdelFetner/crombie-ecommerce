@@ -32,11 +32,6 @@ namespace crombie_ecommerce.Models
         public virtual ICollection<Category> Categories { get; set; } = new List<Category>();
 
         [JsonIgnore]
-        public Guid? UserId { get; set; }
-        [JsonIgnore]
-        public virtual User? User { get; set; }
-
-        [JsonIgnore]
         public Guid? WishlistId { get; set; }
         [JsonIgnore]
         public virtual ICollection<Wishlist>? Wishlist { get; set; } = new List<Wishlist>();
