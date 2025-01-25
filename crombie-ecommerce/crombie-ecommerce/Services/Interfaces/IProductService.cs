@@ -11,5 +11,6 @@ namespace crombie_ecommerce.Services.Interfaces
         Task<List<Product>> GetPage(int page, int quantity);
         Task<Product> GetProductById(Guid id);
         Task<Product> UpdateProduct(Guid id, ProductDto updatedProductDto);
+        Task<List<Product>> FilterProductsAsync(ProductFilterDto filter);
     }
 }

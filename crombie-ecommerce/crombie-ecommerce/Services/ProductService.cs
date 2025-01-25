@@ -13,7 +13,7 @@ namespace crombie_ecommerce.Services
     {
         private readonly ShopContext _context;
         private readonly s3Service _s3Service;
-        private readonly string _bucketFolder = "product";
+        private readonly string _bucketFolder = "products";
 
         public ProductService(ShopContext context, s3Service s3Service)
         {
@@ -44,9 +44,7 @@ namespace crombie_ecommerce.Services
 
             using var stream = fileImage.OpenReadStream();
 
-            string bucketFolder = "product";
-
-            var upload = await _s3Service.UploadFileAsync(stream, fileImage.FileName, fileImage.ContentType, bucketFolder);
+            var upload = await _s3Service.UploadFileAsync(stream, fileImage.FileName, fileImage.ContentType, _bucketFolder);
 
             var product = new Product
             {
@@ -55,7 +53,7 @@ namespace crombie_ecommerce.Services
                 Price = productDto.Price,
                 BrandId = productDto.BrandId,
                 Categories = categories,
-                Image = $"{bucketFolder}/{fileImage.FileName}"
+                Image = $"{_bucketFolder}/{fileImage.FileName}"
             };
 
             _context.Products.Add(product);
@@ -96,7 +94,8 @@ namespace crombie_ecommerce.Services
                 throw new Exception("Product not found");
             }
 
-            var upload = await _s3Service.DeleteObjectFromBucketAsync(existingProduct.Image);
+            // request to s3 to delete the object in the s3 bucket
+            var request = await _s3Service.DeleteObjectFromBucketAsync(existingProduct.Image);
 
             _context.Products.Remove(existingProduct);
             await _context.SaveChangesAsync();
@@ -110,6 +109,56 @@ namespace crombie_ecommerce.Services
                 .Take(quantity)
                 .Include(p => p.Categories)
                 .ToListAsync();
+        }
+
+        public async Task<List<Product>> FilterProductsAsync(ProductFilterDto filter)
+        {
+
+            // prepares the variable with the load of things to filter from
+            var query = _context.Products
+            .Include(p => p.Categories)
+            .Include(p => p.Brand)
+            .AsQueryable();
+
+            // price filtering (min max)
+            if (filter.MinPrice.HasValue)
+            {
+                query = query.Where(p => p.Price >= filter.MinPrice.Value);
+            }
+
+            if (filter.MaxPrice.HasValue)
+            {
+                query = query.Where(p => p.Price <= filter.MaxPrice.Value);
+            }
+
+            // brand filtering
+            if (filter.BrandIds?.Any() == true)
+            {
+                query = query.Where(p => filter.BrandIds.Contains(p.BrandId));
+            }
+            
+            // category filtering
+            if (filter.CategoryIds?.Any() == true)
+            {
+                query = query.Where(p => p.Categories.Any(c => filter.CategoryIds.Contains(c.CategoryId)));
+            }
+
+            // wishlist filtering (placeholder)
+            if (filter.IsOnWishlist.HasValue)
+            {
+                query = query.Where(p => p.Wishlist.Any() == filter.IsOnWishlist.Value);
+            }
+
+            // search term filtering (find keyword)
+            if (!string.IsNullOrWhiteSpace(filter.SearchTerm))
+            {
+                query = query.Where(p =>
+                    p.Name.Contains(filter.SearchTerm) ||
+                    p.Description.Contains(filter.SearchTerm));
+            }
+                
+
+            return await query.ToListAsync();
         }
     }
 }
