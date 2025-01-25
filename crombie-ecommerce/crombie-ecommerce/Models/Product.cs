@@ -1,4 +1,4 @@
-﻿using Amazon.Util.Internal;
+using Amazon.Util.Internal;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Text.Json.Serialization;
@@ -8,7 +8,6 @@ namespace crombie_ecommerce.Models
     public class Product
     {
         [Key]
-        
         public Guid ProductId { get; private set; } 
 
         [Required]
@@ -18,7 +17,7 @@ namespace crombie_ecommerce.Models
 
         [StringLength(100)]
         public string Description { get; set; }
-        
+
         [Range(0, double.MaxValue)]
         public decimal Price { get; set; }
 
