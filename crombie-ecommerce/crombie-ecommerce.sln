@@ -7,6 +7,10 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "crombie-ecommerce", "crombi
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "crombie-ecommerce.Models", "crombie-ecommerce.Models\crombie-ecommerce.Models.csproj", "{DE4CBC3B-0DDC-4B65-A48A-20250EFE8413}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "crombie-ecommerce.BusinessLogic", "BusinessLogic\crombie-ecommerce.BusinessLogic.csproj", "{FBC2C6F2-0797-4BB6-95E5-C7BF049297F8}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "crombie-ecommerce.DataAccess", "crombie-ecommerce.DataAccess\crombie-ecommerce.DataAccess.csproj", "{484D0CB4-FB60-4EB9-B877-744F5505BA73}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -21,6 +25,14 @@ Global
 		{DE4CBC3B-0DDC-4B65-A48A-20250EFE8413}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{DE4CBC3B-0DDC-4B65-A48A-20250EFE8413}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{DE4CBC3B-0DDC-4B65-A48A-20250EFE8413}.Release|Any CPU.Build.0 = Release|Any CPU
+		{FBC2C6F2-0797-4BB6-95E5-C7BF049297F8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{FBC2C6F2-0797-4BB6-95E5-C7BF049297F8}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{FBC2C6F2-0797-4BB6-95E5-C7BF049297F8}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{FBC2C6F2-0797-4BB6-95E5-C7BF049297F8}.Release|Any CPU.Build.0 = Release|Any CPU
+		{484D0CB4-FB60-4EB9-B877-744F5505BA73}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{484D0CB4-FB60-4EB9-B877-744F5505BA73}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{484D0CB4-FB60-4EB9-B877-744F5505BA73}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{484D0CB4-FB60-4EB9-B877-744F5505BA73}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
