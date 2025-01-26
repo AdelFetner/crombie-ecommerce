@@ -1,15 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
-using crombie_ecommerce.Contexts;
-using crombie_ecommerce.Models;
-using crombie_ecommerce.Services;
-using Microsoft.Identity.Client;
+﻿using Microsoft.AspNetCore.Mvc;
+using crombie_ecommerce.BusinessLogic;
 using crombie_ecommerce.Models.Dto;
+using crombie_ecommerce.Models.Entities;
 
 namespace crombie_ecommerce.Controller
 {
@@ -81,7 +73,6 @@ namespace crombie_ecommerce.Controller
                 Email = userDto.Email,
                 Password = userDto.Password,
                 IsVerified = userDto.IsVerified
-
             };
 
              _userService.PostUser(user);

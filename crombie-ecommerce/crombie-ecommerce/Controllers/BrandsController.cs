@@ -1,7 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
-using crombie_ecommerce.Models;
-using crombie_ecommerce.Services;
+using crombie_ecommerce.BusinessLogic;
+using crombie_ecommerce.Models.Entities;
 
 namespace crombie_ecommerce.Controllers
 {

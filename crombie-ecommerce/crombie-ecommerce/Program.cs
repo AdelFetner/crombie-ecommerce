@@ -1,6 +1,6 @@
+using crombie_ecommerce.DataAccess.Contexts;
+using crombie_ecommerce.BusinessLogic;
 using Amazon.CognitoIdentityProvider;
-using crombie_ecommerce.Contexts;
-using crombie_ecommerce.Services;
 using System.Text.Json.Serialization;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 
@@ -21,12 +21,14 @@ builder.Services.AddSwaggerGen();
 builder.Services.AddScoped<WishlistService>()
     .AddScoped<ProductService>()
     .AddScoped<BrandService>()
-    .AddScoped<TagsService>()
+    .AddScoped<TagService>()
     .AddScoped<UserService>()
     .AddScoped<CategoryService>()
     .AddScoped<OrderDetailsService>()
     .AddScoped<OrderService>()
-    .AddScoped<CognitoAuthService>();
+    .AddScoped<CognitoAuthService>()
+    .AddScoped<s3Service>()
+    .AddScoped<NotificationService>();
 
 builder.Services.AddSqlServer<ShopContext>(builder.Configuration["ConnectionString"]);
 

@@ -11,6 +11,18 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Content Remove="Properties\launchSettings.json" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="Properties\launchSettings.json">
+      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+      <CopyToPublishDirectory>Never</CopyToPublishDirectory>
+    </None>
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="AWSSDK.S3" Version="3.7.412.4" />
     <PackageReference Include="Amazon.Extensions.CognitoAuthentication" Version="2.5.5" />
     <PackageReference Include="AWSSDK.CognitoIdentityProvider" Version="3.7.405.22" />
     <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="8.0.11" />
@@ -27,6 +39,11 @@
     <PackageReference Include="Microsoft.VisualStudio.Azure.Containers.Tools.Targets" Version="1.21.0" />
     <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="8.0.7" />
     <PackageReference Include="Swashbuckle.AspNetCore" Version="6.6.2" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\crombie-ecommerce.BusinessLogic\crombie-ecommerce.BusinessLogic.csproj" />
+    <ProjectReference Include="..\crombie-ecommerce.Models\crombie-ecommerce.Models.csproj" />
   </ItemGroup>
 
 </Project>

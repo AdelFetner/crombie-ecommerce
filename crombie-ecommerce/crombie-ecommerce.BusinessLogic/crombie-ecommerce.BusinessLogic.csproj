@@ -1,0 +1,21 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net8.0</TargetFramework>
+    <RootNamespace>crombie_ecommerce.BusinessLogic</RootNamespace>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+    <UserSecretsId>dd4255d6-0727-4b82-9fe4-875bbd8c3d70</UserSecretsId>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="AWSSDK.S3" Version="3.7.412.4" />
+    <PackageReference Include="Swashbuckle.AspNetCore" Version="6.6.2" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\crombie-ecommerce.DataAccess\crombie-ecommerce.DataAccess.csproj" />
+    <ProjectReference Include="..\crombie-ecommerce.Models\crombie-ecommerce.Models.csproj" />
+  </ItemGroup>
+
+</Project>
