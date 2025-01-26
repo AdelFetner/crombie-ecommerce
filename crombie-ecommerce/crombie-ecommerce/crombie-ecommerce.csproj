@@ -36,7 +36,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\BusinessLogic\crombie-ecommerce.BusinessLogic.csproj" />
+    <ProjectReference Include="..\crombie-ecommerce.BusinessLogic\crombie-ecommerce.BusinessLogic.csproj" />
     <ProjectReference Include="..\crombie-ecommerce.Models\crombie-ecommerce.Models.csproj" />
   </ItemGroup>
 
