@@ -1,4 +1,4 @@
-using crombie_ecommerce.DataAccess.Contexts;
+using crombie_ecommerce.Contexts;
 using crombie_ecommerce.BusinessLogic;
 using System.Text.Json.Serialization;
 
@@ -14,6 +14,10 @@ builder.Services.AddControllers()
     options.JsonSerializerOptions.WriteIndented = true;
 });
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
+
+builder.Services.AddBusinessLogic();
+builder.Services.AddDataAccess();
+
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 builder.Services.AddScoped<WishlistService>()
