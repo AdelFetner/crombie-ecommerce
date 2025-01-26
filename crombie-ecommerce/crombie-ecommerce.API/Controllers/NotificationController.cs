@@ -1,7 +1,7 @@
-﻿using crombie_ecommerce.BusinessLogic;
+﻿using crombie_ecommerce.Services;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using crombie_ecommerce.DataAccess.Contexts;
+using crombie_ecommerce.Contexts;
 using crombie_ecommerce.Models.Dto;
 using crombie_ecommerce.Models.Entities;
 

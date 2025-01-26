@@ -1,4 +1,4 @@
-﻿using crombie_ecommerce.BusinessLogic;
+﻿using crombie_ecommerce.Services;
 using Microsoft.AspNetCore.Mvc;
 
 namespace crombie_ecommerce.Controllers
