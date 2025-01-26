@@ -25,8 +25,8 @@ namespace crombie_ecommerce.Models.Models.Entities
 
         public bool IsVerified { get; set; }
 
-        public virtual ICollection<Wishlist>? Wishlists { get; set; } = new List<Wishlist>(); 
+        public virtual ICollection<Wishlist>? Wishlists { get; set; } = []; 
 
-        public virtual ICollection<Order>? Orders { get; set; } = new List<Order>();
+        public virtual ICollection<Order>? Orders { get; set; } = [];
     }
 }

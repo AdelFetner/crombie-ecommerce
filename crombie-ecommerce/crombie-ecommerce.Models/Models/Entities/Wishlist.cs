@@ -22,15 +22,15 @@ namespace crombie_ecommerce.Models.Models.Entities
         public virtual User User { get; set; }
 
         [JsonIgnore]
-        public virtual ICollection<Product>? Products { get; set; } = new List<Product>();
+        public virtual ICollection<Product>? Products { get; set; } = [];
 
         [JsonIgnore]
         public Guid? TagsId { get; set; }
         [JsonIgnore]
-        public virtual ICollection<Tag>? Tags { get; set; } = new List<Tag>();
+        public virtual ICollection<Tag>? Tags { get; set; } = [];
 
         [JsonIgnore]
         public Guid? NotfId { get; set; }
-        public virtual ICollection<Notification>? Notifications { get; set; } = new List<Notification>();
+        public virtual ICollection<Notification>? Notifications { get; set; } = [];
     }
 }

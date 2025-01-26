@@ -29,13 +29,13 @@ namespace crombie_ecommerce.Models.Models.Entities
         [JsonIgnore]
         public virtual Brand Brand { get; set; } 
 
-        public virtual ICollection<Category> Categories { get; set; } = new List<Category>();
+        public virtual ICollection<Category> Categories { get; set; } = [];
 
         [JsonIgnore]
-        public virtual ICollection<Wishlist>? Wishlists { get; set; } = new List<Wishlist>();
+        public virtual ICollection<Wishlist>? Wishlists { get; set; } = [];
 
         public ICollection<OrderDetail> OrderDetails { get; set; }
 
-        public virtual ICollection<Notification>? Notifications { get; set; } = new List<Notification>();
+        public virtual ICollection<Notification>? Notifications { get; set; } = [];
     }
 }
