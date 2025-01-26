@@ -1,137 +1,134 @@
 ﻿using Amazon.CognitoIdentityProvider;
 using Amazon.CognitoIdentityProvider.Model;
 using Amazon.Extensions.CognitoAuthentication;
-using System;
-using System.Threading.Tasks;
+using Amazon.Runtime;
+using Microsoft.VisualStudio.Web.CodeGenerators.Mvc.Templates.BlazorIdentity.Pages.Manage;
+using System.Net;
+using System.Security.Cryptography;
+using System.Text;
 
 public class CognitoAuthService
 {
-    private readonly IAmazonCognitoIdentityProvider _cognitoProvider;
-    private readonly IConfiguration _configuration;
-    private readonly  CognitoUserPool _userPoolId;
+    private readonly AmazonCognitoIdentityProviderClient _provider;
+    private readonly CognitoUserPool _userPool;
+    private readonly string _clientId;
+    private readonly string _clientSecret;
+
+
 
     public CognitoAuthService(IConfiguration configuration)
     {
-        _configuration = configuration;
-        _cognitoProvider = new AmazonCognitoIdentityProviderClient();
-        _userPoolId = new CognitoUserPool(
-            _configuration["AWS:UserPoolId"],
-            _configuration["AWS:AppClientId"],
-            _cognitoProvider
-            );
+        var awsAccessKeyId = configuration["AWS:AccessKeyId"];
+        var awsSecretAccessKey = configuration["AWS:SecretAccessKey"];
+        var userPoolId = configuration["AWS:UserPoolId"];
+        var region = configuration["AWS:Region"];
+
+        _clientId = configuration["AWS:ClientId"] ?? "";
+        _clientSecret = configuration["AWS:ClientSecret"] ?? "";
+
+        var awsCredentials = new BasicAWSCredentials(awsAccessKeyId, awsSecretAccessKey);
+        _provider = new AmazonCognitoIdentityProviderClient(awsCredentials, Amazon.RegionEndpoint.GetBySystemName(region));
+        _userPool = new CognitoUserPool(userPoolId, _clientId, _provider, _clientSecret);
     }
 
-    //Register a user
-    public async Task<string> RegisterAsync(string email, string password)
+    public async Task<string> RegisterAsync(string username, string password)
     {
-        var userAttrs = new AttributeType
+        try
         {
-            Name = "email",
-            Value = email,
-        };
-
-        var userAttrsList = new List<AttributeType>();
-
-        userAttrsList.Add(userAttrs);
-
-        var signUpRequest = new SignUpRequest
-        {
-            UserAttributes = userAttrsList,
-            ClientId= _configuration["AWS:AppClientId"],
-            Username = email,
-            Password = password,
-            /*UserAttributes = new List<AttributeType>
+            var request = new SignUpRequest
             {
-                new AttributeType { Name = "email", Value = email }
-            }*/
-        };
+                ClientId = _clientId,
+                Username = username,
+                Password = password,
+                SecretHash = CalculateSecretHash(_clientId, _clientSecret, username)
+            };
 
-        var response = await _cognitoProvider.SignUpAsync(signUpRequest);
+            var response = await _provider.SignUpAsync(request);
 
-        return response.UserConfirmed ? "User registered and confirmed" : "User registered, please confirm via email.";
-    }
+            if (response.HttpStatusCode == System.Net.HttpStatusCode.OK)
+            {
+                return "Registration successful. Please confirm your email.";
+            }
 
-    //Resend the confirmation code to email
-    public async Task<string> ResendConfirmationCodeAsync(string email)
-    {
-        var resendCodeRequest = new ResendConfirmationCodeRequest
+            throw new Exception("Registration failed with unknown error.");
+        }
+        catch (Exception ex)
         {
-            Username = email
-        };
-
-        await _cognitoProvider.ResendConfirmationCodeAsync(resendCodeRequest);
-        return "Confirmation code resent successfully.";
+            // Log and rethrow exception
+            Console.WriteLine($"Error during registration: {ex.Message}");
+            throw;
+        }
     }
 
-    //Confirms the user 
-    public async Task<string> ConfirmSignupAsync(string code, string email)
+    public async Task<CodeDeliveryDetailsType> ResendConfirmationCodeAsync(string userName)
     {
-        var confirmRequest = new ConfirmSignUpRequest
+        var codeRequest = new ResendConfirmationCodeRequest
         {
-            
-            Username = email,
-            ConfirmationCode = code
+            ClientId = this._clientId,
+            Username = userName,
+            SecretHash = CalculateSecretHash(_clientId, _clientSecret, userName)
         };
 
-        await _cognitoProvider.ConfirmSignUpAsync(confirmRequest);
-        return "User confirmed successfully.";
+        var response = await _provider.ResendConfirmationCodeAsync(codeRequest);
+
+        Console.WriteLine($"Method of delivery is {response.CodeDeliveryDetails.DeliveryMedium}");
+
+        return response.CodeDeliveryDetails;
     }
 
-
-    //Login the user after was confirmed 
-    public async Task<AuthResponse> LoginUserAsync(string email, string password)
+    public async Task<bool> ConfirmSignupAsync(string code, string userName)
     {
+        var signUpRequest = new ConfirmSignUpRequest
+        {
+            ClientId = this._clientId,
+            ConfirmationCode = code,
+            Username = userName,
+            SecretHash = CalculateSecretHash(_clientId, _clientSecret, userName)
+        };
+
+        var response = await _provider.ConfirmSignUpAsync(signUpRequest);
+        if (response.HttpStatusCode == HttpStatusCode.OK)
+        {
+            Console.WriteLine($"{userName} was confirmed");
+            return true;
+        }
+        return false;
+    }
+
+    public async Task<InitiateAuthResponse> InitiateAuthAsync(string userName, string password)
+    {
+        var authParameters = new Dictionary<string, string>();
+        authParameters.Add("USERNAME", userName);
+        authParameters.Add("PASSWORD", password);
+        authParameters.Add("SECRET_HASH", CalculateSecretHash(_clientId, _clientSecret, userName));
+
         var authRequest = new InitiateAuthRequest
         {
+            ClientId = this._clientId,
+            AuthParameters = authParameters,
             AuthFlow = AuthFlowType.USER_PASSWORD_AUTH,
-            AuthParameters = new Dictionary<string, string>
-            {
-                { "EMAIL", email },
-                { "PASSWORD", password }
-            }
+
         };
 
-        var response = await _cognitoProvider.InitiateAuthAsync(authRequest);
 
-        return new AuthResponse
-        {
-            IdToken = response.AuthenticationResult.IdToken,
-            AccessToken = response.AuthenticationResult.AccessToken,
-            RefreshToken = response.AuthenticationResult.RefreshToken,
-            ExpiresIn = response.AuthenticationResult.ExpiresIn
-        };
+      
+
+        var response = await _provider.InitiateAuthAsync(authRequest);
+
+        return response;
     }
 
+    
 
-    public async Task<AuthResponse> Refresh(string email, string refreshToken)
+    public static string CalculateSecretHash(string clientId, string clientSecret, string username)
     {
-        var refreshRequest = new InitiateAuthRequest
-        {
-            AuthFlow = AuthFlowType.REFRESH_TOKEN_AUTH,
-            AuthParameters = new Dictionary<string, string>
-            {
-                { "EMAIL", email },
-                { "REFRESH_TOKEN", refreshToken }
-            }
-        };
+        var message = username + clientId;
+        var key = Encoding.UTF8.GetBytes(clientSecret);
 
-        var response = await _cognitoProvider.InitiateAuthAsync(refreshRequest);
-
-        return new AuthResponse
+        using (var hmac = new HMACSHA256(key))
         {
-            IdToken = response.AuthenticationResult.IdToken,
-            AccessToken = response.AuthenticationResult.AccessToken,
-            RefreshToken = refreshToken,
-            ExpiresIn = response.AuthenticationResult.ExpiresIn
-        };
+            var hash = hmac.ComputeHash(Encoding.UTF8.GetBytes(message));
+            return Convert.ToBase64String(hash);
+        }
     }
 }
-
-public class AuthResponse
-{
-    public string IdToken { get; set; }
-    public string AccessToken { get; set; }
-    public string RefreshToken { get; set; }
-    public int ExpiresIn { get; set; }
-}
-

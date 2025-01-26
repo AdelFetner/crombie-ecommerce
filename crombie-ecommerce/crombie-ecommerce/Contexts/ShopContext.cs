@@ -1,6 +1,7 @@
 ﻿using crombie_ecommerce.Models;
 using Microsoft.EntityFrameworkCore;
 
+
 namespace crombie_ecommerce.Contexts
 {
     public class ShopContext : DbContext

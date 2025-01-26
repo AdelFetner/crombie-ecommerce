@@ -30,7 +30,7 @@ builder.Services.AddScoped<WishlistService>()
 
 builder.Services.AddSqlServer<ShopContext>(builder.Configuration["ConnectionString"]);
 
-builder.Services.AddAuthentication(options =>
+/*builder.Services.AddAuthentication(options =>
 {
     options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
     options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
@@ -49,7 +49,43 @@ builder.Services.AddAuthentication(options =>
         ClockSkew = TimeSpan.Zero
     };
 
-});
+});*/
+
+builder.Services.AddAuthorization();
+builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+    .AddJwtBearer(options =>
+    {
+        options.Authority = $"https://cognito-idp.{builder.Configuration["AWS:Region"]}.amazonaws.com/{builder.Configuration["AWS:UserPoolId"]}";
+        options.TokenValidationParameters = new Microsoft.IdentityModel.Tokens.TokenValidationParameters
+        {
+            ValidateIssuer = true,
+            ValidIssuer = $"https://cognito-idp.{builder.Configuration["AWS:Region"]}.amazonaws.com/{builder.Configuration["AWS:UserPoolId"]}",
+            ValidateAudience = false, // Disable default audience validation
+            ValidateLifetime = true,
+            ValidateIssuerSigningKey = true,
+        };
+
+        options.Events = new JwtBearerEvents
+        {
+            OnTokenValidated = context =>
+            {
+                var claims = context.Principal.Claims;
+                var clientIdClaim = claims.FirstOrDefault(c => c.Type == "client_id")?.Value;
+                if (string.IsNullOrEmpty(clientIdClaim))
+                {
+                    Console.WriteLine("Missing client_id claim");
+                    context.Fail("Missing client_id claim");
+                }
+
+                if (clientIdClaim != builder.Configuration["AWS:ClientId"])
+                {
+                    context.Fail("Invalid client_id");
+                }
+
+                return Task.CompletedTask;
+            }
+        };
+    });
 
 
 
@@ -73,6 +109,8 @@ else
     Console.WriteLine("Couldn't connect to database");
 
 app.UseHttpsRedirection();
+
+app.UseAuthentication();
 
 app.UseAuthorization();
 

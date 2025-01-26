@@ -1,15 +1,14 @@
-﻿using Azure.Core;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 
 [ApiController]
 [Route("auth")]
-public class CognitoAuthController : ControllerBase
+public class AuthController : ControllerBase
 {
-    private readonly CognitoAuthService _authService;
+    private readonly CognitoAuthService _cognitoAuthService;
 
-    public CognitoAuthController(CognitoAuthService authService)
+    public AuthController(CognitoAuthService cognitoAuthService)
     {
-        _authService = authService;
+        _cognitoAuthService = cognitoAuthService;
     }
 
     [HttpPost("register")]
@@ -17,26 +16,26 @@ public class CognitoAuthController : ControllerBase
     {
         try
         {
-            var userId = await _authService.RegisterAsync(request.Email, request.Password);
-            return Ok(new { UserId= userId, Message ="Registered User. Please verify your email." });
+            var result = await _cognitoAuthService.RegisterAsync(request.Email, request.Password);
+            return Ok(new { Message = result });
         }
         catch (Exception ex)
         {
-            return BadRequest(new { Message = ex.Message });
+            return BadRequest(new { Error = ex.Message });
         }
     }
 
     [HttpPost("resend-code")]
-    public async Task<IActionResult> ResendCode([FromBody] ResendCodeRequest request)
+    public async Task<IActionResult> ResendCode([FromBody] ResendRequest request)
     {
         try
         {
-            await _authService.ResendConfirmationCodeAsync(request.Email);
-            return Ok(new { Message = "Code resended to your email." });
+            var result = await _cognitoAuthService.ResendConfirmationCodeAsync(request.Email);
+            return Ok(new { Message = result });
         }
         catch (Exception ex)
         {
-            return BadRequest(new { Message = ex.Message });
+            return BadRequest(new { Error = ex.Message });
         }
     }
 
@@ -45,7 +44,7 @@ public class CognitoAuthController : ControllerBase
     {
         try
         {
-            var result = await _authService.ConfirmSignupAsync(request.Code, request.Email);
+            var result = await _cognitoAuthService.ConfirmSignupAsync(request.Code, request.Email);
             return Ok(new { Message = result });
         }
         catch (Exception ex)
@@ -55,32 +54,19 @@ public class CognitoAuthController : ControllerBase
     }
 
     [HttpPost("login")]
-    public async Task<IActionResult> Login([FromBody] LoginRequest request)
+    public async Task<IActionResult> Login([FromBody] RegisterRequest request)
     {
         try
         {
-            var token = await _authService.LoginUserAsync(request.Email, request.Password);
-            return Ok(new {AccessToken = token});
-        }
-        catch (Exception ex)
-        {
-            return BadRequest(new { Message = ex.Message });
-        }
-    }
-
-    [HttpPost("refresh")]
-    public async Task<IActionResult> Refresh([FromBody] RefreshTokenRequest request)
-    {
-        try
-        {
-            var response = await _authService.Refresh(request.Username, request.RefreshToken);
-            return Ok(response);
+            var result = await _cognitoAuthService.InitiateAuthAsync(request.Email, request.Password);
+            return Ok(result);
         }
         catch (Exception ex)
         {
             return BadRequest(new { Error = ex.Message });
         }
     }
+
 }
 
 public class RegisterRequest
@@ -89,20 +75,26 @@ public class RegisterRequest
     public string Password { get; set; }
 }
 
-public class ResendCodeRequest
+public class ConfirmRequest
+{
+    public string Code { get; set; }
+    public string Email { get; set; }
+}
+
+public class ResendRequest
 {
     public string Email { get; set; }
 }
 
-public class ConfirmRequest
+public class RefreshRequest
 {
-    public string Email { get; set; }
-    public string Code { get; set; }
+    public string userName { get; set; }
+    public string refreshToken { get; set; }
 }
 
 public class LoginRequest
 {
-    public string Email { get; set; }
+    public string Username { get; set; }
     public string Password { get; set; }
 }
 
