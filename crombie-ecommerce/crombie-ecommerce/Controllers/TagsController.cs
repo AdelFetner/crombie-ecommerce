@@ -1,5 +1,5 @@
-﻿using crombie_ecommerce.Models;
-using crombie_ecommerce.Services;
+﻿using crombie_ecommerce.Models.Entities;
+using crombie_ecommerce.BusinessLogic;
 using Microsoft.AspNetCore.Mvc;
 
 namespace crombie_ecommerce.Controllers
@@ -8,9 +8,9 @@ namespace crombie_ecommerce.Controllers
     [Route("api/[controller]")]
     public class TagsController : ControllerBase
     {
-        private readonly TagsService _tagsService;
+        private readonly TagService _tagsService;
 
-        public TagsController(TagsService tagsService)
+        public TagsController(TagService tagsService)
         {
             _tagsService = tagsService;
         }
@@ -37,7 +37,7 @@ namespace crombie_ecommerce.Controllers
 
         // Create a new tag
         [HttpPost]
-        public async Task<IActionResult> CreateTag([FromBody] Tags tag)
+        public async Task<IActionResult> CreateTag([FromBody] Tag tag)
         {
             if (!ModelState.IsValid)
             {
