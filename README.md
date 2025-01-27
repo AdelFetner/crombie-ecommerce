@@ -4,7 +4,7 @@ An eCommerce application built with C# .NET, using **AWS S3** for static object 
 ## Architecture  
 <div align="center">
 
-![Untitled-2024-12-29-1505](https://github.com/user-attachments/assets/2c3a7dc1-c671-4cdd-9581-3ea806aef375)
+![Diagram](https://github.com/user-attachments/assets/d1171941-22c8-44b4-b19a-1809a10eb804)
 
 </div>
 
@@ -20,12 +20,12 @@ An eCommerce application built with C# .NET, using **AWS S3** for static object 
 5. **dotnetApplication**:  
    - **backendApi**: Core API endpoints.  
 
-## statusIndicators  
+## Status Indicators  
 - ✅ **Done**  
 - ⚠️ **Working with issues**
 - 🔴 **Not implemented**
 
-### gitBranchingStrategy  
+### Git Branching Strategy  
 - **main**: Stable production branch.  
 - **release/v{major}.{minor}.{patch}**: Prep for releases (e.g., `release/v1.2.0`).  
 - **dev**: Integration branch for ongoing work.  
@@ -34,7 +34,7 @@ An eCommerce application built with C# .NET, using **AWS S3** for static object 
 
 ---  
 
-## prerequisites  
+## Prerequisites  
 - [.NET SDK](https://dotnet.microsoft.com/download)  
 - [Docker](https://www.docker.com/get-started)  
 - [AWS CLI](https://aws.amazon.com/cli/)  
