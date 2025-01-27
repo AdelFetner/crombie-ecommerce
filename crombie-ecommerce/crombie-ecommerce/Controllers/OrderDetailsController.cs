@@ -1,13 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
-using crombie_ecommerce.Contexts;
-using crombie_ecommerce.Models;
-using crombie_ecommerce.Services;
+﻿using Microsoft.AspNetCore.Mvc;
+using crombie_ecommerce.BusinessLogic;
+using crombie_ecommerce.Models.Entities;
 
 namespace crombie_ecommerce.Controllers
 {
@@ -67,7 +60,7 @@ namespace crombie_ecommerce.Controllers
         public async Task<ActionResult<OrderDetail>> PostOrderDetail(OrderDetail orderDetail)
         {
             var createdDetail = await _orderDetailsService.CreateDetails(orderDetail);
-            return CreatedAtAction(nameof(GetOrderDetailById), new {id = createdDetail.DetailsId}, createdDetail);
+            return CreatedAtAction(nameof(GetOrderDetailById), new {id = createdDetail.DetailId}, createdDetail);
             
         }
 
