@@ -29,9 +29,11 @@ namespace crombie_ecommerce.DataAccess.Contexts
             {
                 user.ToTable("User");
                 user.HasKey(u => u.UserId);
+                user.Property(u => u.Image);
                 user.Property(u => u.Name).IsRequired().HasMaxLength(50);
                 user.Property(u => u.Email).IsRequired();
                 user.Property(u => u.Password).IsRequired().HasMaxLength(100);
+                user.Property(u => u.Address).IsRequired(false);
                 user.Property(u => u.IsVerified).HasDefaultValue(false);
 
                 // user to orders has a one to many raltionship
@@ -49,7 +51,7 @@ namespace crombie_ecommerce.DataAccess.Contexts
 
                 product.HasKey(p => p.ProductId);
                 product.Property(p => p.Image);
-                product.Property(p => p.ProductId).HasDefaultValueSql("NEWID()");
+                product.Property(p => p.ProductId);
                 product.Property(p => p.Name).IsRequired().HasMaxLength(50);
                 product.Property(p => p.Description).HasMaxLength(100);
                 product.Property(p => p.Price).HasColumnType("decimal(18,2)");

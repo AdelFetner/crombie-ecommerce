@@ -40,19 +40,22 @@ namespace crombie_ecommerce.BusinessLogic
                 .Where(c => productDto.CategoryIds.Contains(c.CategoryId))
                 .ToListAsync();
 
-            using var stream = fileImage.OpenReadStream();
-
-            var upload = await _s3Service.UploadFileAsync(stream, fileImage.FileName, fileImage.ContentType, _bucketFolder);
+            var productId = Guid.NewGuid();
 
             var product = new Product
             {
+                ProductId = productId,
                 Name = productDto.Name,
                 Description = productDto.Description,
                 Price = productDto.Price,
                 BrandId = productDto.BrandId,
                 Categories = categories,
-                Image = $"{_bucketFolder}/{fileImage.FileName}"
+                Image = $"{_bucketFolder}/{productId}/{fileImage.FileName}"
             };
+
+            using var stream = fileImage.OpenReadStream();
+
+            var upload = await _s3Service.UploadFileAsync(stream, fileImage.FileName, fileImage.ContentType, $"{_bucketFolder}/{product.ProductId}");
 
             _context.Products.Add(product);
             await _context.SaveChangesAsync();

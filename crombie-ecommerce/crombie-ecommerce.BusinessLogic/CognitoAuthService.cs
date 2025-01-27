@@ -2,7 +2,7 @@
 using Amazon.CognitoIdentityProvider.Model;
 using Amazon.Extensions.CognitoAuthentication;
 using Amazon.Runtime;
-using Microsoft.VisualStudio.Web.CodeGenerators.Mvc.Templates.BlazorIdentity.Pages.Manage;
+using Microsoft.Extensions.Configuration;
 using System.Net;
 using System.Security.Cryptography;
 using System.Text;
