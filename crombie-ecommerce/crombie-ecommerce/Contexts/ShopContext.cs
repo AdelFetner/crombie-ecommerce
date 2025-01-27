@@ -1,6 +1,7 @@
 ﻿using crombie_ecommerce.Models;
 using Microsoft.EntityFrameworkCore;
 
+
 namespace crombie_ecommerce.Contexts
 {
     public class ShopContext : DbContext
@@ -15,6 +16,10 @@ namespace crombie_ecommerce.Contexts
         public DbSet<Order> Orders { get; set; }
 
         public DbSet<OrderDetail> OrderDetails { get; set; }
+
+        public DbSet<Cart> Carts { get; set; }
+
+        public DbSet<CartItem> CartItems { get; set; }
 
 
         public ShopContext(DbContextOptions<ShopContext> options) : base(options)
