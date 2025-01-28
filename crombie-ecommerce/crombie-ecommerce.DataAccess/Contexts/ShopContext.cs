@@ -268,7 +268,7 @@ namespace crombie_ecommerce.DataAccess.Contexts
                 entity.HasKey(entity => entity.CartId);
 
 
-                //producto - cartItem relation (one to many)
+                //product - cartItem relation (one to many)
                 entity.HasOne(ci => ci.Product)
                       .WithMany()
                       .HasForeignKey(ci => ci.ProductId)

@@ -1,5 +1,5 @@
-﻿using crombie_ecommerce.Models;
-using crombie_ecommerce.Services;
+﻿using crombie_ecommerce.Models.Entities;
+using crombie_ecommerce.BusinessLogic;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
