@@ -29,6 +29,9 @@ namespace crombie_ecommerce.Models.Entities
         [Required]
         public string Image { get; set; }
 
+        public int RoleId { get; set; }
+        public Role Role { get; set; } 
+
         public virtual ICollection<Wishlist>? Wishlists { get; set; } = [];
 
         public virtual ICollection<Order>? Orders { get; set; } = [];

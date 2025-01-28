@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace crombie_ecommerce.Models.Entities
 {
-    internal class Role
+    public class Role
     {
         public int RoleId { get; set; }
         public string Name { get; set; }

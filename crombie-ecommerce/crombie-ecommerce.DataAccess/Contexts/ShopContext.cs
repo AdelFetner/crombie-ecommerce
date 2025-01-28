@@ -20,6 +20,8 @@ namespace crombie_ecommerce.DataAccess.Contexts
         public DbSet<HistoryUser> HistoryUsers { get; set; }
         public DbSet<HistoryProduct> HistoryProducts { get; set; }
 
+        public DbSet<Role> Roles { get; set; }
+
 
 
         public ShopContext(DbContextOptions<ShopContext> options) : base(options)
