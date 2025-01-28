@@ -31,5 +31,7 @@ namespace crombie_ecommerce.Models.Entities
         public virtual ICollection<Wishlist>? Wishlists { get; set; } = [];
 
         public virtual ICollection<Order>? Orders { get; set; } = [];
+
+        public Cart Cart { get; set; }
     }
 }

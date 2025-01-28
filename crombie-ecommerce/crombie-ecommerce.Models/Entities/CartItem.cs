@@ -1,10 +1,10 @@
 ﻿using crombie_ecommerce.Models.Entities;
 
-namespace crombie_ecommerce.Models
+namespace crombie_ecommerce.Models.Entities
 {
     public class CartItem
     {
-        public int Id { get; set; }
+        public Guid ItemId { get; set; }
         public Guid CartId { get; set; }
         public Guid ProductId { get; set; }
         public int Quantity { get; set; }

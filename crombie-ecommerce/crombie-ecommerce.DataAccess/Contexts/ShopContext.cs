@@ -41,11 +41,13 @@ namespace crombie_ecommerce.DataAccess.Contexts
                 user.Property(u => u.Address).IsRequired(false);
                 user.Property(u => u.IsVerified).HasDefaultValue(false);
 
-                // user to orders has a one to many raltionship
+                // user to orders has a one to many relationship
                 user.HasMany(u => u.Orders)
                     .WithOne(o => o.User)
                     .HasForeignKey(o => o.UserId)
                     .OnDelete(DeleteBehavior.Cascade);
+
+          
 
             });
 
@@ -241,6 +243,43 @@ namespace crombie_ecommerce.DataAccess.Contexts
                       .OnDelete(DeleteBehavior.Cascade)
                       .IsRequired();
             });
+
+            modelBuilder.Entity<Cart>(entity =>
+            {
+                entity.HasKey(c => c.CartId);
+                entity.Property(c => c.TotalAmount);
+
+                //User - cart relation (one to one)
+                entity.HasOne(c => c.User)
+                      .WithOne(u => u.Cart)
+                      .HasForeignKey<Cart>(c => c.UserId)
+                      .OnDelete(DeleteBehavior.Cascade);
+
+                // cart - cartItems relation (one to many)
+                entity.HasMany(c => c.Items)
+                      .WithOne(ci => ci.Cart)
+                      .HasForeignKey(ci => ci.CartId)
+                      .OnDelete(DeleteBehavior.Cascade);
+            });
+
+
+            modelBuilder.Entity<CartItem>(entity =>
+            {
+                entity.HasKey(entity => entity.CartId);
+
+
+                //producto - cartItem relation (one to many)
+                entity.HasOne(ci => ci.Product)
+                      .WithMany()
+                      .HasForeignKey(ci => ci.ProductId)
+                      .OnDelete(DeleteBehavior.Restrict); //to prevent delete a product when want to delete an CartItem
+
+
+                modelBuilder.Entity<CartItem>()
+                            .Property(ci => ci.Total)
+                            .HasComputedColumnSql("[Quantity] * [Price]");
+            });
+
             base.OnModelCreating(modelBuilder);
         }
     }

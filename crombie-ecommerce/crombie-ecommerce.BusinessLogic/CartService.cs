@@ -1,9 +1,9 @@
 ﻿using crombie_ecommerce.DataAccess.Contexts;
-using crombie_ecommerce.Models;
+using crombie_ecommerce.Models.Entities;
 using Microsoft.EntityFrameworkCore;
 using System.Text.Json;
 
-namespace crombie_ecommerce.Services
+namespace crombie_ecommerce.BusinessLogic
 {
     public class CartService
     {
@@ -50,7 +50,7 @@ namespace crombie_ecommerce.Services
             {
                 cartItem = new CartItem
                 {
-                    CartId = cart.Id,
+                    CartId = cart.CartId,
                     ProductId = productId,
                     Quantity = quantity,
                     Price = product.Price,

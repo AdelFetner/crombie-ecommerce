@@ -1,10 +1,10 @@
 ﻿using crombie_ecommerce.Models.Entities;
 
-namespace crombie_ecommerce.Models
+namespace crombie_ecommerce.Models.Entities
 {
     public class Cart
     {
-        public Guid Id { get; set; }
+        public Guid CartId { get; set; }
         public List<CartItem> Items { get; set; } = new List<CartItem>();
         public decimal TotalAmount => Items.Sum(item => item.Total);
 
