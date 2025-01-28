@@ -81,12 +81,14 @@ namespace crombie_ecommerce.Controllers
 
         // DELETE: api/User/5
         [HttpDelete("{id}")]
-        public async Task<IActionResult> DeleteUser(Guid id)
+        public async Task<IActionResult> DeleteAndArchive(Guid id)
         {
-            await _userService.DeleteUserAsync(id);
-            return Ok(new { message = "The user was successfully deleted" });
+            var success = await _userService.ArchiveMethod(id, "Unregistered");
+            if (!success)
+            {
+                return NotFound(new { message = "User not found." });
+            }
+            return Ok(new { message = "User deleted successfully." });
         }
-
-        
     }
 }

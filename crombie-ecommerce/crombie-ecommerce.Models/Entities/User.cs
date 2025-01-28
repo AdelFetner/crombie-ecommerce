@@ -1,10 +1,11 @@
-﻿using System.ComponentModel.DataAnnotations.Schema;
+﻿using Newtonsoft.Json;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.ComponentModel.DataAnnotations;
 
 namespace crombie_ecommerce.Models.Entities
 {
     [Table("User")]
-    public class User
+    public class User : IProcessableEntity
     {
         [Key]
         public Guid UserId { get; set; }
@@ -31,5 +32,10 @@ namespace crombie_ecommerce.Models.Entities
         public virtual ICollection<Wishlist>? Wishlists { get; set; } = [];
 
         public virtual ICollection<Order>? Orders { get; set; } = [];
+        public Guid Id => UserId;
+        public string SerializeToJson()
+        {
+            return JsonConvert.SerializeObject(this);
+        }
     }
 }

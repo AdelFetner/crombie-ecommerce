@@ -66,16 +66,16 @@ namespace crombie_ecommerce.Controllers
             }
         }
 
-        // Delete a wishlist
+        // Delete a wishlist and move it to the archive
         [HttpDelete("{id}")]
-        public async Task<ActionResult<List<Wishlist>>> DeleteWishlist(Guid id)
+        public async Task<IActionResult> DeleteAndArchive(Guid id)
         {
-            var wishlists = await _wishlistService.DeleteWishlist(id);
-            if (wishlists == null)
+            var success = await _wishlistService.ArchiveMethod(id, "Unregistered");
+            if (!success)
             {
-                return NotFound(new {message = "Wishlist not found. Deletion failed."});
+                return NotFound(new { message = "Wishlist not found." });
             }
-            return Ok(new {message = "Wishlist deleted successfully.", data = wishlists});
+            return Ok(new { message = "Wishlist deleted successfully." });
         }
 
         // Add a product to a wishlist

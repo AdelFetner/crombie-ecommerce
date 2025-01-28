@@ -162,5 +162,31 @@ namespace crombie_ecommerce.BusinessLogic
 
             return await query.ToListAsync();
         }
+
+        public async Task<bool> ArchiveMethod(Guid ProductId, string processedBy = "Unregistered")
+        {
+            var product = await _context.Products
+                .Include(p => p.Categories)
+                .Include(p => p.Brand)
+                .Include(p => p.Image)
+                .FirstOrDefaultAsync(p => p.ProductId == ProductId);
+
+            if (product == null)
+                return false;
+
+            var historyProduct = new HistoryProduct
+            {
+                OriginalId = product.ProductId,
+                ProcessedAt = DateTime.UtcNow,
+                ProcessedBy = processedBy,
+                EntityJson = product.SerializeToJson()
+            };
+
+            _context.HistoryProducts.Add(historyProduct);
+            _context.Products.Remove(product);
+            await _context.SaveChangesAsync();
+
+            return true;
+        }
     }
 }
