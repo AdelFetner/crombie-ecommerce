@@ -1,14 +1,9 @@
 ﻿using System.ComponentModel.DataAnnotations;
-using System.Text.Json.Serialization;
 
-namespace crombie_ecommerce.Models.Entities
+namespace crombie_ecommerce.Models.Dto
 {
-    public class Brand
+    public class BrandDto
     {
-        [Key]
-        [JsonIgnore]
-        public Guid BrandId { get; set; }
-
         [Required]
         [MaxLength(100)]
         public string Name { get; set; } = null!;
@@ -19,8 +14,5 @@ namespace crombie_ecommerce.Models.Entities
         [Url]
         [MaxLength(255)]
         public string? WebsiteUrl { get; set; }
-
-        [JsonIgnore]
-        public virtual ICollection<Product> Products { get; set; } = new List<Product>();
     }
 }

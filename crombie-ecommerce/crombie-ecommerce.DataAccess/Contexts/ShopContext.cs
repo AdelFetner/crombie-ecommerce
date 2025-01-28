@@ -1,5 +1,7 @@
-﻿using crombie_ecommerce.Models.Entities;
+﻿using crombie_ecommerce.DataAccess.Seeds;
+using crombie_ecommerce.Models.Entities;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
 
 namespace crombie_ecommerce.DataAccess.Contexts
 {
@@ -16,6 +18,7 @@ namespace crombie_ecommerce.DataAccess.Contexts
 
         public DbSet<OrderDetail> OrderDetails { get; set; }
         public DbSet<Notification> Notifications { get; set; }
+        public IConfiguration Configuration { get; }
 
 
 
@@ -139,7 +142,7 @@ namespace crombie_ecommerce.DataAccess.Contexts
                 tag.ToTable("Tag");
                 tag.HasKey(t => t.TagId);
                 tag.Property(t => t.Name).IsRequired().HasMaxLength(50);
-                tag.Property(t => t.Description).HasMaxLength(100); 
+                tag.Property(t => t.Description).HasMaxLength(100);
             });
 
             // builder for brand entity
@@ -174,12 +177,12 @@ namespace crombie_ecommerce.DataAccess.Contexts
 
             //builder for order entity
             modelBuilder.Entity<Order>(order =>
-            {   
+            {
                 order.ToTable("Order");
-                order.HasKey(o=>o.OrderId);
+                order.HasKey(o => o.OrderId);
                 order.Property(o => o.OrderId).HasDefaultValueSql("NEWID()");
                 order.Property(o => o.OrderDate).IsRequired();
-                order.Property(o=>o.Status).IsRequired();
+                order.Property(o => o.Status).IsRequired();
                 order.Property(o => o.TotalAmount).IsRequired();
                 order.Property(o => o.ShippingAddress).HasMaxLength(100);
                 order.Property(o => o.PaymentMethod).IsRequired();
@@ -191,24 +194,24 @@ namespace crombie_ecommerce.DataAccess.Contexts
             });
 
             //builder for order detail entity
-            modelBuilder.Entity<OrderDetail>(orderD => 
+            modelBuilder.Entity<OrderDetail>(orderD =>
             {
                 orderD.ToTable("OrderDetail");
                 orderD.HasKey(od => od.DetailId);
                 orderD.Property(od => od.OrderId).HasDefaultValueSql("NEWID()");
-                orderD.Property(od=>od.Quantity).IsRequired();
+                orderD.Property(od => od.Quantity).IsRequired();
                 orderD.Property(od => od.Price).IsRequired();
                 orderD.Property(od => od.Subtotal).IsRequired();
 
                 //relation order - orderDetails (one to many)
-                orderD.HasOne(od=>od.Order)
-                .WithMany(o=>o.OrderDetails)
+                orderD.HasOne(od => od.Order)
+                .WithMany(o => o.OrderDetails)
                 .HasForeignKey(od => od.OrderId);
 
 
                 //relation orderDetails -  product (many to one)
-                orderD.HasOne(od=>od.Product)
-                .WithMany(p=>p.OrderDetails)
+                orderD.HasOne(od => od.Product)
+                .WithMany(p => p.OrderDetails)
                 .HasForeignKey(od => od.ProductId);
             });
 
@@ -236,6 +239,20 @@ namespace crombie_ecommerce.DataAccess.Contexts
                       .OnDelete(DeleteBehavior.Cascade)
                       .IsRequired();
             });
+
+            // Apply seed configurations
+            if (Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT") == "Development")
+            {
+                //modelBuilder.ApplyConfiguration(new BrandSeed());
+                //modelBuilder.ApplyConfiguration(new CategorySeed());
+                //modelBuilder.ApplyConfiguration(new NotificationSeed());
+                //modelBuilder.ApplyConfiguration(new OrderDetailSeed());
+                //modelBuilder.ApplyConfiguration(new OrderSeed());
+                //modelBuilder.ApplyConfiguration(new ProductSeed());
+                //modelBuilder.ApplyConfiguration(new TagSeed());
+                //modelBuilder.ApplyConfiguration(new UserSeed());
+                //modelBuilder.ApplyConfiguration(new WishlistSeed());
+            }
             base.OnModelCreating(modelBuilder);
         }
     }

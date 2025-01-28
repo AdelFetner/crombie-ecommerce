@@ -1,4 +1,5 @@
 ﻿using crombie_ecommerce.DataAccess.Contexts;
+using crombie_ecommerce.Models.Dto;
 using crombie_ecommerce.Models.Entities;
 using Interfaces;
 using Microsoft.EntityFrameworkCore;
@@ -24,8 +25,15 @@ namespace crombie_ecommerce.BusinessLogic
             return await _context.Categories.FindAsync(id);
         }
 
-        public async Task<Category> CreateCategory(Category category)
+        public async Task<Category> CreateCategory(CategoryDto categoryDto)
         {
+            var category = new Category
+            {
+                CategoryId = Guid.NewGuid(),
+                Name = categoryDto.Name,
+                Description = categoryDto.Description
+            };
+
             _context.Categories.Add(category);
             await _context.SaveChangesAsync();
             return category;
