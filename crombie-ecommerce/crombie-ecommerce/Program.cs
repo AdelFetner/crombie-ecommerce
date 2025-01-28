@@ -3,7 +3,7 @@ using crombie_ecommerce.BusinessLogic;
 using Amazon.CognitoIdentityProvider;
 using System.Text.Json.Serialization;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
-using crombie_ecommerce.Services;
+using crombie_ecommerce.BusinessLogic;
 
 
 var builder = WebApplication.CreateBuilder(args);

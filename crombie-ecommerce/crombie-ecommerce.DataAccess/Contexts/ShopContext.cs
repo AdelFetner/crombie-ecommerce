@@ -265,7 +265,10 @@ namespace crombie_ecommerce.DataAccess.Contexts
 
             modelBuilder.Entity<CartItem>(entity =>
             {
-                entity.HasKey(entity => entity.CartId);
+                entity.HasKey(ci => ci.ItemId);
+                entity.Property(ci => ci.Quantity);
+                entity.Property(ci => ci.Price);
+                entity.Property(ci => ci.Total);
 
 
                 //product - cartItem relation (one to many)

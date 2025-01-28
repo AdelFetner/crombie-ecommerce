@@ -25,8 +25,8 @@ namespace crombie_ecommerce.BusinessLogic
             {
                 cart = new Cart
                 {
-                    UserId = userId
-                   
+                    UserId = userId,
+                    Items = new List<CartItem>()
                 };
                 _shopContext.Carts.Add(cart);
                 await _shopContext.SaveChangesAsync();
@@ -37,6 +37,8 @@ namespace crombie_ecommerce.BusinessLogic
 
         public async Task<Cart> AddToCartAsync(Guid userId, Guid productId, int quantity)
         {
+            if (quantity <= 0)
+                throw new ArgumentException("Quantity must be greater than zero");
 
             var cart = await GetOrCreateCartAsync(userId);
             var product = await _shopContext.Products.FindAsync(productId);
@@ -57,19 +59,19 @@ namespace crombie_ecommerce.BusinessLogic
                     Total = product.Price * quantity
                 };
                 cart.Items.Add(cartItem);
-
             }
             else
             {
                 cartItem.Quantity += quantity;
-                cartItem.Price = product.Price; 
+                cartItem.Price = product.Price;
+                cartItem.Total = cartItem.Price * cartItem.Quantity;
             }
 
+            cart.TotalAmount = cart.Items.Sum(item => item.Total);
             await _shopContext.SaveChangesAsync();
+
             return cart;
         }
-
-        
 
         public async Task<Cart> RemoveFromCartAsync(Guid userId, Guid productId)
         {
@@ -79,32 +81,48 @@ namespace crombie_ecommerce.BusinessLogic
             if (cartItem != null)
             {
                 cart.Items.Remove(cartItem);
-                
+                cart.TotalAmount = cart.Items.Sum(item => item.Total);
                 await _shopContext.SaveChangesAsync();
             }
+
             return cart;
         }
 
-        public async Task UpdateQuantityAsync(Guid userId, Guid productId, int quantity)
+        public async Task<Cart> UpdateQuantityAsync(Guid userId, Guid productId, int quantity)
         {
+            if (quantity <= 0)
+                throw new ArgumentException("Quantity must be greater than zero");
+
             var cart = await GetOrCreateCartAsync(userId);
             var product = await _shopContext.Products.FindAsync(productId);
+
+            if (product == null)
+                throw new ArgumentException("Product not found");
+
             var cartItem = cart.Items.FirstOrDefault(i => i.ProductId == productId);
 
-            if (cartItem != null && quantity > 0)
+            if (cartItem != null)
             {
                 cartItem.Quantity = quantity;
-                cartItem.Total = product.Price * quantity;
+                cartItem.Price = product.Price;
+                cartItem.Total = cartItem.Price * cartItem.Quantity;
+
+                cart.TotalAmount = cart.Items.Sum(item => item.Total);
                 await _shopContext.SaveChangesAsync();
             }
+
+            return cart;
         }
 
-        public async Task ClearCartAsync(Guid userId)
+        public async Task<Cart> ClearCartAsync(Guid userId)
         {
             var cart = await GetOrCreateCartAsync(userId);
             cart.Items.Clear();
-            
+            cart.TotalAmount = 0;
+
             await _shopContext.SaveChangesAsync();
+
+            return cart;
         }
     }
 
