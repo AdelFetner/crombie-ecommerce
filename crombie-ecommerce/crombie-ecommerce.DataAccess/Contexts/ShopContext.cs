@@ -20,6 +20,7 @@ namespace crombie_ecommerce.DataAccess.Contexts
         public DbSet<HistoryUser> HistoryUsers { get; set; }
         public DbSet<HistoryProduct> HistoryProducts { get; set; }
         public DbSet<HistoryBrand> HistoryBrands { get; set; }
+        public DbSet<HistoryOrder> HistoryOrders { get; set; }
 
 
 
@@ -275,6 +276,16 @@ namespace crombie_ecommerce.DataAccess.Contexts
             modelBuilder.Entity<HistoryBrand>(entity =>
             {
                 entity.ToTable("HistoryBrand");
+                entity.HasKey(e => e.OriginalId);
+                entity.Property(e => e.EntityJson).IsRequired();
+                entity.Property(e => e.ProcessedBy).IsRequired();
+                entity.Property(e => e.ProcessedAt).IsRequired();
+            });
+
+            //builder for history order entity
+            modelBuilder.Entity<HistoryBrand>(entity =>
+            {
+                entity.ToTable("HistoryOrder");
                 entity.HasKey(e => e.OriginalId);
                 entity.Property(e => e.EntityJson).IsRequired();
                 entity.Property(e => e.ProcessedBy).IsRequired();

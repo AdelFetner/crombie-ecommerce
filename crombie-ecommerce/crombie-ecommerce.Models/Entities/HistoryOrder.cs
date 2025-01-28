@@ -7,9 +7,8 @@ using System.Threading.Tasks;
 
 namespace crombie_ecommerce.Models.Entities
 {
-    [Table("HistoryBrands")]
-    public class HistoryBrand : History
+    [Table("HistoryOrders")]
+    public class HistoryOrder : History
     {
-        // Does not require any additional fields, data is stored in JSON format
     }
 }
