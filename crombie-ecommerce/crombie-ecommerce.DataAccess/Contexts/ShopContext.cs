@@ -16,6 +16,9 @@ namespace crombie_ecommerce.DataAccess.Contexts
 
         public DbSet<OrderDetail> OrderDetails { get; set; }
         public DbSet<Notification> Notifications { get; set; }
+        public DbSet<HistoryWishlist> HistoryWishlists { get; set; }
+        public DbSet<HistoryUser> HistoryUsers { get; set; }
+        public DbSet<HistoryProduct> HistoryProducts { get; set; }
 
 
 
@@ -235,6 +238,36 @@ namespace crombie_ecommerce.DataAccess.Contexts
                       .HasForeignKey(n => n.WishlistId)
                       .OnDelete(DeleteBehavior.Cascade)
                       .IsRequired();
+            });
+
+            //builder for history wishlist entity
+            modelBuilder.Entity<HistoryWishlist>(entity =>
+            {
+                entity.ToTable("HistoryWishlist");
+                entity.HasKey(e => e.OriginalId);
+                entity.Property(e => e.EntityJson).IsRequired();
+                entity.Property(e => e.ProcessedBy).IsRequired();
+                entity.Property(e => e.ProcessedAt).IsRequired();
+            });
+
+            //builder for history user entity
+            modelBuilder.Entity<HistoryUser>(entity =>
+            {
+                entity.ToTable("HistoryUser");
+                entity.HasKey(e => e.OriginalId);
+                entity.Property(e => e.EntityJson).IsRequired();
+                entity.Property(e => e.ProcessedBy).IsRequired();
+                entity.Property(e => e.ProcessedAt).IsRequired();
+            });
+
+            //builder for history product entity
+            modelBuilder.Entity<HistoryProduct>(entity =>
+            {
+                entity.ToTable("HistoryProduct");
+                entity.HasKey(e => e.OriginalId);
+                entity.Property(e => e.EntityJson).IsRequired();
+                entity.Property(e => e.ProcessedBy).IsRequired();
+                entity.Property(e => e.ProcessedAt).IsRequired();
             });
             base.OnModelCreating(modelBuilder);
         }

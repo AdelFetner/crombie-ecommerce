@@ -68,17 +68,14 @@ namespace crombie_ecommerce.Controllers
 
         // DELETE: api/Products/5
         [HttpDelete("{id}")]
-        public async Task<IActionResult> DeleteProduct(Guid id)
+        public async Task<IActionResult> DeleteAndArchive(Guid id)
         {
-            try
+            var success = await _productService.ArchiveMethod(id, "Unregistered");
+            if (!success)
             {
-                await _productService.DeleteProduct(id);
-                return NoContent();
+                return NotFound(new { message = "Product not found." });
             }
-            catch (Exception ex)
-            {
-                return BadRequest(ex.Message);
-            }
+            return Ok(new { message = "Product deleted successfully." });
         }
 
         [HttpGet("filter")]

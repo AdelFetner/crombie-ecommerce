@@ -96,5 +96,32 @@ namespace crombie_ecommerce.BusinessLogic
             }
             
         }
+
+        // Method to delete and archive user
+        public async Task<bool> ArchiveMethod(Guid userId, string processedBy = "Unregistered")
+        {
+            var user = await _context.Users
+                .Include(u => u.Wishlists)
+                .Include(u => u.Orders)
+                .FirstOrDefaultAsync(u => u.UserId == userId);
+
+            if (user == null)
+                return false;
+
+            var historyUser = new HistoryUser
+            {
+                OriginalId = user.UserId,
+                UserId = user.UserId,
+                ProcessedAt = DateTime.UtcNow,
+                ProcessedBy = processedBy,
+                EntityJson = user.SerializeToJson()
+            };
+
+            _context.HistoryUsers.Add(historyUser);
+            _context.Users.Remove(user);
+            await _context.SaveChangesAsync();
+
+            return true;
+        }
     }
 }
