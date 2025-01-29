@@ -72,9 +72,9 @@ namespace crombie_ecommerce.Controllers
             var success = await _orderDetailsService.ArchiveMethod(id, "Unregistered");
             if (!success)
             {
-                return NotFound(new { message = "Order not found." });
+                return NotFound(new { message = "Order detail not found." });
             }
-            return Ok(new { message = "Order deleted successfully." });
+            return Ok(new { message = "Order detail deleted successfully." });
         }
 
     }

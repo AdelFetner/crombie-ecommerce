@@ -12,7 +12,7 @@ using crombie_ecommerce.DataAccess.Contexts;
 namespace crombie_ecommerce.DataAccess.Migrations
 {
     [DbContext(typeof(ShopContext))]
-    [Migration("20250128170056_HistoryTest")]
+    [Migration("20250129171802_HistoryTest")]
     partial class HistoryTest
     {
         /// <inheritdoc />
@@ -111,6 +111,106 @@ namespace crombie_ecommerce.DataAccess.Migrations
                     b.ToTable("Category", (string)null);
                 });
 
+            modelBuilder.Entity("crombie_ecommerce.Models.Entities.HistoryBrand", b =>
+                {
+                    b.Property<Guid>("OriginalId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("EntityJson")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime>("ProcessedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("ProcessedBy")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<Guid>("UserId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.HasKey("OriginalId");
+
+                    b.ToTable("HistoryBrand", (string)null);
+                });
+
+            modelBuilder.Entity("crombie_ecommerce.Models.Entities.HistoryCategory", b =>
+                {
+                    b.Property<Guid>("OriginalId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("EntityJson")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime>("ProcessedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("ProcessedBy")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<Guid>("UserId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.HasKey("OriginalId");
+
+                    b.ToTable("HistoryCategories", (string)null);
+                });
+
+            modelBuilder.Entity("crombie_ecommerce.Models.Entities.HistoryOrder", b =>
+                {
+                    b.Property<Guid>("OriginalId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("EntityJson")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime>("ProcessedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("ProcessedBy")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<Guid>("UserId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.HasKey("OriginalId");
+
+                    b.ToTable("HistoryOrder", (string)null);
+                });
+
+            modelBuilder.Entity("crombie_ecommerce.Models.Entities.HistoryOrderDetails", b =>
+                {
+                    b.Property<Guid>("OriginalId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("EntityJson")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime>("ProcessedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("ProcessedBy")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<Guid>("UserId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.HasKey("OriginalId");
+
+                    b.ToTable("HistoryOrderDetails", (string)null);
+                });
+
             modelBuilder.Entity("crombie_ecommerce.Models.Entities.HistoryProduct", b =>
                 {
                     b.Property<Guid>("OriginalId")
@@ -134,6 +234,31 @@ namespace crombie_ecommerce.DataAccess.Migrations
                     b.HasKey("OriginalId");
 
                     b.ToTable("HistoryProduct", (string)null);
+                });
+
+            modelBuilder.Entity("crombie_ecommerce.Models.Entities.HistoryTag", b =>
+                {
+                    b.Property<Guid>("OriginalId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("EntityJson")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime>("ProcessedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("ProcessedBy")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<Guid>("UserId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.HasKey("OriginalId");
+
+                    b.ToTable("HistoryTags", (string)null);
                 });
 
             modelBuilder.Entity("crombie_ecommerce.Models.Entities.HistoryUser", b =>

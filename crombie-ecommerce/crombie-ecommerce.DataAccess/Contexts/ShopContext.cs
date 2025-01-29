@@ -21,7 +21,9 @@ namespace crombie_ecommerce.DataAccess.Contexts
         public DbSet<HistoryProduct> HistoryProducts { get; set; }
         public DbSet<HistoryBrand> HistoryBrands { get; set; }
         public DbSet<HistoryOrder> HistoryOrders { get; set; }
-
+        public DbSet<HistoryOrderDetails> HistoryOrderDetails { get; set; }
+        public DbSet<HistoryTag> HistoryTags { get; set; }
+        public DbSet<HistoryCategory> HistoryCategories { get; set; }
 
 
         public ShopContext(DbContextOptions<ShopContext> options) : base(options)
@@ -283,9 +285,39 @@ namespace crombie_ecommerce.DataAccess.Contexts
             });
 
             //builder for history order entity
-            modelBuilder.Entity<HistoryBrand>(entity =>
+            modelBuilder.Entity<HistoryOrder>(entity =>
             {
                 entity.ToTable("HistoryOrder");
+                entity.HasKey(e => e.OriginalId);
+                entity.Property(e => e.EntityJson).IsRequired();
+                entity.Property(e => e.ProcessedBy).IsRequired();
+                entity.Property(e => e.ProcessedAt).IsRequired();
+            });
+
+            //builder for history order details entity
+            modelBuilder.Entity<HistoryOrderDetails>(entity =>
+            {
+                entity.ToTable("HistoryOrderDetails");
+                entity.HasKey(e => e.OriginalId);
+                entity.Property(e => e.EntityJson).IsRequired();
+                entity.Property(e => e.ProcessedBy).IsRequired();
+                entity.Property(e => e.ProcessedAt).IsRequired();
+            });
+
+            //builder for history order details entity
+            modelBuilder.Entity<HistoryCategory>(entity =>
+            {
+                entity.ToTable("HistoryCategories");
+                entity.HasKey(e => e.OriginalId);
+                entity.Property(e => e.EntityJson).IsRequired();
+                entity.Property(e => e.ProcessedBy).IsRequired();
+                entity.Property(e => e.ProcessedAt).IsRequired();
+            });
+
+            //builder for history order details entity
+            modelBuilder.Entity<HistoryTag>(entity =>
+            {
+                entity.ToTable("HistoryTags");
                 entity.HasKey(e => e.OriginalId);
                 entity.Property(e => e.EntityJson).IsRequired();
                 entity.Property(e => e.ProcessedBy).IsRequired();

@@ -1,12 +1,12 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using System.Text.Json.Serialization;
+using Newtonsoft.Json;
 
 namespace crombie_ecommerce.Models.Entities
 {
     public class Category
     {
         [Key]
-        [JsonIgnore]
         public Guid CategoryId { get; set; }
 
         [Required]
@@ -16,7 +16,11 @@ namespace crombie_ecommerce.Models.Entities
         [MaxLength(1000)]
         public string? Description { get; set; }
 
-        [JsonIgnore]
         public virtual ICollection<Product> Products { get; set; } = new List<Product>();
+        public Guid Id => CategoryId;
+        public string SerializeToJson()
+        {
+            return JsonConvert.SerializeObject(this);
+        }
     }
 }

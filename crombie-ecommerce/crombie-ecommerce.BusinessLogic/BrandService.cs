@@ -49,18 +49,6 @@ namespace crombie_ecommerce.BusinessLogic
             return existingBrand;
         }
 
-        public async Task DeleteBrand(Guid id)
-        {
-            var brand = await GetBrandById(id);
-            if (brand == null)
-            {
-                throw new Exception("Brand not found");
-            }
-
-            _context.Brands.Remove(brand);
-            await _context.SaveChangesAsync();
-        }
-
         // Method to delete and archive brand
         public async Task<bool> ArchiveMethod(Guid brandId, string processedBy = "Unregistered")
         {

@@ -5,7 +5,7 @@ namespace Interfaces
     public interface ICategoryService
     {
         Task<Category> CreateCategory(Category category);
-        Task DeleteCategory(Guid id);
+        Task<bool> ArchiveMethod(Guid categoryId, string processedBy = "Unregistered");
         Task<List<Category>> GetAllCategories();
         Task<Category> GetCategoryById(Guid id);
         Task<Category> UpdateCategory(Guid id, Category updatedCategory);
