@@ -58,7 +58,6 @@ namespace crombie_ecommerce.BusinessLogic
         {
             var order = await _context.Orders
                 .Include(o => o.OrderDetails)
-                .Include(o => o.User)
                 .FirstOrDefaultAsync(o => o.OrderId == orderId);
 
             if (order == null)

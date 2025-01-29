@@ -39,7 +39,7 @@ namespace crombie_ecommerce.DataAccess.Migrations
 
                     b.HasIndex("CategoryId");
 
-                    b.ToTable("ProductCategory");
+                    b.ToTable("ProductCategory", (string)null);
                 });
 
             modelBuilder.Entity("WishlistProduct", b =>
@@ -59,7 +59,7 @@ namespace crombie_ecommerce.DataAccess.Migrations
 
                     b.HasIndex("WishlistId");
 
-                    b.ToTable("WishlistProduct");
+                    b.ToTable("WishlistProduct", (string)null);
                 });
 
             modelBuilder.Entity("crombie_ecommerce.Models.Entities.Brand", b =>
@@ -346,7 +346,7 @@ namespace crombie_ecommerce.DataAccess.Migrations
 
                     b.HasIndex("WishlistId");
 
-                    b.ToTable("Notification");
+                    b.ToTable("Notification", (string)null);
                 });
 
             modelBuilder.Entity("crombie_ecommerce.Models.Entities.Order", b =>
