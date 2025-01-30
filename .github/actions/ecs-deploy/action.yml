@@ -27,9 +27,10 @@ runs:
               TASK_FAMILY: ${{ inputs.task-family }}
               AWS_REGION: ${{ inputs.aws-region }}
               REPOSITORY_NAME: ${{ inputs.repository-name }}
+              IMAGE_TAG: ${{ github.run_id }}
           run: |
               # Only replace essential values
-              envsubst '${TASK_FAMILY} ${AWS_REGION} ${REPOSITORY_NAME}' \
+              envsubst '${TASK_FAMILY} ${AWS_REGION} ${REPOSITORY_NAME} ${IMAGE_TAG}' \
                 < taskdefinition.template.json > taskdefinition.json
 
         - name: Register task definition
@@ -37,6 +38,11 @@ runs:
           run: |
               aws ecs register-task-definition \
                 --cli-input-json file://taskdefinition.json
+
+        # - name: Log responses
+        #   shell: bash
+        #   run: |
+        #       echo ''
 
         - name: Update service
           shell: bash
