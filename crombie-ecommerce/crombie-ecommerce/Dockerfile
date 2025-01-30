@@ -12,16 +12,16 @@ ENV ASPNETCORE_URLS=http://+:80
 FROM mcr.microsoft.com/dotnet/sdk:8.0 AS build
 
 WORKDIR /src
-COPY ["crombie-ecommerce/crombie-ecommerce.csproj", "crombie-ecommerce/"]
-COPY ["crombie-ecommerce.BusinessLogic/crombie-ecommerce.BusinessLogic.csproj", "crombie-ecommerce.BusinessLogic/"]
-COPY ["crombie-ecommerce.DataAccess/crombie-ecommerce.DataAccess.csproj", "crombie-ecommerce.DataAccess/"]
-COPY ["crombie-ecommerce.Models/crombie-ecommerce.Models.csproj", "crombie-ecommerce.Models/"]
+COPY ["crombie-ecommerce/crombie-ecommerce/crombie-ecommerce.csproj", "crombie-ecommerce/"]
+COPY ["crombie-ecommerce/crombie-ecommerce.BusinessLogic/crombie-ecommerce.BusinessLogic.csproj", "crombie-ecommerce.BusinessLogic/"]
+COPY ["crombie-ecommerce/crombie-ecommerce.DataAccess/crombie-ecommerce.DataAccess.csproj", "crombie-ecommerce.DataAccess/"]
+COPY ["crombie-ecommerce/crombie-ecommerce.Models/crombie-ecommerce.Models.csproj", "crombie-ecommerce.Models/"]
 
 RUN dotnet restore "./crombie-ecommerce/crombie-ecommerce.csproj"
 
 COPY . .
 
-WORKDIR "/src/crombie-ecommerce"
+WORKDIR "/src/crombie-ecommerce/crombie-ecommerce"
 RUN dotnet build "crombie-ecommerce.csproj" -c Release -o /app/build
 
 # This stage is used to publish the service project to be copied to the final stage
