@@ -4,7 +4,7 @@ An eCommerce application built with C# .NET, using **AWS S3** for static object 
 ## Architecture  
 <div align="center">
 
-![Diagram](https://github.com/user-attachments/assets/77d3e459-338e-4ecc-ae57-20bb92d84342)
+![Diagram](https://github.com/user-attachments/assets/d3e34ee1-e71e-4a47-a156-606a6d0b44bf)
 
 </div>
 
