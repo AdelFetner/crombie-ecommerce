@@ -17,6 +17,9 @@ inputs:
     repository-name:
         description: ECR repository name
         required: true
+    repository-uri:
+        description: ECR repository URI
+        required: true
 
 runs:
     using: "composite"

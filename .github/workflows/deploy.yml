@@ -52,3 +52,4 @@ jobs:
                   task-family: ${{ secrets.TASK_FAMILY }}
                   aws-region: ${{ secrets.AWS_REGION }}
                   repository-name: ${{ secrets.ECR_REPOSITORY }}
+                  repository-uri: ${{ secrets.ECR_REPOSITORY_URI }}
