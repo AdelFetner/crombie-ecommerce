@@ -34,7 +34,7 @@ namespace crombie_ecommerce.DataAccess.Contexts
             {
                 user.ToTable("User");
                 user.HasKey(u => u.UserId);
-                user.Property(u => u.Image);
+                user.Property(u => u.Image).IsRequired(false);
                 user.Property(u => u.Name).IsRequired().HasMaxLength(50);
                 user.Property(u => u.Email).IsRequired();
                 user.Property(u => u.Password).IsRequired().HasMaxLength(100);

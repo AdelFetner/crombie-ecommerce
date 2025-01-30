@@ -26,8 +26,7 @@ namespace crombie_ecommerce.Models.Entities
 
         public bool IsVerified { get; set; }
 
-        [Required]
-        public string Image { get; set; }
+        public string? Image { get; set; }
 
         public int RoleId { get; set; }
         public Role Role { get; set; } 

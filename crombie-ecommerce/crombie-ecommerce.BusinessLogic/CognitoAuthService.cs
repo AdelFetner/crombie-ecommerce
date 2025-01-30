@@ -22,15 +22,14 @@ public class CognitoAuthService
     private readonly string _clientSecret;
     private readonly ShopContext _shopContext;
     private readonly IConfiguration _configuration;
-    private readonly ILogger<CognitoAuthService> _logger;
 
-    public CognitoAuthService(IConfiguration configuration, IAmazonCognitoIdentityProvider provider,ShopContext shopContext, ILogger<CognitoAuthService> logger)
+    public CognitoAuthService(IConfiguration configuration, IAmazonCognitoIdentityProvider provider,ShopContext shopContext)
     {
         
         _shopContext = shopContext;
         _configuration = configuration;
         _shopContext = shopContext;
-        _logger = logger;
+        
 
         var awsAccessKeyId = configuration["AWS:AccessKeyId"];
         var awsSecretAccessKey = configuration["AWS:SecretAccessKey"];
@@ -47,29 +46,18 @@ public class CognitoAuthService
 
     public async Task<string> RegisterAsync(UserDto userDto)
     {
-       
-
         try
         {
-            _logger.LogInformation("Starting the user register.");
-
             var clientId = _configuration["AWS:ClientId"];
             var clientSecret = _configuration["AWS:ClientSecret"];
-            _logger.LogInformation("AWS Credencials are ok");
-
-            // Validar usuario en base de datos
-            _logger.LogInformation("Verifying if user is in the database...");
+           
+           
             var existingUser = await _shopContext.Users.FirstOrDefaultAsync(u => u.Email == userDto.Email);
             if (existingUser != null)
             {
-                _logger.LogWarning("user already exist: {Email}", userDto.Email);
+                
                 throw new InvalidOperationException("user registered already.");
             }
-
-            // Crear solicitud para Cognito
-            _logger.LogInformation("preparing the application...");
-
-           
 
             // Cognito
             var signUpRequest = new SignUpRequest
@@ -85,15 +73,14 @@ public class CognitoAuthService
             }
             };
 
-            _logger.LogInformation("Sendind request to cognito...");
+           
             var cognitoResponse = await _provider.SignUpAsync(signUpRequest);
 
-            _logger.LogInformation("Cognito answer: {StatusCode}", cognitoResponse.HttpStatusCode);
-
+           
             // if cognito register is success, add the user 
             if (cognitoResponse.HttpStatusCode == System.Net.HttpStatusCode.OK)
             {
-                _logger.LogInformation("successfully registered.");
+               
 
                 // new user
                 var newUser = new User
@@ -105,6 +92,7 @@ public class CognitoAuthService
                     Password = userDto.Password,
                     Address = userDto.Address,
                     IsVerified = false,
+                    Image=null,
                     RoleId = 1,
 
                 };
@@ -112,15 +100,15 @@ public class CognitoAuthService
                 _shopContext.Users.Add(newUser);
                 await _shopContext.SaveChangesAsync();
 
-                _logger.LogInformation("Registration successful.");
+                
 
                 return "Registration successful. Please confirm your email.";
             }
             return cognitoResponse.UserSub;
         }
-        catch (AmazonCognitoIdentityProviderException cognitoEx)
+        catch (Exception ex)
         {
-            _logger.LogError(cognitoEx, "Error from Cognito: {Message}", cognitoEx.Message);
+            
             throw new Exception("A problem occurred while registering the user. Try again.");
         }
         
