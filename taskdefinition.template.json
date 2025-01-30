@@ -1,69 +1,40 @@
 {
-  "family": "$TASK_FAMILY",
-  "containerDefinitions": [
-    {
-      "name": "code-academy_$IMAGE_TAG",
-      "image": "$REPOSITORY_URI/$REPOSITORY_NAME:$IMAGE_TAG",
-      "cpu": 0,
-      "portMappings": [
+    "family": "$TASK_FAMILY",
+    "containerDefinitions": [
         {
-          "containerPort": 8080,
-          "hostPort": 8080,
-          "protocol": "tcp"
+            "name": "crombie-api",
+            "image": "${REPOSITORY_NAME}:latest",
+            "cpu": 0,
+            "portMappings": [
+                {
+                    "containerPort": 80,
+                    "protocol": "tcp"
+                }
+            ],
+            "essential": true,
+            "environment": [
+                {
+                    "name": "AWS_REGION",
+                    "value": "${AWS_REGION}"
+                }
+            ],
+            "logConfiguration": {
+                "logDriver": "awslogs",
+                "options": {
+                    "awslogs-group": "/ecs/${TASK_FAMILY}",
+                    "awslogs-region": "${AWS_REGION}",
+                    "awslogs-stream-prefix": "ecs"
+                }
+            }
         }
-      ],
-      "essential": true,
-      "environment": [
-        {
-          "name": "AWS_Region",
-          "value": "$AWS_REGION"
-        },
-        {
-          "name": "AWS_ClientId",
-          "value": "$CLIENT_ID"
-        },
-        {
-          "name": "AWS_SecretAccessKey",
-          "value": "$SECRET_ACCESS_KEY"
-        },
-        {
-          "name": "AWS_ClientSecret",
-          "value": "$CLIENT_SECRET"
-        },
-        {
-          "name": "AWS_BucketName",
-          "value": "$BUCKET_NAME"
-        },
-        {
-          "name": "AWS_AccessKeyId",
-          "value": "$ACCESS_KEY_ID"
-        },
-        {
-          "name": "AWS_UserPoolId",
-          "value": "$USER_POOL_ID"
-        },
-        {
-          "name": "DB_CONNECTIONSTRING",
-          "value": "$DB_CONNECTIONSTRING"
-        }
-      ],
-      "logConfiguration": {
-        "logDriver": "awslogs",
-        "options": {
-          "awslogs-group": "/ecs/$TASK_FAMILY",
-          "awslogs-region": "$AWS_REGION",
-          "awslogs-stream-prefix": "ecs"
-        }
-      }
+    ],
+    "executionRoleArn": "ecsTaskExecutionRole",
+    "networkMode": "awsvpc",
+    "requiresCompatibilities": ["FARGATE"],
+    "cpu": "256",
+    "memory": "512",
+    "runtimePlatform": {
+        "cpuArchitecture": "X86_64",
+        "operatingSystemFamily": "LINUX"
     }
-  ],
-  "executionRoleArn": "$EXECUTION_ROLE_ARN",
-  "networkMode": "awsvpc",
-  "requiresCompatibilities": ["FARGATE"],
-  "cpu": "256",
-  "memory": "512",
-  "runtimePlatform": {
-    "cpuArchitecture": "X86_64",
-    "operatingSystemFamily": "LINUX"
-  }
 }
