@@ -11,6 +11,7 @@
   <ItemGroup>
     <PackageReference Include="Amazon.Extensions.CognitoAuthentication" Version="2.5.5" />
     <PackageReference Include="AWSSDK.CognitoIdentityProvider" Version="3.7.406.1" />
+    <PackageReference Include="AWSSDK.Extensions.NETCore.Setup" Version="3.7.301" />
     <PackageReference Include="AWSSDK.S3" Version="3.7.412.4" />
     <PackageReference Include="Swashbuckle.AspNetCore" Version="6.6.2" />
   </ItemGroup>

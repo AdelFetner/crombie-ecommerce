@@ -1,40 +1,35 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Amazon.CognitoIdentityProvider.Model;
+using crombie_ecommerce.Models.Dto;
+using Microsoft.AspNetCore.Mvc;
+using System.Runtime.InteropServices;
 
 [ApiController]
 [Route("auth")]
 public class AuthController : ControllerBase
 {
     private readonly CognitoAuthService _cognitoAuthService;
+    
 
     public AuthController(CognitoAuthService cognitoAuthService)
     {
         _cognitoAuthService = cognitoAuthService;
+        
     }
 
     [HttpPost("register")]
-    public async Task<IActionResult> Register([FromBody] RegisterRequest request)
+    public async Task<IActionResult> Register(UserDto userDto)
     {
-        if (string.IsNullOrEmpty(request.Email) || string.IsNullOrEmpty(request.Password) || string.IsNullOrEmpty(request.Name) || string.IsNullOrEmpty(request.Address))
-        {
-            return BadRequest(new { Error = "All fields (Email, Password, Name, Address) are required." });
-        }
-
         try
         {
-            var result = await _cognitoAuthService.RegisterAsync(
-                email:request.Email,
-                name:request.Name,
-                address:request.Address,
-                password: request.Password
-               
-            );
-
-            return Ok(new { Message = result });
+            var user = await _cognitoAuthService.RegisterAsync(userDto);
+            return Ok(new { User = user });
         }
         catch (Exception ex)
         {
-            return BadRequest(new { Error = ex.Message });
+            return BadRequest(ex.Message);
         }
+
+        
     }
 
     [HttpPost("resend-code")]
@@ -56,13 +51,23 @@ public class AuthController : ControllerBase
     {
         try
         {
-            var result = await _cognitoAuthService.ConfirmSignupAsync(request.Code, request.Email);
-            return Ok(new { Message = result });
+            var isConfirmed = await _cognitoAuthService.ConfirmSignupAsync(
+                code: request.Code,
+                userName: request.Email
+            );
+
+            if (isConfirmed)
+            {
+                return Ok(new { Message = "Email confirmed successfully." });
+            }
+            return BadRequest(new { Error = "Failed to confirm email." });
         }
         catch (Exception ex)
         {
+            
             return BadRequest(new { Error = ex.Message });
         }
+    
     }
 
     [HttpPost("login")]
@@ -84,9 +89,10 @@ public class AuthController : ControllerBase
 public class RegisterRequest
 {
     public string Email { get; set; }
+    public string Password { get; set; }
     public string Name { get; set; }
     public string Address { get; set; }
-    public string Password { get; set; }
+   
 }
 
 public class ConfirmRequest
