@@ -2,29 +2,29 @@ name: Docker Build and Push to ECR
 description: This action builds a Docker image and pushes it to Amazon ECR.
 
 inputs:
-  ecr-repository:
-    description: The name of the ECR repository to push to (e.g., my-repo).
-    required: true
-  aws-region:
-    description: AWS region for the ECR repository (e.g., us-east-1).
-    required: true
+    ecr-repository:
+        description: The name of the ECR repository to push to (e.g., my-repo).
+        required: true
+    aws-region:
+        description: AWS region for the ECR repository (e.g., us-east-1).
+        required: true
 
 runs:
-  using: "composite"
-  steps:
-    - name: Login to Amazon ECR
-      id: login-ecr
-      uses: aws-actions/amazon-ecr-login@v2
+    using: "composite"
+    steps:
+        - name: Login to Amazon ECR
+          id: login-ecr
+          uses: aws-actions/amazon-ecr-login@v2
 
-    - name: Build Docker image
-      shell: bash
-      run: |
-        IMAGE_TAG=${{ github.run_id }}
-        docker build -t ${{ inputs.ecr-repository }}:$IMAGE_TAG .
-        docker tag ${{ inputs.ecr-repository }}:$IMAGE_TAG ${{ steps.login-ecr.outputs.registry }}/${{ inputs.ecr-repository }}:$IMAGE_TAG
-        docker push ${{ steps.login-ecr.outputs.registry }}/${{ inputs.ecr-repository }}:$IMAGE_TAG
-        echo "image-uri=${{ steps.login-ecr.outputs.registry }}/${{ inputs.ecr-repository }}:$IMAGE_TAG" >> $GITHUB_ENV
+        - name: Build Docker image
+          shell: bash
+          run: |
+              IMAGE_TAG=${{ github.run_id }}
+              docker build -f crombie-ecommerce/crombie-ecommerce/Dockerfile -t ${{ inputs.ecr-repository }}:$IMAGE_TAG .
+              docker tag ${{ inputs.ecr-repository }}:$IMAGE_TAG ${{ steps.login-ecr.outputs.registry }}/${{ inputs.ecr-repository }}:$IMAGE_TAG
+              docker push ${{ steps.login-ecr.outputs.registry }}/${{ inputs.ecr-repository }}:$IMAGE_TAG
+              echo "image-uri=${{ steps.login-ecr.outputs.registry }}/${{ inputs.ecr-repository }}:$IMAGE_TAG" >> $GITHUB_ENV
 
-    - name: Set image URI as output
-      shell: bash
-      run: echo "image-uri=${{ steps.login-ecr.outputs.registry }}/${{ inputs.ecr-repository }}:$IMAGE_TAG" >> $GITHUB_ENV
+        - name: Set image URI as output
+          shell: bash
+          run: echo "image-uri=${{ steps.login-ecr.outputs.registry }}/${{ inputs.ecr-repository }}:$IMAGE_TAG" >> $GITHUB_ENV
