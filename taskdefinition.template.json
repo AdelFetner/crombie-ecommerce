@@ -2,8 +2,8 @@
     "family": "$TASK_FAMILY",
     "containerDefinitions": [
         {
-            "name": "crombie-api",
-            "image": "${REPOSITORY_URI}/$REPOSITORY_NAME}:${IMAGE_TAG}",
+            "name": "crombie-api_$IMAGE_TAG",
+            "image": "$REPOSITORY_URI/$REPOSITORY_NAME:$IMAGE_TAG",
             "cpu": 0,
             "portMappings": [
                 {

@@ -26,12 +26,12 @@ runs:
           env:
               TASK_FAMILY: ${{ inputs.task-family }}
               AWS_REGION: ${{ inputs.aws-region }}
-              REPOSITORY_NAME: ${{ inputs.repository-name }}
               REPOSITORY_URI: ${{ inputs.repository-uri }}
+              REPOSITORY_NAME: ${{ inputs.repository-name }}
               IMAGE_TAG: ${{ github.run_id }}
           run: |
               # Only replace essential values
-              envsubst '${TASK_FAMILY} ${AWS_REGION} ${REPOSITORY_NAME} ${REPOSITORY_URI} ${IMAGE_TAG}' \
+              envsubst '${TASK_FAMILY} ${AWS_REGION} ${REPOSITORY_URI} ${REPOSITORY_NAME} ${IMAGE_TAG}' \
                 < taskdefinition.template.json > taskdefinition.json
 
         - name: Register task definition
