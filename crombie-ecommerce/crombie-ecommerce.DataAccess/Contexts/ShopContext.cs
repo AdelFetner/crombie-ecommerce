@@ -41,11 +41,18 @@ namespace crombie_ecommerce.DataAccess.Contexts
                 user.Property(u => u.Address).IsRequired(false);
                 user.Property(u => u.IsVerified).HasDefaultValue(false);
 
-                // user to orders has a one to many raltionship
+                // user to orders has a one to many relationship
                 user.HasMany(u => u.Orders)
                     .WithOne(o => o.User)
                     .HasForeignKey(o => o.UserId)
                     .OnDelete(DeleteBehavior.Cascade);
+
+                //user to role relations (one to one)
+                user.HasOne(u => u.Role)
+                .WithMany(r => r.Users)
+                .HasForeignKey(u => u.RoleId)
+                .IsRequired();
+                    
 
             });
 
@@ -271,6 +278,23 @@ namespace crombie_ecommerce.DataAccess.Contexts
                 entity.Property(e => e.ProcessedBy).IsRequired();
                 entity.Property(e => e.ProcessedAt).IsRequired();
             });
+
+
+            //builder for role entity
+            modelBuilder.Entity<Role>(entity =>
+            {
+                entity.ToTable("Roles");
+                entity.HasKey(r=>r.RoleId);
+                entity.Property(e => e.RoleId).ValueGeneratedNever();
+                entity.Property(r => r.Name).IsRequired();
+                entity.Property(r => r.Description).HasMaxLength(500);
+                entity.HasData(
+                       new Role { RoleId = 1, Name = "User", Description = "Default user role" },
+                       new Role { RoleId = 2, Name = "Admin", Description = "Administrator role" }
+                );
+
+            });
+
             base.OnModelCreating(modelBuilder);
         }
     }

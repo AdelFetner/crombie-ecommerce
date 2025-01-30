@@ -14,9 +14,21 @@ public class AuthController : ControllerBase
     [HttpPost("register")]
     public async Task<IActionResult> Register([FromBody] RegisterRequest request)
     {
+        if (string.IsNullOrEmpty(request.Email) || string.IsNullOrEmpty(request.Password) || string.IsNullOrEmpty(request.Name) || string.IsNullOrEmpty(request.Address))
+        {
+            return BadRequest(new { Error = "All fields (Email, Password, Name, Address) are required." });
+        }
+
         try
         {
-            var result = await _cognitoAuthService.RegisterAsync(request.Email, request.Password);
+            var result = await _cognitoAuthService.RegisterAsync(
+                email:request.Email,
+                name:request.Name,
+                address:request.Address,
+                password: request.Password
+               
+            );
+
             return Ok(new { Message = result });
         }
         catch (Exception ex)
@@ -72,6 +84,8 @@ public class AuthController : ControllerBase
 public class RegisterRequest
 {
     public string Email { get; set; }
+    public string Name { get; set; }
+    public string Address { get; set; }
     public string Password { get; set; }
 }
 

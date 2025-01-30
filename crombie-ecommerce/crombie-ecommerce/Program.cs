@@ -28,30 +28,12 @@ builder.Services.AddScoped<WishlistService>()
     .AddScoped<OrderService>()
     .AddScoped<CognitoAuthService>()
     .AddScoped<s3Service>()
-    .AddScoped<NotificationService>();
+    .AddScoped<NotificationService>()
+    .AddScoped<RoleService>();
 
 builder.Services.AddSqlServer<ShopContext>(builder.Configuration["ConnectionString"]);
 
-/*builder.Services.AddAuthentication(options =>
-{
-    options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
-    options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
-})
-.AddJwtBearer(options =>
-{
-    var cognitoIssuer = $"https://cognito-idp.{builder.Configuration["AWS:Region"]}.amazonaws.com/{builder.Configuration["AWS:UserPoolId"]}";
 
-    options.TokenValidationParameters = new Microsoft.IdentityModel.Tokens.TokenValidationParameters
-    {
-        ValidateIssuer = true,
-        ValidIssuer = cognitoIssuer,
-        ValidateAudience = true,
-        ValidAudience = builder.Configuration["AWS:AppClientId"],
-        ValidateLifetime = true,
-        ClockSkew = TimeSpan.Zero
-    };
-
-});*/
 
 builder.Services.AddAuthorization();
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
