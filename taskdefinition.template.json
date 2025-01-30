@@ -3,7 +3,7 @@
     "containerDefinitions": [
         {
             "name": "crombie-api",
-            "image": "$REPOSITORY_URI/$REPOSITORY_NAME:$IMAGE_TAG",
+            "image": "${REPOSITORY_URI}/${REPOSITORY_NAME}:${IMAGE_TAG}",
             "cpu": 0,
             "portMappings": [
                 {
