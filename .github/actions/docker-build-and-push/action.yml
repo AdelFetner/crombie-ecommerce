@@ -20,7 +20,7 @@ runs:
           shell: bash
           run: |
               IMAGE_TAG=${{ github.run_id }}
-              docker build -f crombie-ecommerce/crombie-ecommerce/Dockerfile -t ${{ inputs.ecr-repository }}:$IMAGE_TAG .
+              docker build -f crombie-ecommerce/Dockerfile -t ${{ inputs.ecr-repository }}:$IMAGE_TAG .
               docker tag ${{ inputs.ecr-repository }}:$IMAGE_TAG ${{ steps.login-ecr.outputs.registry }}/${{ inputs.ecr-repository }}:$IMAGE_TAG
               docker push ${{ steps.login-ecr.outputs.registry }}/${{ inputs.ecr-repository }}:$IMAGE_TAG
               echo "image-uri=${{ steps.login-ecr.outputs.registry }}/${{ inputs.ecr-repository }}:$IMAGE_TAG" >> $GITHUB_ENV
