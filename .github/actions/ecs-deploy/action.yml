@@ -1,0 +1,97 @@
+name: ECS Deploy
+description: This action deploys a Docker image to ECS by updating the ECS task definition.
+
+inputs:
+  task-family:
+    description: The ECS task family name (e.g., my-task).
+    required: true
+  aws-region:
+    description: AWS region for the ECS service (e.g., us-east-1).
+    required: true
+  client-id:
+    description: ""
+    required: true
+  secret-access-key:
+    description: ""
+    required: true
+  client-secret:
+    description: ""
+    required: true
+  bucket-name:
+    description: ""
+    required: true
+  access-key-id:
+    description: ""
+    required: true
+  user-pool-id:
+    description: ""
+    required: true
+  db-connection-string:
+    description: ""
+    required: true
+  execution-role:
+    description: ""
+    required: true
+  cluster-name:
+    description: The ECS cluster name (e.g., my-cluster).
+    required: true
+  service-name:
+    description: The ECS service name (e.g., my-service).
+    required: true
+  repository-name:
+    description: The ECS service name (e.g., my-service).
+    required: true
+  repository-uri:
+    description: The ECS service name (e.g., my-service).
+    required: true
+
+outputs:
+  task-def-arn:
+    value: ""
+    description: The ARN of the newly registered ECS task definition.
+
+runs:
+  using: "composite"
+  steps:
+    - name: Checkout code
+      uses: actions/checkout@v2
+
+    - name: Replace placeholders in task definition template
+      shell: bash
+      env:
+        TASK_FAMILY: ${{ inputs.task-family }}
+        IMAGE_TAG: ${{ github.run_id }}
+        AWS_REGION: ${{ inputs.aws-region }}
+        CLIENT_ID: ${{ inputs.client-id }}
+        SECRET_ACCESS_KEY: ${{ inputs.secret-access-key }}
+        CLIENT_SECRET: ${{ inputs.client-secret }}
+        BUCKET_NAME: ${{ inputs.bucket-name }}
+        ACCESS_KEY_ID: ${{ inputs.access-key-id }}
+        USER_POOL_ID: ${{ inputs.user-pool-id }}
+        DB_CONNECTIONSTRING: ${{ inputs.db-connection-string }}
+        EXECUTION_ROLE_ARN: ${{ inputs.execution-role }}
+        REPOSITORY_URI: ${{ inputs.repository-uri }}
+        REPOSITORY_NAME: ${{ inputs.repository-name }}
+      run: |
+        envsubst < taskdefinition.template.json > taskdefinition.json
+
+    - name: Register new ECS task definition
+      id: register-task
+      shell: bash
+      run: |
+        cat taskdefinition.json
+        NEW_TASK_DEF_ARN=$(aws ecs register-task-definition \
+          --cli-input-json "$(cat taskdefinition.json)" \
+          --query 'taskDefinition.taskDefinitionArn' \
+          --output text)
+        echo "task-def-arn=$NEW_TASK_DEF_ARN" >> $GITHUB_ENV
+
+    - name: Update ECS service
+      shell: bash
+      env:
+        TASK_DEF_ARN: ${{ env.task-def-arn }}
+      run: |
+        aws ecs update-service \
+          --cluster ${{ inputs.cluster-name }} \
+          --service ${{ inputs.service-name }} \
+          --task-definition $TASK_DEF_ARN

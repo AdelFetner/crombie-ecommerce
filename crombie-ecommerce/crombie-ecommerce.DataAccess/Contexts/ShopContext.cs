@@ -183,7 +183,7 @@ namespace crombie_ecommerce.DataAccess.Contexts
                 order.Property(o => o.OrderId).HasDefaultValueSql("NEWID()");
                 order.Property(o => o.OrderDate).IsRequired();
                 order.Property(o=>o.Status).IsRequired();
-                order.Property(o => o.TotalAmount).IsRequired();
+                order.Property(o => o.TotalAmount).HasPrecision(18, 2).IsRequired();
                 order.Property(o => o.ShippingAddress).HasMaxLength(100);
                 order.Property(o => o.PaymentMethod).IsRequired();
 
@@ -200,8 +200,8 @@ namespace crombie_ecommerce.DataAccess.Contexts
                 orderD.HasKey(od => od.DetailId);
                 orderD.Property(od => od.OrderId).HasDefaultValueSql("NEWID()");
                 orderD.Property(od=>od.Quantity).IsRequired();
-                orderD.Property(od => od.Price).IsRequired();
-                orderD.Property(od => od.Subtotal).IsRequired();
+                orderD.Property(od => od.Price).HasPrecision(18, 2).IsRequired();
+                orderD.Property(od => od.Subtotal).HasPrecision(18, 2).IsRequired();
 
                 //relation order - orderDetails (one to many)
                 orderD.HasOne(od=>od.Order)

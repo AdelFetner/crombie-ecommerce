@@ -7,7 +7,6 @@
     <RootNamespace>crombie_ecommerce</RootNamespace>
     <UserSecretsId>ecc3a1ec-c5a0-4e88-9e8b-94adb77d0721</UserSecretsId>
     <DockerDefaultTargetOS>Linux</DockerDefaultTargetOS>
-    <DockerfileContext>.</DockerfileContext>
   </PropertyGroup>
 
   <ItemGroup>

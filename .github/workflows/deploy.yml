@@ -1,0 +1,61 @@
+name: Build, Push and Deploy to ECS
+
+on:
+  workflow_dispatch:  # This allows the workflow to be triggered manually
+  push:
+     branches:
+     - main
+
+jobs:
+  build-push:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v3
+
+    - name: Configure AWS credentials
+      uses: aws-actions/configure-aws-credentials@v3
+      with:
+        aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+        aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+        aws-region: ${{ secrets.AWS_REGION }}
+
+    - name: Docker Build and Push
+      uses: ./.github/actions/docker-build-and-push
+      with:
+        ecr-repository: ${{ secrets.ECR_REPOSITORY }}
+        aws-region: ${{ secrets.AWS_REGION }} 
+
+  ecs-deploy:
+    needs: build-push
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v3
+
+    - name: Configure AWS credentials
+      uses: aws-actions/configure-aws-credentials@v3
+      with:
+        aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+        aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+        aws-region: ${{ secrets.AWS_REGION }}
+
+    - name: ECS Deploy
+      uses: ./.github/actions/ecs-deploy
+      with:
+        task-family: ${{ secrets.TASK_FAMILY }}
+        aws-region: ${{ secrets.AWS_REGION }}
+        client-id: ${{ secrets.CLIENT_ID }}
+        secret-access-key: ${{ secrets.SECRET_ACCESS_KEY }}
+        client-secret: ${{ secrets.CLIENT_SECRET }}
+        bucket-name: ${{ secrets.BUCKET_NAME }}
+        access-key-id: ${{ secrets.ACCESS_KEY_ID }}
+        user-pool-id: ${{ secrets.USER_POOL_ID }}
+        db-connection-string: ${{ secrets.DB_CONNECTIONSTRING }}
+        execution-role: ${{ secrets.EXECUTION_ROLE_ARN }}
+        cluster-name: ${{ secrets.CLUSTER_NAME }}
+        service-name: ${{ secrets.SERVICE_NAME }}
+        repository-name: ${{ secrets.ECR_REPOSITORY }}
+        repository-uri: ${{ secrets.ECR_URI }}
