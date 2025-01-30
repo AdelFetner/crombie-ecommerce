@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using crombie_ecommerce.DataAccess.Contexts;
 
@@ -11,9 +12,11 @@ using crombie_ecommerce.DataAccess.Contexts;
 namespace crombie_ecommerce.DataAccess.Migrations
 {
     [DbContext(typeof(ShopContext))]
-    partial class ShopContextModelSnapshot : ModelSnapshot
+    [Migration("20250127184648_UserS3Connection")]
+    partial class UserS3Connection
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -108,81 +111,6 @@ namespace crombie_ecommerce.DataAccess.Migrations
                     b.ToTable("Category", (string)null);
                 });
 
-            modelBuilder.Entity("crombie_ecommerce.Models.Entities.HistoryProduct", b =>
-                {
-                    b.Property<Guid>("OriginalId")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<string>("EntityJson")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<DateTime>("ProcessedAt")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("ProcessedBy")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<Guid>("UserId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.HasKey("OriginalId");
-
-                    b.ToTable("HistoryProduct", (string)null);
-                });
-
-            modelBuilder.Entity("crombie_ecommerce.Models.Entities.HistoryUser", b =>
-                {
-                    b.Property<Guid>("OriginalId")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<string>("EntityJson")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<DateTime>("ProcessedAt")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("ProcessedBy")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<Guid>("UserId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.HasKey("OriginalId");
-
-                    b.ToTable("HistoryUser", (string)null);
-                });
-
-            modelBuilder.Entity("crombie_ecommerce.Models.Entities.HistoryWishlist", b =>
-                {
-                    b.Property<Guid>("OriginalId")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<string>("EntityJson")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<DateTime>("ProcessedAt")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("ProcessedBy")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<Guid>("UserId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.HasKey("OriginalId");
-
-                    b.ToTable("HistoryWishlist", (string)null);
-                });
-
             modelBuilder.Entity("crombie_ecommerce.Models.Entities.Notification", b =>
                 {
                     b.Property<Guid>("NotfId")
@@ -248,7 +176,6 @@ namespace crombie_ecommerce.DataAccess.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<decimal>("TotalAmount")
-                        .HasPrecision(18, 2)
                         .HasColumnType("decimal(18,2)");
 
                     b.Property<Guid?>("UserId")
@@ -273,7 +200,6 @@ namespace crombie_ecommerce.DataAccess.Migrations
                         .HasDefaultValueSql("NEWID()");
 
                     b.Property<decimal>("Price")
-                        .HasPrecision(18, 2)
                         .HasColumnType("decimal(18,2)");
 
                     b.Property<Guid?>("ProductId")
@@ -283,7 +209,6 @@ namespace crombie_ecommerce.DataAccess.Migrations
                         .HasColumnType("int");
 
                     b.Property<decimal>("Subtotal")
-                        .HasPrecision(18, 2)
                         .HasColumnType("decimal(18,2)");
 
                     b.HasKey("DetailId");

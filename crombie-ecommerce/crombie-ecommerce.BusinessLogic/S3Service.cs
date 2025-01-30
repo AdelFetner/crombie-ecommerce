@@ -1,4 +1,5 @@
-﻿using Amazon.Runtime;
+﻿using Amazon;
+using Amazon.Runtime;
 using Amazon.S3;
 using Amazon.S3.Model;
 using Interfaces;
@@ -14,7 +15,13 @@ namespace crombie_ecommerce.BusinessLogic
         public s3Service(IConfiguration configuration)
         {
             // get the bucket and keys from user secrets
-            _amazonS3 = new AmazonS3Client(new BasicAWSCredentials(configuration["AccessKeyId"], configuration["SecretAcessKey"]));
+            _amazonS3 = new AmazonS3Client(new BasicAWSCredentials(
+                configuration["AccessKeyId"],
+                configuration["SecretAccessKey"]
+                ),
+                new AmazonS3Config { RegionEndpoint = RegionEndpoint.GetBySystemName(configuration["AWS:Region"]) }
+            );
+
             _bucketName = configuration["BucketName"] ?? "";
         }
 

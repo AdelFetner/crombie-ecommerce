@@ -1,6 +1,0 @@
-@crombie_ecommerce_HostAddress = http://localhost:5081
-
-GET {{crombie_ecommerce_HostAddress}}/weatherforecast/
-Accept: application/json
-
-###

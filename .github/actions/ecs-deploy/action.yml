@@ -1,0 +1,47 @@
+name: ECS Deploy
+description: Deploys Docker image to ECS service
+
+inputs:
+    cluster-name:
+        description: ECS cluster name
+        required: true
+    service-name:
+        description: ECS service name
+        required: true
+    task-family:
+        description: ECS task definition family
+        required: true
+    aws-region:
+        description: AWS region
+        required: true
+    repository-name:
+        description: ECR repository name
+        required: true
+
+runs:
+    using: "composite"
+    steps:
+        - name: Replace placeholders
+          shell: bash
+          env:
+              TASK_FAMILY: ${{ inputs.task-family }}
+              AWS_REGION: ${{ inputs.aws-region }}
+              REPOSITORY_NAME: ${{ inputs.repository-name }}
+          run: |
+              # Only replace essential values
+              envsubst '${TASK_FAMILY} ${AWS_REGION} ${REPOSITORY_NAME}' \
+                < taskdefinition.template.json > taskdefinition.json
+
+        - name: Register task definition
+          shell: bash
+          run: |
+              aws ecs register-task-definition \
+                --cli-input-json file://taskdefinition.json
+
+        - name: Update service
+          shell: bash
+          run: |
+              aws ecs update-service \
+                --cluster ${{ inputs.cluster-name }} \
+                --service ${{ inputs.service-name }} \
+                --task-definition ${{ inputs.task-family }}

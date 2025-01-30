@@ -40,19 +40,22 @@ namespace crombie_ecommerce.BusinessLogic
                 .Where(c => productDto.CategoryIds.Contains(c.CategoryId))
                 .ToListAsync();
 
-            using var stream = fileImage.OpenReadStream();
-
-            var upload = await _s3Service.UploadFileAsync(stream, fileImage.FileName, fileImage.ContentType, _bucketFolder);
+            var productId = Guid.NewGuid();
 
             var product = new Product
             {
+                ProductId = productId,
                 Name = productDto.Name,
                 Description = productDto.Description,
                 Price = productDto.Price,
                 BrandId = productDto.BrandId,
                 Categories = categories,
-                Image = $"{_bucketFolder}/{fileImage.FileName}"
+                Image = $"{_bucketFolder}/{productId}/{fileImage.FileName}"
             };
+
+            using var stream = fileImage.OpenReadStream();
+
+            var upload = await _s3Service.UploadFileAsync(stream, fileImage.FileName, fileImage.ContentType, $"{_bucketFolder}/{product.ProductId}");
 
             _context.Products.Add(product);
             await _context.SaveChangesAsync();
@@ -158,6 +161,32 @@ namespace crombie_ecommerce.BusinessLogic
                 
 
             return await query.ToListAsync();
+        }
+
+        public async Task<bool> ArchiveMethod(Guid ProductId, string processedBy = "Unregistered")
+        {
+            var product = await _context.Products
+                .Include(p => p.Categories)
+                .Include(p => p.Brand)
+                .Include(p => p.Image)
+                .FirstOrDefaultAsync(p => p.ProductId == ProductId);
+
+            if (product == null)
+                return false;
+
+            var historyProduct = new HistoryProduct
+            {
+                OriginalId = product.ProductId,
+                ProcessedAt = DateTime.UtcNow,
+                ProcessedBy = processedBy,
+                EntityJson = product.SerializeToJson()
+            };
+
+            _context.HistoryProducts.Add(historyProduct);
+            _context.Products.Remove(product);
+            await _context.SaveChangesAsync();
+
+            return true;
         }
     }
 }
