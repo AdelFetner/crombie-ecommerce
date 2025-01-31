@@ -49,16 +49,28 @@ namespace crombie_ecommerce.BusinessLogic
             return existingBrand;
         }
 
-        public async Task DeleteBrand(Guid id)
+        // Method to delete and archive brand
+        public async Task<bool> ArchiveMethod(Guid brandId, string processedBy = "Unregistered")
         {
-            var brand = await GetBrandById(id);
-            if (brand == null)
-            {
-                throw new Exception("Brand not found");
-            }
+            var brand = await _context.Brands
+                .FirstOrDefaultAsync(b => b.BrandId == brandId);
 
+            if (brand == null)
+                return false;
+
+            var historyBrand = new HistoryBrand
+            {
+                OriginalId = brand.BrandId,
+                ProcessedAt = DateTime.UtcNow,
+                ProcessedBy = processedBy,
+                EntityJson = brand.SerializeToJson()
+            };
+
+            _context.HistoryBrands.Add(historyBrand);
             _context.Brands.Remove(brand);
             await _context.SaveChangesAsync();
+
+            return true;
         }
     }
 }

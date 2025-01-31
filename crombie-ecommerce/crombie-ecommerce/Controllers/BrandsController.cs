@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using crombie_ecommerce.BusinessLogic;
 using crombie_ecommerce.Models.Entities;
+using Interfaces;
 
 namespace crombie_ecommerce.Controllers
 {
@@ -71,17 +72,14 @@ namespace crombie_ecommerce.Controllers
 
         // DELETE: api/Brands/5
         [HttpDelete("{id}")]
-        public async Task<IActionResult> DeleteBrand(Guid id)
+        public async Task<IActionResult> DeleteAndArchive(Guid id)
         {
-            try
+            var success = await _brandService.ArchiveMethod(id, "Unregistered");
+            if (!success)
             {
-                await _brandService.DeleteBrand(id);
-                return NoContent();
+                return NotFound(new { message = "Brand not found." });
             }
-            catch (Exception ex)
-            {
-                return BadRequest(ex.Message);
-            }
+            return Ok(new { message = "Brand deleted successfully." });
         }
     }
 }

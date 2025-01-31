@@ -1,8 +1,8 @@
-﻿using System.Text.Json.Serialization;
+﻿using Newtonsoft.Json;
 
 namespace crombie_ecommerce.Models.Entities
 {
-    public class Order
+    public class Order 
     {
         public Guid OrderId { get; set; }
 
@@ -15,8 +15,12 @@ namespace crombie_ecommerce.Models.Entities
         public Guid? UserId { get; set; }
         [JsonIgnore]
         public User? User { get; set; }
-
         [JsonIgnore]
         public virtual ICollection<OrderDetail>? OrderDetails { get; set; } = new List<OrderDetail>();
+        public Guid Id => OrderId;
+        public string SerializeToJson()
+        {
+            return JsonConvert.SerializeObject(this);
+        }
     }
 }

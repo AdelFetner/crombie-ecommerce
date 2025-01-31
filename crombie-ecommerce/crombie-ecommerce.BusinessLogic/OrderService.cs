@@ -54,15 +54,28 @@ namespace crombie_ecommerce.BusinessLogic
                 
         }
         //delete order
-        public async Task DeleteOrder(Guid id) 
+        public async Task<bool> ArchiveMethod(Guid orderId, string processedBy = "Unregistered")
         {
-            var order = await _context.Orders.FindAsync(id);
-            if (order != null)
-            {
-                _context.Orders.Remove(order);
-                await _context.SaveChangesAsync();
-            }
-        }
+            var order = await _context.Orders
+                .Include(o => o.OrderDetails)
+                .FirstOrDefaultAsync(o => o.OrderId == orderId);
 
+            if (order == null)
+                return false;
+
+            var historyOrder = new HistoryOrder
+            {
+                OriginalId = order.OrderId,
+                ProcessedAt = DateTime.UtcNow,
+                ProcessedBy = processedBy,
+                EntityJson = order.SerializeToJson()
+            };
+
+            _context.HistoryOrders.Add(historyOrder);
+            _context.Orders.Remove(order);
+            await _context.SaveChangesAsync();
+
+            return true;
+        }
     }
 }

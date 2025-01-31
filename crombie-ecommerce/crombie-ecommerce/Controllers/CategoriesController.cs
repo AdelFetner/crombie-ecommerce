@@ -66,17 +66,14 @@ namespace crombie_ecommerce.Controllers
 
         // DELETE: api/Categories/5
         [HttpDelete("{id}")]
-        public async Task<IActionResult> DeleteCategory(Guid id)
+        public async Task<IActionResult> DeleteAndArchive(Guid id)
         {
-            try
+            var success = await _categoryService.ArchiveMethod(id, "Unregistered");
+            if (!success)
             {
-                await _categoryService.DeleteCategory(id);
-                return NoContent();
+                return NotFound(new { message = "Category not found." });
             }
-            catch (Exception ex)
-            {
-                return BadRequest(ex.Message);
-            }
+            return Ok(new { message = "Category deleted successfully." });
         }
     }
 }
