@@ -60,12 +60,16 @@ public class CognitoAuthService
                 throw new InvalidOperationException("User already exist.");
             }
 
+            var passwordHasher = new PasswordHasher();
+
+            string hashedPassword = passwordHasher.HashPassword(userDto.Password);
+
             // Cognito
             var signUpRequest = new SignUpRequest
             {
                 ClientId = _clientId,
                 Username = userDto.Email,
-                Password = userDto.Password,
+                Password = hashedPassword,
                 SecretHash = CalculateSecretHash(_clientId, _clientSecret, userDto.Email),
                 UserAttributes = new List<AttributeType>
             {
@@ -90,7 +94,7 @@ public class CognitoAuthService
                     Name = userDto.Name,
                     Email = userDto.Email,
                     // Hash
-                    Password = userDto.Password,
+                    Password = hashedPassword,
                     Address = userDto.Address,
                     IsVerified = false,
                     Image=null,
@@ -237,12 +241,16 @@ public class CognitoAuthService
     {
         try
         {
+            var passwordHasher = new PasswordHasher();
+            //hash
+            string hashedPassword = passwordHasher.HashPassword(confirmForgotPasswordDto.NewPassword);
+
             var confirmPasswordRequest = new ConfirmForgotPasswordRequest
             {
                 ClientId = _clientId,
                 Username = confirmForgotPasswordDto.Email,
                 ConfirmationCode = confirmForgotPasswordDto.ConfirmationCode,
-                Password = confirmForgotPasswordDto.NewPassword,
+                Password = hashedPassword,
                 SecretHash = CalculateSecretHash(_clientId, _clientSecret, confirmForgotPasswordDto.Email)
             };
 
@@ -254,7 +262,7 @@ public class CognitoAuthService
                 var user = await _shopContext.Users.FirstOrDefaultAsync(u => u.Email == confirmForgotPasswordDto.Email);
                 if (user != null)
                 {
-                    user.Password = confirmForgotPasswordDto.NewPassword; // Puedes aplicar hashing si lo deseas
+                    user.Password = hashedPassword; //hash
                     await _shopContext.SaveChangesAsync();
                 }
 
