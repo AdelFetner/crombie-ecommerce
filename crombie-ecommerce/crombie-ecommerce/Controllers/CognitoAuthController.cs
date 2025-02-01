@@ -1,5 +1,7 @@
 ﻿using Amazon.CognitoIdentityProvider.Model;
 using crombie_ecommerce.Models.Dto;
+using crombie_ecommerce.Models.Dto.Password;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Runtime.InteropServices;
 
@@ -71,16 +73,82 @@ public class AuthController : ControllerBase
     }
 
     [HttpPost("login")]
-    public async Task<IActionResult> Login([FromBody] RegisterRequest request)
+    public async Task<IActionResult> Login([FromBody] LoginDto loginDto)
     {
         try
         {
-            var result = await _cognitoAuthService.InitiateAuthAsync(request.Email, request.Password);
+            var result = await _cognitoAuthService.InitiateAuthAsync(loginDto.Email, loginDto.Password);
             return Ok(result);
         }
         catch (Exception ex)
         {
             return BadRequest(new { Error = ex.Message });
+        }
+    }
+
+    [HttpPost("change-password")]
+    [Authorize] //User must be logged in, to change the password this way.
+    public async Task<IActionResult> ChangePassword([FromBody] ChangePasswordDto changePasswordDto)
+    {
+        try
+        {
+            var result = await _cognitoAuthService.ChangePassword(changePasswordDto);
+            
+
+            if (result)
+            {
+                return Ok(new { message = "A code has been sent to your email, please check it and confirm the change." });
+            }
+
+            return BadRequest(new { message = "Password could not be changed." });
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error: {ex.Message}, InnerException: {ex.InnerException}");
+            throw new Exception($"Error changing password: {ex.Message}", ex);
+        }
+    }
+
+    [HttpPost("forgot")]
+    //User doesn't have to be logged in, to change password this way.
+    public async Task<IActionResult> ForgotPassword([FromBody] ForgotPasswordDto forgotPasswordDto)
+    {
+        try
+        {
+            var response = await _cognitoAuthService.ForgotPassword(forgotPasswordDto);
+            return Ok(new
+            {
+                message = "A code has been sent to your email, please check it and confirm the change",
+                deliveryMethod = response.CodeDeliveryDetails.DeliveryMedium,
+                destination = response.CodeDeliveryDetails.Destination
+            });
+        }
+        catch (Exception ex)
+        {
+           
+            return BadRequest(new { message = "Error trying the password recovery process" });
+        }
+    }
+
+    [HttpPost("forgot/confirm")]
+    public async Task<IActionResult> ConfirmForgotPassword([FromBody] ConfirmForgotPasswordDto confirmForgotPasswordDto)
+    {
+        try
+        {
+            var result = await _cognitoAuthService.ConfirmForgotPasswordAsync(confirmForgotPasswordDto);
+            
+
+            if (result)
+            {
+                return Ok(new { message = "Password successfully changed" });
+            }
+
+            return BadRequest(new { message = "Error when confirming password change" });
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine("error");
+            return BadRequest(new { message = "Error when confirming password change" });
         }
     }
 

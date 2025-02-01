@@ -5,6 +5,7 @@ using Amazon.Runtime;
 using crombie_ecommerce.BusinessLogic;
 using crombie_ecommerce.DataAccess.Contexts;
 using crombie_ecommerce.Models.Dto;
+using crombie_ecommerce.Models.Dto.Password;
 using crombie_ecommerce.Models.Entities;
 using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.EntityFrameworkCore;
@@ -56,7 +57,7 @@ public class CognitoAuthService
             if (existingUser != null)
             {
                 
-                throw new InvalidOperationException("user registered already.");
+                throw new InvalidOperationException("User already exist.");
             }
 
             // Cognito
@@ -181,9 +182,102 @@ public class CognitoAuthService
 
         return response;
     }
+
+    //change password:
+    public async Task<bool> ChangePassword(ChangePasswordDto changePasswordDto)
+    {
+        try
+        {
+            var authResponse = await InitiateAuthAsync(changePasswordDto.Email, changePasswordDto.CurrentPassword);
+            if (authResponse.AuthenticationResult == null)
+            {
+                throw new InvalidOperationException("Invalid credentials.");
+            }
+            var forgotPasswordRequest = new ForgotPasswordRequest
+            {
+                ClientId = _clientId,
+                Username = changePasswordDto.Email,
+                SecretHash = CalculateSecretHash(_clientId, _clientSecret, changePasswordDto.Email)
+            };
+
+            var response = await _provider.ForgotPasswordAsync(forgotPasswordRequest);
+
+            return true ;
+        }
+        catch (Exception ex)
+        {
+            throw new Exception("Failed to initiate password change. Please try again.", ex);
+        }
+    }
+
+    //forgot password:
+    public async Task<ForgotPasswordResponse> ForgotPassword(ForgotPasswordDto forgotPasswordDto)
+    {
+        try
+        {
+            var request = new ForgotPasswordRequest
+            {
+                ClientId = _clientId,
+                Username = forgotPasswordDto.Email,
+                SecretHash = CalculateSecretHash(_clientId, _clientSecret, forgotPasswordDto.Email)
+            };
+
+            var response = await _provider.ForgotPasswordAsync(request);
+            return response;
+        }
+        catch (Exception ex)
+        {
+            throw new Exception("Error at change password proccess.", ex);
+        }
+    }
+
+
+    //confirm the password change(with de code send to the email):
+    public async Task<bool> ConfirmForgotPasswordAsync(ConfirmForgotPasswordDto confirmForgotPasswordDto)
+    {
+        try
+        {
+            var confirmPasswordRequest = new ConfirmForgotPasswordRequest
+            {
+                ClientId = _clientId,
+                Username = confirmForgotPasswordDto.Email,
+                ConfirmationCode = confirmForgotPasswordDto.ConfirmationCode,
+                Password = confirmForgotPasswordDto.NewPassword,
+                SecretHash = CalculateSecretHash(_clientId, _clientSecret, confirmForgotPasswordDto.Email)
+            };
+
+            var response = await _provider.ConfirmForgotPasswordAsync(confirmPasswordRequest);
+
+            if (response.HttpStatusCode == HttpStatusCode.OK)
+            {
+                
+                var user = await _shopContext.Users.FirstOrDefaultAsync(u => u.Email == confirmForgotPasswordDto.Email);
+                if (user != null)
+                {
+                    user.Password = confirmForgotPasswordDto.NewPassword; // Puedes aplicar hashing si lo deseas
+                    await _shopContext.SaveChangesAsync();
+                }
+
+                return true;
+            }
+
+            return false;
+            throw new Exception("Failed to change password.");
+        }
+        catch (Exception ex)
+        {
+            
+            throw new Exception("Error while confirming password change.", ex);
+        }
+    }
+
+
+
     public static string CalculateSecretHash(string clientId, string clientSecret, string username)
     {
+        
         var message = username + clientId;
+        var data = Encoding.UTF8.GetBytes(message);
         var key = Encoding.UTF8.GetBytes(clientSecret);
 
         using (var hmac = new HMACSHA256(key))
