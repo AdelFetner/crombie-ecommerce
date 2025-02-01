@@ -2,6 +2,7 @@
 using crombie_ecommerce.BusinessLogic;
 using crombie_ecommerce.Models.Entities;
 using Interfaces;
+using Microsoft.AspNetCore.Authorization;
 
 namespace crombie_ecommerce.Controllers
 {
@@ -18,6 +19,7 @@ namespace crombie_ecommerce.Controllers
 
         // GET: api/OrderDetails
         [HttpGet]
+        [Authorize]
         public async Task<ActionResult<IEnumerable<OrderDetail>>> GetAllOrderDetails()
         {
             var details = await _orderDetailsService.GetAllDetails();
@@ -26,6 +28,7 @@ namespace crombie_ecommerce.Controllers
 
         // GET: api/OrderDetails/5
         [HttpGet("{id}")]
+        [Authorize]
         public async Task<ActionResult<OrderDetail>> GetOrderDetailById(Guid id)
         {
             var orderDetail = await _orderDetailsService.GetDetailsById(id);
@@ -41,6 +44,7 @@ namespace crombie_ecommerce.Controllers
         // PUT: api/OrderDetails/5
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPut("{id}")]
+        [Authorize]
         public async Task<IActionResult> PutOrderDetail(Guid id, [FromBody]OrderDetail orderDetail)
         {
             try
@@ -58,6 +62,7 @@ namespace crombie_ecommerce.Controllers
         // POST: api/OrderDetails
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPost]
+        [Authorize]
         public async Task<ActionResult<OrderDetail>> PostOrderDetail(OrderDetail orderDetail)
         {
             var createdDetail = await _orderDetailsService.CreateDetails(orderDetail);
@@ -67,6 +72,7 @@ namespace crombie_ecommerce.Controllers
 
         // DELETE: api/OrderDetails/5
         [HttpDelete("{id}")]
+        [Authorize(Roles ="Admin")]
         public async Task<IActionResult> DeleteAndArchive(Guid id)
         {
             var success = await _orderDetailsService.ArchiveMethod(id, "Unregistered");

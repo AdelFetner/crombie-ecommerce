@@ -2,6 +2,7 @@
 using crombie_ecommerce.BusinessLogic;
 using crombie_ecommerce.Models.Entities;
 using Interfaces;
+using Microsoft.AspNetCore.Authorization;
 
 namespace crombie_ecommerce.Controllers
 {
@@ -19,6 +20,7 @@ namespace crombie_ecommerce.Controllers
        
         // GET: api/Orders/5
         [HttpGet("{id}")]
+        [Authorize]
         public async Task<ActionResult<Order>> GetOrderById(Guid id)
         {
             var order = await _orderService.GetOrderById(id);
@@ -33,6 +35,7 @@ namespace crombie_ecommerce.Controllers
 
         // GET: api/Orders
         [HttpGet("user/{userId}")]
+        [Authorize]
         public async Task<ActionResult<Order>> GetOrdersByUserId(Guid userId)
         {
             var orders = await _orderService.GetOrdersByUserId(userId);
@@ -42,6 +45,7 @@ namespace crombie_ecommerce.Controllers
         // PUT: api/Orders/5
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPut("{id}")]
+        [Authorize]
         public async Task<IActionResult> PutOrder(Guid id, [FromBody]Order order)
         {
             try
@@ -59,7 +63,9 @@ namespace crombie_ecommerce.Controllers
 
         // POST: api/Orders
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
+        
         [HttpPost]
+        [Authorize]
         public async Task<ActionResult<Order>> PostOrder(Order order)
         {
             var createdOrder =  await _orderService.CreateOrder(order);
@@ -69,6 +75,7 @@ namespace crombie_ecommerce.Controllers
 
         // DELETE: api/Orders/5
         [HttpDelete("{id}")]
+        [Authorize(Roles ="Admin")]
         public async Task<IActionResult> DeleteAndArchive(Guid id)
         {
             var success = await _orderService.ArchiveMethod(id, "Unregistered");
