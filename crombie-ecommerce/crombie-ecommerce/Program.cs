@@ -28,7 +28,8 @@ builder.Services.AddScoped<WishlistService>()
     .AddScoped<OrderService>()
     .AddScoped<CognitoAuthService>()
     .AddScoped<s3Service>()
-    .AddScoped<NotificationService>();
+    .AddScoped<NotificationService>()
+    .AddScoped<StockService>();
 
 builder.Services.AddSqlServer<ShopContext>(builder.Configuration["ConnectionString"]);
 
