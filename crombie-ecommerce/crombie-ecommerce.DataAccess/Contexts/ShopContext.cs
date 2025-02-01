@@ -220,59 +220,61 @@ namespace crombie_ecommerce.DataAccess.Contexts
             });
 
             //builder for notifications entity
-            modelBuilder.Entity<Notification>(entity =>
+            modelBuilder.Entity<Notification>(notification =>
             {
-                entity.HasKey(n => n.NotfId);
-                entity.Property(n => n.NotificationType).HasMaxLength(50).IsRequired();
-                entity.Property(n => n.Message).HasMaxLength(100).IsRequired();
-                entity.Property(n => n.CreatedDate).IsRequired().HasDefaultValueSql("CURRENT_TIMESTAMP");
-                entity.Property(n => n.IsRead).HasDefaultValue(false);
+                notification.HasKey(n => n.NotfId);
+                notification.Property(n => n.NotificationType).HasMaxLength(50).IsRequired();
+                notification.Property(n => n.Message).HasMaxLength(100).IsRequired();
+                notification.Property(n => n.CreatedDate).IsRequired().HasDefaultValueSql("CURRENT_TIMESTAMP");
+                notification.Property(n => n.IsRead).HasDefaultValue(false);
 
 
                 // relation notification - product (many to one)
-                entity.HasOne(n => n.Product)
+                notification.HasOne(n => n.Product)
                       .WithMany(p => p.Notifications)
                       .HasForeignKey(n => n.ProductId)
                       .OnDelete(DeleteBehavior.Cascade)
                       .IsRequired(); // Ensure the foreign key is required
 
                 // relation notification - wishlist (many to one)
-                entity.HasOne(n => n.Wishlist)
+                notification.HasOne(n => n.Wishlist)
                       .WithMany(w => w.Notifications)
                       .HasForeignKey(n => n.WishlistId)
                       .OnDelete(DeleteBehavior.Cascade)
                       .IsRequired();
             });
 
-            modelBuilder.Entity<Cart>(entity =>
+            modelBuilder.Entity<Cart>(cart =>
             {
-                entity.HasKey(c => c.CartId);
-                entity.Property(c => c.TotalAmount);
+                cart.ToTable("Cart");
+                cart.HasKey(c => c.CartId);
+                cart.Property(c => c.TotalAmount);
 
                 //User - cart relation (one to one)
-                entity.HasOne(c => c.User)
+                cart.HasOne(c => c.User)
                       .WithOne(u => u.Cart)
                       .HasForeignKey<Cart>(c => c.UserId)
                       .OnDelete(DeleteBehavior.Cascade);
 
                 // cart - cartItems relation (one to many)
-                entity.HasMany(c => c.Items)
+                cart.HasMany(c => c.Items)
                       .WithOne(ci => ci.Cart)
                       .HasForeignKey(ci => ci.CartId)
                       .OnDelete(DeleteBehavior.Cascade);
             });
 
 
-            modelBuilder.Entity<CartItem>(entity =>
+            modelBuilder.Entity<CartItem>(cartItem =>
             {
-                entity.HasKey(ci => ci.ItemId);
-                entity.Property(ci => ci.Quantity);
-                entity.Property(ci => ci.Price);
-                entity.Property(ci => ci.Total);
+                cartItem.ToTable("CartItem");
+                cartItem.HasKey(ci => ci.ItemId);
+                cartItem.Property(ci => ci.Quantity);
+                cartItem.Property(ci => ci.Price);
+                cartItem.Property(ci => ci.Total);
 
 
                 //product - cartItem relation (one to many)
-                entity.HasOne(ci => ci.Product)
+                cartItem.HasOne(ci => ci.Product)
                       .WithMany()
                       .HasForeignKey(ci => ci.ProductId)
                       .OnDelete(DeleteBehavior.Restrict); //to prevent delete a product when want to delete an CartItem
