@@ -146,7 +146,6 @@ public class AuthController : ControllerBase
         }
         catch (Exception ex)
         {
-            Console.WriteLine("error");
             return BadRequest(new { message = "Error when confirming password change" });
         }
     }

@@ -75,7 +75,7 @@ namespace crombie_ecommerce.Controllers
         [Authorize(Roles ="Admin")]
         public async Task<IActionResult> DeleteAndArchive(Guid id)
         {
-            var success = await _orderDetailsService.ArchiveMethod(id, "Unregistered");
+            var success = await _orderDetailService.ArchiveMethod(id, "Unregistered");
             if (!success)
             {
                 return NotFound(new { message = "Order detail not found." });
