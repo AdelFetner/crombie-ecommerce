@@ -1,4 +1,6 @@
 ﻿using Newtonsoft.Json;
+﻿using System.ComponentModel.DataAnnotations.Schema;
+using System.Text.Json.Serialization;
 
 namespace crombie_ecommerce.Models.Entities
 {
@@ -8,7 +10,12 @@ namespace crombie_ecommerce.Models.Entities
 
         public DateTime OrderDate { get; set; }
         public string Status { get; set; }
+
         public decimal TotalAmount { get; set; }
+
+        [NotMapped]
+        [JsonIgnore]
+        public decimal CalculatedTotal => OrderDetails?.Sum(od => od.Subtotal) ?? 0m;
         public string ShippingAddress { get; set; }
         public string PaymentMethod { get; set; }
 

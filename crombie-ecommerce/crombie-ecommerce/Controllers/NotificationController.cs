@@ -50,7 +50,7 @@ namespace crombie_ecommerce.Controllers
 
                 var notification = new Notification
                 {
-                    NotfId = Guid.NewGuid(),
+                    NotificationId = Guid.NewGuid(),
                     NotificationType = notificationDto.NotificationType,
                     Message = notificationDto.Message,
                     ProductId = notificationDto.ProductId,

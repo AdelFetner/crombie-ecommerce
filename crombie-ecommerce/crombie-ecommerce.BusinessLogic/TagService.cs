@@ -13,24 +13,21 @@ namespace crombie_ecommerce.BusinessLogic
             _context = context;
         }
 
-        // Method to get all tags
         public async Task<List<Tag>> GetAllTags()
         {
             return await _context.Tags.ToListAsync();
         }
 
-        // Method to get a tag by its ID
         public async Task<Tag?> GetTagById(Guid tagId)
         {
             return await _context.Tags.FindAsync(tagId);
         }
 
-        // Method to create a new tag
-        public async Task<List<Tag>> CreateTag(Tag tag)
+        public async Task<Tag> CreateTag(Tag tag)
         {
             _context.Tags.Add(tag);
             await _context.SaveChangesAsync();
-            return await _context.Tags.ToListAsync();
+            return tag;
         }
 
         public async Task<bool> ArchiveMethod(Guid tagId, string processedBy = "Unregistered")
@@ -57,40 +54,33 @@ namespace crombie_ecommerce.BusinessLogic
             return true;
         }
 
-        // Method to associate a tag with a wishlist
         public async Task<bool> AddTagToWishlist(Guid tagId, Guid wishlistId)
         {
             var tag = await _context.Tags.FindAsync(tagId);
-            if (tag == null)
-            {
-                return false;
-            }
+            var wishlist = await _context.Wishlists
+                .Include(w => w.Tags)
+                .FirstOrDefaultAsync(w => w.WishlistId == wishlistId);
 
-            var wishlist = await _context.Wishlists.FindAsync(wishlistId);
-            if (wishlist == null)
-            {
-                return false;
-            }
+            if (tag == null || wishlist == null) return false;
 
-            tag.WishlistId = wishlistId;
-            wishlist.TagsId = tagId;
+            // Add tag to wishlist's collection
+            wishlist.Tags.Add(tag);
             await _context.SaveChangesAsync();
             return true;
         }
 
-        // Method to dissociate a tag from a wishlist
         public async Task<bool> RemoveTagFromWishlist(Guid tagId)
         {
-            var tag = await _context.Tags.FindAsync(tagId);
-            if (tag == null || tag.WishlistId == null)
-            {
-                return false;
-            }
+            var tag = await _context.Tags
+                .Include(t => t.Wishlist)
+                .FirstOrDefaultAsync(t => t.TagId == tagId);
 
-            tag.WishlistId = null;
+            if (tag?.Wishlist == null) return false;
+
+            // Remove tag from wishlist
+            tag.Wishlist.Tags.Remove(tag);
             await _context.SaveChangesAsync();
             return true;
         }
     }
 }
-

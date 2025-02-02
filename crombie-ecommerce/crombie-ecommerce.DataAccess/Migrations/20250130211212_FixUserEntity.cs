@@ -5,35 +5,32 @@
 namespace crombie_ecommerce.DataAccess.Migrations
 {
     /// <inheritdoc />
-    public partial class UserS3Connection : Migration
+    public partial class FixUserEntity : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
         {
-            migrationBuilder.DropColumn(
-                name: "Adress",
-                table: "User");
-
-            migrationBuilder.AddColumn<string>(
-                name: "Address",
+            migrationBuilder.AlterColumn<string>(
+                name: "Image",
                 table: "User",
                 type: "nvarchar(max)",
-                nullable: true);
+                nullable: true,
+                oldClrType: typeof(string),
+                oldType: "nvarchar(max)");
         }
 
         /// <inheritdoc />
         protected override void Down(MigrationBuilder migrationBuilder)
         {
-            migrationBuilder.DropColumn(
-                name: "Address",
-                table: "User");
-
-            migrationBuilder.AddColumn<string>(
-                name: "Adress",
+            migrationBuilder.AlterColumn<string>(
+                name: "Image",
                 table: "User",
                 type: "nvarchar(max)",
                 nullable: false,
-                defaultValue: "");
+                defaultValue: "",
+                oldClrType: typeof(string),
+                oldType: "nvarchar(max)",
+                oldNullable: true);
         }
     }
 }

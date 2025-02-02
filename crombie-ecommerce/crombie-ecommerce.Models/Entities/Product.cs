@@ -7,7 +7,6 @@ namespace crombie_ecommerce.Models.Entities
     public class Product
     {
         [Key]
-
         public Guid ProductId { get; set; }
 
         [Required]

@@ -1,4 +1,5 @@
-﻿using crombie_ecommerce.Models.Entities;
+﻿using crombie_ecommerce.Models.Dto;
+using crombie_ecommerce.Models.Entities;
 
 namespace Interfaces
 {
