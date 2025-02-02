@@ -1,4 +1,5 @@
 ﻿using crombie_ecommerce.DataAccess.Contexts;
+using crombie_ecommerce.Models.Dto;
 using crombie_ecommerce.Models.Entities;
 using Interfaces;
 using Microsoft.EntityFrameworkCore;
@@ -24,8 +25,16 @@ namespace crombie_ecommerce.BusinessLogic
             return await _context.Brands.FindAsync(id);
         }
 
-        public async Task<Brand> CreateBrand(Brand brand)
+        public async Task<Brand> CreateBrand(BrandDto brandDto)
         {
+            var brand = new Brand
+            {
+                BrandId = Guid.NewGuid(),
+                Name = brandDto.Name,
+                Description = brandDto.Description,
+                WebsiteUrl = brandDto.WebsiteUrl
+            };
+
             _context.Brands.Add(brand);
             await _context.SaveChangesAsync();
             return brand;

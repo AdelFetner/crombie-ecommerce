@@ -1,4 +1,5 @@
-﻿using crombie_ecommerce.Models.Entities;
+﻿using crombie_ecommerce.DataAccess.Seeds;
+using crombie_ecommerce.Models.Entities;
 using Microsoft.EntityFrameworkCore;
 
 namespace crombie_ecommerce.DataAccess.Contexts
@@ -48,7 +49,6 @@ namespace crombie_ecommerce.DataAccess.Contexts
                     .WithOne(o => o.User)
                     .HasForeignKey(o => o.UserId)
                     .OnDelete(DeleteBehavior.Cascade);
-
             });
 
             // builder for product entity
@@ -62,14 +62,6 @@ namespace crombie_ecommerce.DataAccess.Contexts
                 product.Property(p => p.Name).IsRequired().HasMaxLength(50);
                 product.Property(p => p.Description).HasMaxLength(100);
                 product.Property(p => p.Price).HasColumnType("decimal(18,2)");
-
-                // product to user (doesn't exist anymore)
-                /*product.HasOne(p => p.User)
-                    .WithOne(u => u.Product)
-
-                    .HasForeignKey<User>(u => u.ProductId)
-
-                    .IsRequired(false);*/
 
                 // product to brand
                 product.HasOne(p => p.Brand)
@@ -94,7 +86,6 @@ namespace crombie_ecommerce.DataAccess.Contexts
                             j.HasKey("ProductId", "CategoryId");
                         }
                     );
-
             });
 
             // builder for wishlist entity
@@ -146,7 +137,12 @@ namespace crombie_ecommerce.DataAccess.Contexts
                 tag.ToTable("Tag");
                 tag.HasKey(t => t.TagId);
                 tag.Property(t => t.Name).IsRequired().HasMaxLength(50);
-                tag.Property(t => t.Description).HasMaxLength(100); 
+                tag.Property(t => t.Description).HasMaxLength(100);
+
+                tag.HasOne(t => t.Wishlist)
+                        .WithMany(w => w.Tags)
+                        .HasForeignKey(t => t.WishlistId)
+                        .OnDelete(DeleteBehavior.Cascade);
             });
 
             // builder for brand entity
@@ -181,9 +177,9 @@ namespace crombie_ecommerce.DataAccess.Contexts
 
             //builder for order entity
             modelBuilder.Entity<Order>(order =>
-            {   
+            {
                 order.ToTable("Order");
-                order.HasKey(o=>o.OrderId);
+                order.HasKey(o => o.OrderId);
                 order.Property(o => o.OrderId).HasDefaultValueSql("NEWID()");
                 order.Property(o => o.OrderDate).IsRequired();
                 order.Property(o=>o.Status).IsRequired();
@@ -198,31 +194,31 @@ namespace crombie_ecommerce.DataAccess.Contexts
             });
 
             //builder for order detail entity
-            modelBuilder.Entity<OrderDetail>(orderD => 
+            modelBuilder.Entity<OrderDetail>(orderD =>
             {
                 orderD.ToTable("OrderDetail");
                 orderD.HasKey(od => od.DetailId);
                 orderD.Property(od => od.OrderId).HasDefaultValueSql("NEWID()");
-                orderD.Property(od=>od.Quantity).IsRequired();
+                orderD.Property(od => od.Quantity).IsRequired();
                 orderD.Property(od => od.Price).HasPrecision(18, 2).IsRequired();
-                orderD.Property(od => od.Subtotal).HasPrecision(18, 2).IsRequired();
-
+                orderD.Property(od => od.Subtotal).HasPrecision(18, 2).IsRequired().HasComputedColumnSql("[Quantity] * [Price]").ValueGeneratedOnAddOrUpdate();
                 //relation order - orderDetails (one to many)
-                orderD.HasOne(od=>od.Order)
-                .WithMany(o=>o.OrderDetails)
-                .HasForeignKey(od => od.OrderId);
+                orderD.HasOne(od => od.Order)
+                .WithMany(o => o.OrderDetails)
+                .HasForeignKey(od => od.OrderId)
+                .OnDelete(DeleteBehavior.Cascade);
 
 
                 //relation orderDetails -  product (many to one)
-                orderD.HasOne(od=>od.Product)
-                .WithMany(p=>p.OrderDetails)
+                orderD.HasOne(od => od.Product)
+                .WithMany(p => p.OrderDetails)
                 .HasForeignKey(od => od.ProductId);
             });
 
             //builder for notifications entity
             modelBuilder.Entity<Notification>(entity =>
             {
-                entity.HasKey(n => n.NotfId);
+                entity.HasKey(n => n.NotificationId);
                 entity.Property(n => n.NotificationType).HasMaxLength(50).IsRequired();
                 entity.Property(n => n.Message).HasMaxLength(100).IsRequired();
                 entity.Property(n => n.CreatedDate).IsRequired().HasDefaultValueSql("CURRENT_TIMESTAMP");
@@ -323,6 +319,16 @@ namespace crombie_ecommerce.DataAccess.Contexts
                 entity.Property(e => e.ProcessedBy).IsRequired();
                 entity.Property(e => e.ProcessedAt).IsRequired();
             });
+
+            modelBuilder.ApplyConfiguration(new BrandSeed());
+            modelBuilder.ApplyConfiguration(new CategorySeed());
+            modelBuilder.ApplyConfiguration(new ProductSeed());
+            modelBuilder.ApplyConfiguration(new UserSeed());
+            modelBuilder.ApplyConfiguration(new WishlistSeed());
+            modelBuilder.ApplyConfiguration(new OrderSeed());
+            modelBuilder.ApplyConfiguration(new OrderDetailSeed());
+            modelBuilder.ApplyConfiguration(new TagSeed());
+            modelBuilder.ApplyConfiguration(new NotificationSeed());
             base.OnModelCreating(modelBuilder);
         }
     }

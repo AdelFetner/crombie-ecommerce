@@ -22,4 +22,8 @@
     <ProjectReference Include="..\crombie-ecommerce.Models\crombie-ecommerce.Models.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Migrations\" />
+  </ItemGroup>
+
 </Project>

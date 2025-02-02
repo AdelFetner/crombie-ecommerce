@@ -21,9 +21,11 @@ namespace crombie_ecommerce.Models.Entities
         public Guid UserId { get; set; }
         public virtual User User { get; set; }
         public virtual ICollection<Product>? Products { get; set; } = [];
-        public Guid? TagsId { get; set; }
+
+        [JsonIgnore]
         public virtual ICollection<Tag>? Tags { get; set; } = [];
-        public Guid? NotfId { get; set; }
+
+        [JsonIgnore]
         public virtual ICollection<Notification>? Notifications { get; set; } = [];
 
         public Guid Id => WishlistId;

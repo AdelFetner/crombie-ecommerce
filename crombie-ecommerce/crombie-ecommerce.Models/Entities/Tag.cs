@@ -19,6 +19,8 @@ namespace crombie_ecommerce.Models.Entities
         public string Description { get; set; }
 
         public Guid? WishlistId { get; set; }
+
+        [JsonIgnore]
         public virtual Wishlist? Wishlist { get; set; }
         public Guid Id => TagId;
         public string SerializeToJson()

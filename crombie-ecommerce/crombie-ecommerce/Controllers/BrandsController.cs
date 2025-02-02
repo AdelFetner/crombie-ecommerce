@@ -2,6 +2,7 @@
 using crombie_ecommerce.BusinessLogic;
 using crombie_ecommerce.Models.Entities;
 using Interfaces;
+using crombie_ecommerce.Models.Dto;
 
 namespace crombie_ecommerce.Controllers
 {
@@ -40,11 +41,11 @@ namespace crombie_ecommerce.Controllers
         // PUT: api/Brands/5
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPost]
-        public async Task<ActionResult<Brand>> PostBrand([FromBody] Brand brand)
+        public async Task<ActionResult<Brand>> PostBrand([FromBody] BrandDto brandDto)
         {
             try
             {
-                var createdBrand = await _brandService.CreateBrand(brand);
+                var createdBrand = await _brandService.CreateBrand(brandDto);
                 return CreatedAtAction(nameof(GetBrand), new { id = createdBrand.BrandId }, createdBrand);
             }
             catch (Exception ex)

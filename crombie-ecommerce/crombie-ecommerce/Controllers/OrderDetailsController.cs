@@ -9,18 +9,18 @@ namespace crombie_ecommerce.Controllers
     [ApiController]
     public class OrderDetailsController : ControllerBase
     {
-        private readonly OrderDetailsService _orderDetailsService;
+        private readonly OrderDetailService _orderDetailService;
 
-        public OrderDetailsController(OrderDetailsService orderDetailsService)
+        public OrderDetailsController(OrderDetailService orderDetailService)
         {
-            _orderDetailsService = orderDetailsService;
+            _orderDetailService = orderDetailService;
         }
 
         // GET: api/OrderDetails
         [HttpGet]
         public async Task<ActionResult<IEnumerable<OrderDetail>>> GetAllOrderDetails()
         {
-            var details = await _orderDetailsService.GetAllDetails();
+            var details = await _orderDetailService.GetAllDetails();
             return Ok(details);
         }
 
@@ -28,7 +28,7 @@ namespace crombie_ecommerce.Controllers
         [HttpGet("{id}")]
         public async Task<ActionResult<OrderDetail>> GetOrderDetailById(Guid id)
         {
-            var orderDetail = await _orderDetailsService.GetDetailsById(id);
+            var orderDetail = await _orderDetailService.GetDetailsById(id);
 
             if (orderDetail == null)
             {
@@ -45,7 +45,7 @@ namespace crombie_ecommerce.Controllers
         {
             try
             {
-                var updatedOrderDetail = await _orderDetailsService.UpdateDetails(id, orderDetail);
+                var updatedOrderDetail = await _orderDetailService.UpdateDetails(id, orderDetail);
                 return Ok(updatedOrderDetail);
             }
             catch (Exception ex)
@@ -60,7 +60,7 @@ namespace crombie_ecommerce.Controllers
         [HttpPost]
         public async Task<ActionResult<OrderDetail>> PostOrderDetail(OrderDetail orderDetail)
         {
-            var createdDetail = await _orderDetailsService.CreateDetails(orderDetail);
+            var createdDetail = await _orderDetailService.CreateDetails(orderDetail);
             return CreatedAtAction(nameof(GetOrderDetailById), new {id = createdDetail.DetailId}, createdDetail);
             
         }
