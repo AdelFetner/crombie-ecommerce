@@ -12,13 +12,8 @@ using crombie_ecommerce.DataAccess.Contexts;
 namespace crombie_ecommerce.DataAccess.Migrations
 {
     [DbContext(typeof(ShopContext))]
-<<<<<<<< HEAD:crombie-ecommerce/crombie-ecommerce.DataAccess/Migrations/20250130000527_fixOrderAndOrderDetails.Designer.cs
-    [Migration("20250130000527_fixOrderAndOrderDetails")]
-    partial class fixOrderAndOrderDetails
-========
-    [Migration("20250130211212_FixUserEntity")]
-    partial class FixUserEntity
->>>>>>>> feat/Roles:crombie-ecommerce/crombie-ecommerce.DataAccess/Migrations/20250130211212_FixUserEntity.Designer.cs
+    [Migration("20250130035058_NewEntityRole")]
+    partial class NewEntityRole
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -256,7 +251,6 @@ namespace crombie_ecommerce.DataAccess.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<decimal>("TotalAmount")
-                        .HasPrecision(18, 2)
                         .HasColumnType("decimal(18,2)");
 
                     b.Property<Guid?>("UserId")
@@ -281,7 +275,6 @@ namespace crombie_ecommerce.DataAccess.Migrations
                         .HasDefaultValueSql("NEWID()");
 
                     b.Property<decimal>("Price")
-                        .HasPrecision(18, 2)
                         .HasColumnType("decimal(18,2)");
 
                     b.Property<Guid?>("ProductId")
@@ -291,7 +284,6 @@ namespace crombie_ecommerce.DataAccess.Migrations
                         .HasColumnType("int");
 
                     b.Property<decimal>("Subtotal")
-                        .HasPrecision(18, 2)
                         .HasColumnType("decimal(18,2)");
 
                     b.HasKey("DetailId");
@@ -409,6 +401,7 @@ namespace crombie_ecommerce.DataAccess.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Image")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<bool>("IsVerified")

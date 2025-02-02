@@ -32,7 +32,6 @@ namespace crombie_ecommerce.BusinessLogic
                 Email = userDto.Email,
                 Password = userDto.Password,
                 Address = userDto.Address,
-                IsVerified = userDto.IsVerified,
                 Image = $"{_bucketFolder}/{userId}/{fileImage.FileName}"
             };
 

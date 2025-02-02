@@ -764,6 +764,39 @@ namespace crombie_ecommerce.DataAccess.Migrations
                         });
                 });
 
+            modelBuilder.Entity("crombie_ecommerce.Models.Entities.Role", b =>
+                {
+                    b.Property<int>("RoleId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Description")
+                        .IsRequired()
+                        .HasMaxLength(500)
+                        .HasColumnType("nvarchar(500)");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("RoleId");
+
+                    b.ToTable("Roles", (string)null);
+
+                    b.HasData(
+                        new
+                        {
+                            RoleId = 1,
+                            Description = "Default user role",
+                            Name = "User"
+                        },
+                        new
+                        {
+                            RoleId = 2,
+                            Description = "Administrator role",
+                            Name = "Admin"
+                        });
+                });
+
             modelBuilder.Entity("crombie_ecommerce.Models.Entities.Tag", b =>
                 {
                     b.Property<Guid>("TagId")
@@ -842,7 +875,6 @@ namespace crombie_ecommerce.DataAccess.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Image")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<bool>("IsVerified")
@@ -860,7 +892,12 @@ namespace crombie_ecommerce.DataAccess.Migrations
                         .HasMaxLength(100)
                         .HasColumnType("nvarchar(100)");
 
+                    b.Property<int>("RoleId")
+                        .HasColumnType("int");
+
                     b.HasKey("UserId");
+
+                    b.HasIndex("RoleId");
 
                     b.ToTable("User", (string)null);
 
@@ -1080,6 +1117,17 @@ namespace crombie_ecommerce.DataAccess.Migrations
                     b.Navigation("Wishlist");
                 });
 
+            modelBuilder.Entity("crombie_ecommerce.Models.Entities.User", b =>
+                {
+                    b.HasOne("crombie_ecommerce.Models.Entities.Role", "Role")
+                        .WithMany("Users")
+                        .HasForeignKey("RoleId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Role");
+                });
+
             modelBuilder.Entity("crombie_ecommerce.Models.Entities.Wishlist", b =>
                 {
                     b.HasOne("crombie_ecommerce.Models.Entities.User", "User")
@@ -1106,6 +1154,11 @@ namespace crombie_ecommerce.DataAccess.Migrations
                     b.Navigation("Notifications");
 
                     b.Navigation("OrderDetails");
+                });
+
+            modelBuilder.Entity("crombie_ecommerce.Models.Entities.Role", b =>
+                {
+                    b.Navigation("Users");
                 });
 
             modelBuilder.Entity("crombie_ecommerce.Models.Entities.User", b =>

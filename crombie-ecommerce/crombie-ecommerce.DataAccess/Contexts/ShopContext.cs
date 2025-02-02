@@ -14,9 +14,10 @@ namespace crombie_ecommerce.DataAccess.Contexts
         public DbSet<Category> Categories { get; set; }
 
         public DbSet<Order> Orders { get; set; }
-
         public DbSet<OrderDetail> OrderDetails { get; set; }
+
         public DbSet<Notification> Notifications { get; set; }
+
         public DbSet<HistoryWishlist> HistoryWishlists { get; set; }
         public DbSet<HistoryUser> HistoryUsers { get; set; }
         public DbSet<HistoryProduct> HistoryProducts { get; set; }
@@ -25,6 +26,9 @@ namespace crombie_ecommerce.DataAccess.Contexts
         public DbSet<HistoryOrderDetails> HistoryOrderDetails { get; set; }
         public DbSet<HistoryTag> HistoryTags { get; set; }
         public DbSet<HistoryCategory> HistoryCategories { get; set; }
+        
+        public DbSet<Role> Roles { get; set; }
+
 
 
         public ShopContext(DbContextOptions<ShopContext> options) : base(options)
@@ -37,18 +41,26 @@ namespace crombie_ecommerce.DataAccess.Contexts
             {
                 user.ToTable("User");
                 user.HasKey(u => u.UserId);
-                user.Property(u => u.Image);
+                user.Property(u => u.Image).IsRequired(false);
                 user.Property(u => u.Name).IsRequired().HasMaxLength(50);
                 user.Property(u => u.Email).IsRequired();
                 user.Property(u => u.Password).IsRequired().HasMaxLength(100);
                 user.Property(u => u.Address).IsRequired(false);
                 user.Property(u => u.IsVerified).HasDefaultValue(false);
 
-                // user to orders has a one to many raltionship
+                // user to orders has a one to many relationship
                 user.HasMany(u => u.Orders)
                     .WithOne(o => o.User)
                     .HasForeignKey(o => o.UserId)
                     .OnDelete(DeleteBehavior.Cascade);
+
+                //user to role relations (one to one)
+                user.HasOne(u => u.Role)
+                .WithMany(r => r.Users)
+                .HasForeignKey(u => u.RoleId)
+                .IsRequired();
+                    
+
             });
 
             // builder for product entity
@@ -309,6 +321,21 @@ namespace crombie_ecommerce.DataAccess.Contexts
                 entity.Property(e => e.ProcessedBy).IsRequired();
                 entity.Property(e => e.ProcessedAt).IsRequired();
             });
+            
+            //builder for role entity
+            modelBuilder.Entity<Role>(entity =>
+            {
+                entity.ToTable("Roles");
+                entity.HasKey(r=>r.RoleId);
+                entity.Property(e => e.RoleId).ValueGeneratedNever();
+                entity.Property(r => r.Name).IsRequired();
+                entity.Property(r => r.Description).HasMaxLength(500);
+                entity.HasData(
+                        new Role { RoleId = 1, Name = "User", Description = "Default user role" },
+                        new Role { RoleId = 2, Name = "Admin", Description = "Administrator role" }
+                );
+
+            });
 
             //builder for history order details entity
             modelBuilder.Entity<HistoryTag>(entity =>
@@ -329,6 +356,8 @@ namespace crombie_ecommerce.DataAccess.Contexts
             modelBuilder.ApplyConfiguration(new OrderDetailSeed());
             modelBuilder.ApplyConfiguration(new TagSeed());
             modelBuilder.ApplyConfiguration(new NotificationSeed());
+
+
             base.OnModelCreating(modelBuilder);
         }
     }
