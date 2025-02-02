@@ -96,6 +96,11 @@ namespace crombie_ecommerce.DataAccess.Contexts
                         }
                     );
 
+                // product to stock
+                product.HasOne(p => p.Stock)
+                       .WithOne(s => s.Product)
+                       .HasForeignKey<Stock>(s => s.ProductId)
+                       .OnDelete(DeleteBehavior.Cascade);
             });
 
             // builder for wishlist entity
@@ -243,6 +248,22 @@ namespace crombie_ecommerce.DataAccess.Contexts
                       .HasForeignKey(n => n.WishlistId)
                       .OnDelete(DeleteBehavior.Cascade)
                       .IsRequired();
+            });
+
+            //builder for stock entity
+            modelBuilder.Entity<Stock>(stock =>
+            {
+                stock.ToTable("Stock");
+                stock.HasKey(s => s.StockId);
+                stock.Property(s => s.Quantity).IsRequired();
+                stock.Property(s => s.LastUpdated).IsRequired();
+
+                // relation stock - product (one to one)
+                stock.HasOne(s => s.Product)
+                    .WithOne(p => p.Stock)
+                    .HasForeignKey<Stock>(s => s.ProductId)
+                    .OnDelete(DeleteBehavior.Cascade)
+                    .IsRequired();
             });
 
             //builder for history wishlist entity
