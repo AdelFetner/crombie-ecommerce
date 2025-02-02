@@ -2,6 +2,7 @@
 using crombie_ecommerce.BusinessLogic;
 using crombie_ecommerce.Models.Entities;
 using Interfaces;
+using Microsoft.AspNetCore.Authorization;
 using crombie_ecommerce.Models.Dto;
 
 namespace crombie_ecommerce.Controllers
@@ -19,6 +20,7 @@ namespace crombie_ecommerce.Controllers
 
         // GET: api/Brands
         [HttpGet]
+        
         public async Task<ActionResult<List<Brand>>> GetBrands()
         {
             var brands = await _brandService.GetAllBrands();
@@ -27,6 +29,7 @@ namespace crombie_ecommerce.Controllers
 
         // GET: api/Brands/5
         [HttpGet("{id}")]
+        
         public async Task<ActionResult<Brand>> GetBrand(Guid id)
         {
             var brand = await _brandService.GetBrandById(id);
@@ -41,6 +44,7 @@ namespace crombie_ecommerce.Controllers
         // PUT: api/Brands/5
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPost]
+        [Authorize]
         public async Task<ActionResult<Brand>> PostBrand([FromBody] BrandDto brandDto)
         {
             try
@@ -57,6 +61,7 @@ namespace crombie_ecommerce.Controllers
         // POST: api/Brands
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPut("{id}")]
+        [Authorize]
         public async Task<ActionResult<Brand>> PutBrand(Guid id, [FromBody] Brand brand)
         {
             try
@@ -73,6 +78,7 @@ namespace crombie_ecommerce.Controllers
 
         // DELETE: api/Brands/5
         [HttpDelete("{id}")]
+        [Authorize(Roles ="Admin")]
         public async Task<IActionResult> DeleteAndArchive(Guid id)
         {
             var success = await _brandService.ArchiveMethod(id, "Unregistered");

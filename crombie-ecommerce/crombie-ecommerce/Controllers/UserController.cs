@@ -2,6 +2,7 @@
 using crombie_ecommerce.BusinessLogic;
 using crombie_ecommerce.Models.Dto;
 using crombie_ecommerce.Models.Entities;
+using Microsoft.AspNetCore.Authorization;
 
 namespace crombie_ecommerce.Controllers
 {
@@ -18,6 +19,7 @@ namespace crombie_ecommerce.Controllers
 
         // GET: api/User
         [HttpGet]
+        [Authorize]
         public async Task<ActionResult<IEnumerable<User>>> GetAllUsers()
         {
             var users = await _userService.GetAllUsersAsync();
@@ -27,6 +29,7 @@ namespace crombie_ecommerce.Controllers
 
         // GET: api/User/5
         [HttpGet("{id}")]
+        [Authorize]
         public async Task<ActionResult<User>> GetUserById(Guid id)
         {
             var user = await _userService.GetUserByIdAsync(id);
@@ -42,6 +45,7 @@ namespace crombie_ecommerce.Controllers
         // PUT: api/User/5
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPut("{id}")]
+        [Authorize]
         public async Task<IActionResult> UpdateUser(Guid id, [FromBody] User user)
         {
             try
@@ -54,9 +58,6 @@ namespace crombie_ecommerce.Controllers
                 return BadRequest(ex.Message);
             }
         }
-
-           
-          
 
         [HttpPost]
         public async Task<ActionResult<Product>> CreateUser([FromForm] UserDto userDto, IFormFile fileImage)
@@ -81,6 +82,7 @@ namespace crombie_ecommerce.Controllers
 
         // DELETE: api/User/5
         [HttpDelete("{id}")]
+        [Authorize(Roles ="Admin")]
         public async Task<IActionResult> DeleteAndArchive(Guid id)
         {
             var success = await _userService.ArchiveMethod(id, "Unregistered");

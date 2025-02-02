@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using crombie_ecommerce.BusinessLogic;
 using crombie_ecommerce.Models.Entities;
+using Microsoft.AspNetCore.Authorization;
 using crombie_ecommerce.Models.Dto;
 
 namespace crombie_ecommerce.Controllers
@@ -38,6 +39,7 @@ namespace crombie_ecommerce.Controllers
         }
 
         [HttpPost]
+        [Authorize]
         public async Task<ActionResult<Category>> PostCategory(CategoryDto categoryDto)
         {
             try
@@ -52,6 +54,7 @@ namespace crombie_ecommerce.Controllers
         }
 
         [HttpPut("{id}")]
+        [Authorize]
         public async Task<IActionResult> PutCategory(Guid id, Category category)
         {
             try
@@ -67,6 +70,7 @@ namespace crombie_ecommerce.Controllers
 
         // DELETE: api/Categories/5
         [HttpDelete("{id}")]
+        [Authorize(Roles ="Admin")]
         public async Task<IActionResult> DeleteAndArchive(Guid id)
         {
             var success = await _categoryService.ArchiveMethod(id, "Unregistered");
