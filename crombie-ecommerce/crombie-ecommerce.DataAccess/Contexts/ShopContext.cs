@@ -97,9 +97,9 @@ namespace crombie_ecommerce.DataAccess.Contexts
 
                 // user to wishlist has a one to many relationship
                 wishlist.HasOne(w => w.User)
-                     .WithMany(u => u.Wishlists)
-                     .HasForeignKey(w => w.UserId)
-                     .OnDelete(DeleteBehavior.Cascade);
+                    .WithMany(u => u.Wishlists)
+                    .HasForeignKey(w => w.UserId)
+                    .OnDelete(DeleteBehavior.Cascade);
 
                 // product to wishlist has a many to many relationship
                 wishlist.HasMany(w => w.Products)
@@ -125,10 +125,10 @@ namespace crombie_ecommerce.DataAccess.Contexts
 
                 // wl to tags has a one to many relationship
                 wishlist.HasMany(w => w.Tags)
-                         .WithOne(t => t.Wishlist)
-                         .HasForeignKey(t => t.WishlistId)
-                         .OnDelete(DeleteBehavior.Cascade)
-                         .IsRequired(false);
+                        .WithOne(t => t.Wishlist)
+                        .HasForeignKey(t => t.WishlistId)
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired(false);
             });
 
             // builder for tags entity 
@@ -222,17 +222,17 @@ namespace crombie_ecommerce.DataAccess.Contexts
 
                 // relation notification - product (many to one)
                 entity.HasOne(n => n.Product)
-                      .WithMany(p => p.Notifications)
-                      .HasForeignKey(n => n.ProductId)
-                      .OnDelete(DeleteBehavior.Cascade)
-                      .IsRequired(); // Ensure the foreign key is required
+                    .WithMany(p => p.Notifications)
+                    .HasForeignKey(n => n.ProductId)
+                    .OnDelete(DeleteBehavior.Cascade)
+                    .IsRequired(); // Ensure the foreign key is required
 
                 // relation notification - wishlist (many to one)
                 entity.HasOne(n => n.Wishlist)
-                      .WithMany(w => w.Notifications)
-                      .HasForeignKey(n => n.WishlistId)
-                      .OnDelete(DeleteBehavior.Cascade)
-                      .IsRequired();
+                    .WithMany(w => w.Notifications)
+                    .HasForeignKey(n => n.WishlistId)
+                    .OnDelete(DeleteBehavior.Cascade)
+                    .IsRequired();
             });
             base.OnModelCreating(modelBuilder);
         }
