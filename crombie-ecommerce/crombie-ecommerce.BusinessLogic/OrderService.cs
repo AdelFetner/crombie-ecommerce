@@ -15,10 +15,15 @@ namespace crombie_ecommerce.BusinessLogic
 
 
         //create a order
-        public async Task<Order> CreateOrder (Order order)
+        public async Task<Order> CreateOrder(Order order)
         {
+            if (order.OrderDetails != null)
+            {
+                order.TotalAmount = order.OrderDetails.Sum(od => od.Subtotal);
+            }
+
             _context.Orders.Add(order);
-            _context.SaveChanges();
+            await _context.SaveChangesAsync();
             return order;
         }
 
@@ -35,24 +40,38 @@ namespace crombie_ecommerce.BusinessLogic
         }
 
         //update order status
-        public async Task<Order> UpdateOrder(Guid id, Order order) 
+        public async Task<Order> UpdateOrder(Guid id, Order order)
         {
+            var existingOrder = await _context.Orders
+                .Include(o => o.OrderDetails)
+                .FirstOrDefaultAsync(o => o.OrderId == id);
 
-            var createdOrder = await _context.Orders.FindAsync(id);
-           
-           
-            createdOrder.Status = order.Status;
-            createdOrder.TotalAmount = order.TotalAmount;
-            createdOrder.ShippingAddress = order.ShippingAddress;
-            createdOrder.PaymentMethod = order.PaymentMethod;
+            // Update fields
+            existingOrder.Status = order.Status;
+            existingOrder.ShippingAddress = order.ShippingAddress;
+            existingOrder.PaymentMethod = order.PaymentMethod;
 
-            _context.Orders.Update(createdOrder);
-            await _context.SaveChangesAsync().ConfigureAwait(false);
-
-            return createdOrder;
-        
-                
+            await _context.SaveChangesAsync();
+            return existingOrder;
         }
+
+
+        // this serves as to recalculate when details change
+        public async Task RecalculateOrderTotal(Guid orderId)
+        {
+            var order = await _context.Orders
+                .Include(o => o.OrderDetails)
+                .FirstOrDefaultAsync(o => o.OrderId == orderId);
+
+            if (order == null)
+            {
+                throw new Exception("Order not found");
+            }
+
+            order.TotalAmount = order.OrderDetails?.Sum(od => od.Subtotal) ?? 0m;
+            await _context.SaveChangesAsync();
+        }
+
         //delete order
         public async Task DeleteOrder(Guid id) 
         {

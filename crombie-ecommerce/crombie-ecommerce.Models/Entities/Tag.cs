@@ -19,6 +19,7 @@ namespace crombie_ecommerce.Models.Entities
 
         [JsonIgnore]
         public Guid? WishlistId { get; set; }
+
         [JsonIgnore]
         public virtual Wishlist? Wishlist { get; set; }
     }

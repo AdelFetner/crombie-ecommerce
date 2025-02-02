@@ -8,7 +8,7 @@ namespace crombie_ecommerce.Models.Entities
     public class Notification
     {
         [Key]
-        public Guid NotfId { get; set; }
+        public Guid NotificationId { get; set; }
 
         [Required]
         [MaxLength(50)]
@@ -23,7 +23,7 @@ namespace crombie_ecommerce.Models.Entities
 
         [JsonIgnore]
         public Guid WishlistId { get; set; }
-        public virtual Wishlist? Wishlist { get; set; }
+        public virtual Wishlist Wishlist { get; set; }
 
         [Required]
         public Guid ProductId { get; set; }

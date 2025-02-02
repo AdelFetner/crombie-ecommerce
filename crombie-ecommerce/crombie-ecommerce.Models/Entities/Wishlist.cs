@@ -25,12 +25,9 @@ namespace crombie_ecommerce.Models.Entities
         public virtual ICollection<Product>? Products { get; set; } = [];
 
         [JsonIgnore]
-        public Guid? TagsId { get; set; }
-        [JsonIgnore]
         public virtual ICollection<Tag>? Tags { get; set; } = [];
 
         [JsonIgnore]
-        public Guid? NotfId { get; set; }
         public virtual ICollection<Notification>? Notifications { get; set; } = [];
     }
 }

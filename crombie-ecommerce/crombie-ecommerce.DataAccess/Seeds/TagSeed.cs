@@ -1,61 +1,56 @@
 ﻿using crombie_ecommerce.Models.Entities;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace crombie_ecommerce.DataAccess.Seeds
 {
-    public class TagSeed
+    public class TagSeed : IEntityTypeConfiguration<Tag>
     {
-        public void Configure(EntityTypeBuilder<User> builder)
+        public static readonly Guid TechTag = Guid.Parse("6a5b4c3d-2e1f-4a8b-9c7d-3e6f5a4b2c1d");
+        public static readonly Guid FashionTag = Guid.Parse("7b6c5d4e-3f2a-5b9a-8d7c-4f6e5a3b2c1e");
+        public static readonly Guid KitchenTag = Guid.Parse("8c7d6e5f-4a3b-6c0b-9e8d-5f7e6b4c3a2d");
+        public static readonly Guid FitnessTag = Guid.Parse("9d8e7f0a-5b4c-7d1c-0a9e-6d8f7c5b3a2e");
+        public static readonly Guid ReadingTag = Guid.Parse("0a9b8c7d-6c5d-8e2d-1b0f-7e9a8d6c4b3a");
+
+        public void Configure(EntityTypeBuilder<Tag> builder)
         {
             builder.HasData(
                 new Tag
                 {
-                    TagId = Guid.Parse("aaaa1111-bbbb-cccc-dddd-eeeeffff0001"), // Sports Tag
-                    Name = "Sports",
-                    Description = "Tags for sports-related products.",
-                    WishlistId = Guid.Parse("1111aaaa-bbbb-cccc-dddd-eeeeffff1111") // John's Wishlist
+                    TagId = TechTag,
+                    Name = "Tech",
+                    Description = "Latest technology products",
+                    WishlistId = WishlistSeed.TechWishlist
                 },
                 new Tag
                 {
-                    TagId = Guid.Parse("aaaa1111-bbbb-cccc-dddd-eeeeffff0002"), // Electronics Tag
-                    Name = "Electronics",
-                    Description = "Tags for electronics and gadgets.",
-                    WishlistId = Guid.Parse("2222bbbb-cccc-dddd-eeee-ffff1111aaaa") // Jane's Wishlist
+                    TagId = FashionTag,
+                    Name = "Fashion",
+                    Description = "Trending fashion items",
+                    WishlistId = WishlistSeed.FashionWishlist
                 },
                 new Tag
                 {
-                    TagId = Guid.Parse("aaaa1111-bbbb-cccc-dddd-eeeeffff0003"), // Books Tag
-                    Name = "Books",
-                    Description = "Tags for books, novels, and literature.",
-                    WishlistId = Guid.Parse("3333cccc-dddd-eeee-ffff-1111aaaabbbb") // Alice's Wishlist
+                    TagId = KitchenTag,
+                    Name = "Kitchen",
+                    Description = "Essential kitchen tools",
+                    WishlistId = WishlistSeed.KitchenWishlist
                 },
                 new Tag
                 {
-                    TagId = Guid.Parse("aaaa1111-bbbb-cccc-dddd-eeeeffff0004"), // Gaming Tag
-                    Name = "Gaming",
-                    Description = "Tags for gaming consoles and accessories.",
-                    WishlistId = Guid.Parse("4444dddd-eeee-ffff-1111-aaaabbbbcccc") // Bob's Wishlist
+                    TagId = FitnessTag,
+                    Name = "Fitness",
+                    Description = "Workout and exercise gear",
+                    WishlistId = WishlistSeed.FitnessWishlist
                 },
                 new Tag
                 {
-                    TagId = Guid.Parse("aaaa1111-bbbb-cccc-dddd-eeeeffff0005"), // Music Tag
-                    Name = "Music",
-                    Description = "Tags for musical instruments and gear.",
-                    WishlistId = Guid.Parse("5555eeee-ffff-1111-aaaa-bbbbccccdddd") // Charlie's Wishlist
-                },
-                new Tag
-                {
-                    TagId = Guid.Parse("aaaa1111-bbbb-cccc-dddd-eeeeffff0006"), // Premium Tag
-                    Name = "Premium",
-                    Description = "Tags for high-end or premium products.",
-                    WishlistId = null // Not tied to a specific wishlist for flexibility
+                    TagId = ReadingTag,
+                    Name = "Reading",
+                    Description = "Books and literature",
+                    WishlistId = WishlistSeed.ReadingWishlist
                 }
-                );
+            );
         }
     }
 }

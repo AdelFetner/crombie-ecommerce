@@ -1,73 +1,69 @@
 ﻿using crombie_ecommerce.Models.Entities;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
-
 namespace crombie_ecommerce.DataAccess.Seeds
 {
     public class UserSeed : IEntityTypeConfiguration<User>
     {
+        // GUIDs follow sequential pattern
+        public static readonly Guid AlexJohnson = Guid.Parse("3d4a7c9f-2e1b-4a8d-9c3f-6b2e1d0a4c7b");
+        public static readonly Guid MariaGomez = Guid.Parse("a1b8f45c-9d32-4e67-82f1-0c3d5e7f9a2b");
+        public static readonly Guid JohnDoe = Guid.Parse("e6f9d287-5c34-4a1b-89d0-3b7a2c4e5f1a");
+        public static readonly Guid EmmaWilson = Guid.Parse("8c2d1f9a-4b3e-4567-8910-3f6e5d4c2b1a");
+        public static readonly Guid LiamBrown = Guid.Parse("5b3d9f1a-7e2c-48d9-9a1b-4f6c3e2d0a5b");
+
         public void Configure(EntityTypeBuilder<User> builder)
         {
             builder.HasData(
                 new User
                 {
-                    UserId = Guid.Parse("a1b2c3d4-e5f6-a7b8-c9d0-e1f2a3b4c5d6"), // John Doe
+                    UserId = AlexJohnson,
+                    Name = "Alex Johnson",
+                    Email = "alex.j@example.com",
+                    Password = "SecurePass123!",
+                    Address = "La casa de los olmedo",
+                    Image = "user-alex.jpg",
+                    IsVerified = true
+                },
+                new User
+                {
+                    UserId = MariaGomez,
+                    Name = "Maria Gomez",
+                    Email = "maria.g@example.com",
+                    Password = "MariaG0mez!",
+                    Address = "123 Main St, TechCity",
+                    Image = "user-maria.jpg",
+                    IsVerified = false
+                },
+                new User
+                {
+                    UserId = JohnDoe,
                     Name = "John Doe",
-                    Email = "john.doe@example.com",
-                    Password = "password123",
-                    Address = "123 Elm Street, Springfield, USA",
-                    IsVerified = true,
-                    Image = "john_doe.jpg",
-                    Wishlists = new List<Wishlist>(), // Can be populated later
-                    Orders = new List<Order>() // Can be populated later
+                    Email = "john.d@example.com",
+                    Password = "DoeJ0hn!",
+                    Address = "456 Oak St, MetroCity",
+                    Image = "user-john.jpg",
+                    IsVerified = false
                 },
                 new User
                 {
-                    UserId = Guid.Parse("b2c3d4e5-f6a7-b8c9-d0e1-f2a3b4c5d6a1"), // Jane Smith
-                    Name = "Jane Smith",
-                    Email = "jane.smith@example.com",
-                    Password = "securepass456",
-                    Address = "456 Oak Avenue, Metropolis, USA",
-                    IsVerified = false,
-                    Image = "jane_smith.jpg",
-                    Wishlists = new List<Wishlist>(),
-                    Orders = new List<Order>()
+                    UserId = EmmaWilson,
+                    Name = "Emma Wilson",
+                    Email = "emma.w@example.com",
+                    Password = "Emm@2024!",
+                    Address = "Palito Santo 2040",
+                    Image = "user-emma.jpg",
+                    IsVerified = false
                 },
                 new User
                 {
-                    UserId = Guid.Parse("c3d4e5f6-a7b8-c9d0-e1f2-a3b4c5d6a1b2"), // Alice Brown
-                    Name = "Alice Brown",
-                    Email = "alice.brown@example.com",
-                    Password = "alicebrown789",
-                    Address = "789 Maple Drive, Gotham, USA",
-                    IsVerified = true,
-                    Image = "alice_brown.jpg",
-                    Wishlists = new List<Wishlist>(),
-                    Orders = new List<Order>()
-                },
-                new User
-                {
-                    UserId = Guid.Parse("d4e5f6a7-b8c9-d0e1-f2a3-b4c5d6a1b2c3"), // Bob Johnson
-                    Name = "Bob Johnson",
-                    Email = "bob.johnson@example.com",
-                    Password = "bobsecurepass",
-                    Address = "321 Pine Lane, Star City, USA",
-                    IsVerified = false,
-                    Image = "bob_johnson.jpg",
-                    Wishlists = new List<Wishlist>(),
-                    Orders = new List<Order>()
-                },
-                new User
-                {
-                    UserId = Guid.Parse("e5f6a7b8-c9d0-e1f2-a3b4-c5d6a1b2c3d4"), // Charlie Davis
-                    Name = "Charlie Davis",
-                    Email = "charlie.davis@example.com",
-                    Password = "charliedavis123",
-                    Address = "654 Cedar Road, Coast City, USA",
-                    IsVerified = true,
-                    Image = "charlie_davis.jpg",
-                    Wishlists = new List<Wishlist>(),
-                    Orders = new List<Order>()
+                    UserId = LiamBrown,
+                    Name = "Liam Brown",
+                    Email = "liam.b@example.com",
+                    Password = "L1amBrown!",
+                    Address = "321 Elm St, Bookville",
+                    Image = "user-liam.jpg",
+                    IsVerified = true
                 }
             );
         }

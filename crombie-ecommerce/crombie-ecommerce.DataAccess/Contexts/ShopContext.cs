@@ -1,7 +1,6 @@
 ﻿using crombie_ecommerce.DataAccess.Seeds;
 using crombie_ecommerce.Models.Entities;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Configuration;
 
 namespace crombie_ecommerce.DataAccess.Contexts
 {
@@ -18,7 +17,6 @@ namespace crombie_ecommerce.DataAccess.Contexts
 
         public DbSet<OrderDetail> OrderDetails { get; set; }
         public DbSet<Notification> Notifications { get; set; }
-        public IConfiguration Configuration { get; }
 
 
 
@@ -44,7 +42,6 @@ namespace crombie_ecommerce.DataAccess.Contexts
                     .WithOne(o => o.User)
                     .HasForeignKey(o => o.UserId)
                     .OnDelete(DeleteBehavior.Cascade);
-
             });
 
             // builder for product entity
@@ -58,14 +55,6 @@ namespace crombie_ecommerce.DataAccess.Contexts
                 product.Property(p => p.Name).IsRequired().HasMaxLength(50);
                 product.Property(p => p.Description).HasMaxLength(100);
                 product.Property(p => p.Price).HasColumnType("decimal(18,2)");
-
-                // product to user (doesn't exist anymore)
-                /*product.HasOne(p => p.User)
-                    .WithOne(u => u.Product)
-
-                    .HasForeignKey<User>(u => u.ProductId)
-
-                    .IsRequired(false);*/
 
                 // product to brand
                 product.HasOne(p => p.Brand)
@@ -90,7 +79,6 @@ namespace crombie_ecommerce.DataAccess.Contexts
                             j.HasKey("ProductId", "CategoryId");
                         }
                     );
-
             });
 
             // builder for wishlist entity
@@ -133,7 +121,7 @@ namespace crombie_ecommerce.DataAccess.Contexts
                          .WithOne(t => t.Wishlist)
                          .HasForeignKey(t => t.WishlistId)
                          .OnDelete(DeleteBehavior.Cascade)
-                         .IsRequired(false);
+                         .IsRequired();
             });
 
             // builder for tags entity 
@@ -143,6 +131,11 @@ namespace crombie_ecommerce.DataAccess.Contexts
                 tag.HasKey(t => t.TagId);
                 tag.Property(t => t.Name).IsRequired().HasMaxLength(50);
                 tag.Property(t => t.Description).HasMaxLength(100);
+
+                tag.HasOne(t => t.Wishlist)
+                        .WithMany(w => w.Tags)
+                        .HasForeignKey(t => t.WishlistId)
+                        .OnDelete(DeleteBehavior.Cascade);
             });
 
             // builder for brand entity
@@ -183,7 +176,7 @@ namespace crombie_ecommerce.DataAccess.Contexts
                 order.Property(o => o.OrderId).HasDefaultValueSql("NEWID()");
                 order.Property(o => o.OrderDate).IsRequired();
                 order.Property(o => o.Status).IsRequired();
-                order.Property(o => o.TotalAmount).IsRequired();
+                order.Property(o => o.TotalAmount);
                 order.Property(o => o.ShippingAddress).HasMaxLength(100);
                 order.Property(o => o.PaymentMethod).IsRequired();
 
@@ -198,15 +191,15 @@ namespace crombie_ecommerce.DataAccess.Contexts
             {
                 orderD.ToTable("OrderDetail");
                 orderD.HasKey(od => od.DetailId);
-                orderD.Property(od => od.OrderId).HasDefaultValueSql("NEWID()");
                 orderD.Property(od => od.Quantity).IsRequired();
                 orderD.Property(od => od.Price).IsRequired();
-                orderD.Property(od => od.Subtotal).IsRequired();
+                orderD.Property(od => od.Subtotal).HasComputedColumnSql("[Quantity] * [Price]").ValueGeneratedOnAddOrUpdate();
 
                 //relation order - orderDetails (one to many)
                 orderD.HasOne(od => od.Order)
                 .WithMany(o => o.OrderDetails)
-                .HasForeignKey(od => od.OrderId);
+                .HasForeignKey(od => od.OrderId)
+                .OnDelete(DeleteBehavior.Cascade);
 
 
                 //relation orderDetails -  product (many to one)
@@ -218,7 +211,7 @@ namespace crombie_ecommerce.DataAccess.Contexts
             //builder for notifications entity
             modelBuilder.Entity<Notification>(entity =>
             {
-                entity.HasKey(n => n.NotfId);
+                entity.HasKey(n => n.NotificationId);
                 entity.Property(n => n.NotificationType).HasMaxLength(50).IsRequired();
                 entity.Property(n => n.Message).HasMaxLength(100).IsRequired();
                 entity.Property(n => n.CreatedDate).IsRequired().HasDefaultValueSql("CURRENT_TIMESTAMP");
@@ -227,32 +220,28 @@ namespace crombie_ecommerce.DataAccess.Contexts
 
                 // relation notification - product (many to one)
                 entity.HasOne(n => n.Product)
-                      .WithMany(p => p.Notifications)
-                      .HasForeignKey(n => n.ProductId)
-                      .OnDelete(DeleteBehavior.Cascade)
-                      .IsRequired(); // Ensure the foreign key is required
+                    .WithMany(p => p.Notifications)
+                    .HasForeignKey(n => n.ProductId)
+                    .OnDelete(DeleteBehavior.Cascade)
+                    .IsRequired(); // Ensure the foreign key is required
 
                 // relation notification - wishlist (many to one)
                 entity.HasOne(n => n.Wishlist)
-                      .WithMany(w => w.Notifications)
-                      .HasForeignKey(n => n.WishlistId)
-                      .OnDelete(DeleteBehavior.Cascade)
-                      .IsRequired();
+                    .WithMany(w => w.Notifications)
+                    .HasForeignKey(n => n.WishlistId)
+                    .OnDelete(DeleteBehavior.Cascade)
+                    .IsRequired();
             });
 
-            // Apply seed configurations
-            if (Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT") == "Development")
-            {
-                //modelBuilder.ApplyConfiguration(new BrandSeed());
-                //modelBuilder.ApplyConfiguration(new CategorySeed());
-                //modelBuilder.ApplyConfiguration(new NotificationSeed());
-                //modelBuilder.ApplyConfiguration(new OrderDetailSeed());
-                //modelBuilder.ApplyConfiguration(new OrderSeed());
-                //modelBuilder.ApplyConfiguration(new ProductSeed());
-                //modelBuilder.ApplyConfiguration(new TagSeed());
-                //modelBuilder.ApplyConfiguration(new UserSeed());
-                //modelBuilder.ApplyConfiguration(new WishlistSeed());
-            }
+            modelBuilder.ApplyConfiguration(new BrandSeed());
+            modelBuilder.ApplyConfiguration(new CategorySeed());
+            modelBuilder.ApplyConfiguration(new ProductSeed());
+            modelBuilder.ApplyConfiguration(new UserSeed());
+            modelBuilder.ApplyConfiguration(new WishlistSeed());
+            modelBuilder.ApplyConfiguration(new OrderSeed());
+            modelBuilder.ApplyConfiguration(new OrderDetailSeed());
+            modelBuilder.ApplyConfiguration(new TagSeed());
+            modelBuilder.ApplyConfiguration(new NotificationSeed());
             base.OnModelCreating(modelBuilder);
         }
     }
