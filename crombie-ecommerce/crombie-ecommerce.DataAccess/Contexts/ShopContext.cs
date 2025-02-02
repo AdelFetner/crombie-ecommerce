@@ -16,6 +16,7 @@ namespace crombie_ecommerce.DataAccess.Contexts
 
         public DbSet<OrderDetail> OrderDetails { get; set; }
         public DbSet<Notification> Notifications { get; set; }
+        public DbSet<Stock> Stock { get; set; }
         public DbSet<HistoryWishlist> HistoryWishlists { get; set; }
         public DbSet<HistoryUser> HistoryUsers { get; set; }
         public DbSet<HistoryProduct> HistoryProducts { get; set; }
