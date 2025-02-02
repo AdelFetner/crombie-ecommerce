@@ -1,6 +1,5 @@
 ﻿using crombie_ecommerce.BusinessLogic;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
 namespace crombie_ecommerce.Controllers
@@ -27,13 +26,13 @@ namespace crombie_ecommerce.Controllers
 
                 if (string.IsNullOrEmpty(adminEmail))
                 {
-                    return Unauthorized("Usuario no autenticado.");
+                    return Unauthorized("User Not Authenticated.");
                 }
 
                 
                 await _roleService.AssignRoleToUser(adminEmail, request.TargetUserEmail, request.RoleId);
 
-                return Ok("Rol asignado correctamente.");
+                return Ok("Role assigned successfully.");
             }
             catch (UnauthorizedAccessException ex)
             {
