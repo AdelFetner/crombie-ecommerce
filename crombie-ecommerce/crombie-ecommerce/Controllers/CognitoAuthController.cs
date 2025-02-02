@@ -104,7 +104,6 @@ public class AuthController : ControllerBase
         }
         catch (Exception ex)
         {
-            Console.WriteLine($"Error: {ex.Message}, InnerException: {ex.InnerException}");
             throw new Exception($"Error changing password: {ex.Message}", ex);
         }
     }
@@ -147,7 +146,6 @@ public class AuthController : ControllerBase
         }
         catch (Exception ex)
         {
-            Console.WriteLine("error");
             return BadRequest(new { message = "Error when confirming password change" });
         }
     }

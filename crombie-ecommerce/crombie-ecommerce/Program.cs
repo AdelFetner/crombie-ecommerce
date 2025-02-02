@@ -1,14 +1,10 @@
 using crombie_ecommerce.DataAccess.Contexts;
 using crombie_ecommerce.BusinessLogic;
-using crombie_ecommerce.Models.Dto;
-using crombie_ecommerce.Models.Entities;
 using Amazon.CognitoIdentityProvider;
 using System.Text.Json.Serialization;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Amazon;
 using Amazon.Extensions.CognitoAuthentication;
-using Amazon.Runtime;
-using Microsoft.AspNetCore.Authentication;
 using Microsoft.OpenApi.Models;
 
 
@@ -126,7 +122,7 @@ builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen(c =>
 {
-    c.SwaggerDoc("v1", new OpenApiInfo { Title = "Mi API", Version = "v1" });
+    c.SwaggerDoc("v1", new OpenApiInfo { Title = "Crombie-ecommerce", Version = "v1" });
 
     c.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
     {

@@ -1,12 +1,6 @@
 ﻿using crombie_ecommerce.DataAccess.Contexts;
 using Microsoft.EntityFrameworkCore;
 using crombie_ecommerce.Models.Entities;
-using System;
-using System.Collections.Generic;
-using System.Data;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace crombie_ecommerce.BusinessLogic
 {
@@ -27,31 +21,31 @@ namespace crombie_ecommerce.BusinessLogic
 
         public async Task AssignRoleToUser(string adminEmail, string targetUserEmail, int roleId)
         {
-            // Verificar si el usuario que realiza la solicitud es un administrador
+            // Checks for user role
             var adminUser = await _shopContext.Users
-                .Include(u => u.Role) // Asegúrate de incluir el rol del administrador
+                .Include(u => u.Role)
                 .FirstOrDefaultAsync(u => u.Email == adminEmail);
 
             if (adminUser == null || adminUser.Role?.Name != "Admin")
             {
-                throw new UnauthorizedAccessException("Solo los administradores pueden asignar roles.");
+                throw new UnauthorizedAccessException("Only admins can assign roles");
             }
 
-            // Buscar al usuario al que se le asignará el rol por su email
+            // Look by user email the user to assign the role
             var targetUser = await _shopContext.Users.FirstOrDefaultAsync(u => u.Email == targetUserEmail);
             if (targetUser == null)
             {
-                throw new Exception("Usuario no encontrado.");
+                throw new Exception("User not found");
             }
 
-            // Verificar si el rol que se está asignando existe
+            // Checks if role exists
             var role = await _shopContext.Roles.FirstOrDefaultAsync(r => r.RoleId == roleId);
             if (role == null)
             {
-                throw new Exception("Rol no encontrado.");
+                throw new Exception("Role not found");
             }
 
-            // Asignar el rol al usuario
+            // Assigns role to user
             targetUser.RoleId = roleId;
             await _shopContext.SaveChangesAsync();
         }
