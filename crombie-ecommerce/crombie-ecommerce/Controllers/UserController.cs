@@ -3,7 +3,7 @@ using crombie_ecommerce.BusinessLogic;
 using crombie_ecommerce.Models.Dto;
 using crombie_ecommerce.Models.Entities;
 
-namespace crombie_ecommerce.Controller
+namespace crombie_ecommerce.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
@@ -59,37 +59,36 @@ namespace crombie_ecommerce.Controller
           
 
         [HttpPost]
-        public IActionResult CreateUser([FromBody] UserDto userDto)
+        public async Task<ActionResult<Product>> CreateUser([FromForm] UserDto userDto, IFormFile fileImage)
         {
-            if (!ModelState.IsValid)
+            try
             {
-                return BadRequest(ModelState);
-        }
+                if (!ModelState.IsValid)
+                {
+                    return BadRequest(ModelState);
+                }
 
-            var user = new User
+                var createdUser = await _userService.CreateUser(userDto, fileImage);
+
+                return CreatedAtAction(nameof(GetUserById), new { id = createdUser.UserId }, createdUser);
+            }
+            catch (Exception ex)
             {
-                UserId = Guid.NewGuid(),
-                Name = userDto.Name,
-                Email = userDto.Email,
-                Password = userDto.Password,
-                IsVerified = userDto.IsVerified
-            };
-
-             _userService.PostUser(user);
-           
-           
-            return Ok(user);
+                return BadRequest(ex.Message);
+            }
         }
 
 
         // DELETE: api/User/5
         [HttpDelete("{id}")]
-        public async Task<IActionResult> DeleteUser(Guid id)
+        public async Task<IActionResult> DeleteAndArchive(Guid id)
         {
-            await _userService.DeleteUserAsync(id);
-            return Ok(new { message = "The user was successfully deleted" });
+            var success = await _userService.ArchiveMethod(id, "Unregistered");
+            if (!success)
+            {
+                return NotFound(new { message = "User not found." });
+            }
+            return Ok(new { message = "User deleted successfully." });
         }
-
-        
     }
 }

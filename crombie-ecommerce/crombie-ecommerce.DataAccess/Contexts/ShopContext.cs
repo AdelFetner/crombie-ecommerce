@@ -16,7 +16,14 @@ namespace crombie_ecommerce.DataAccess.Contexts
 
         public DbSet<OrderDetail> OrderDetails { get; set; }
         public DbSet<Notification> Notifications { get; set; }
-
+        public DbSet<HistoryWishlist> HistoryWishlists { get; set; }
+        public DbSet<HistoryUser> HistoryUsers { get; set; }
+        public DbSet<HistoryProduct> HistoryProducts { get; set; }
+        public DbSet<HistoryBrand> HistoryBrands { get; set; }
+        public DbSet<HistoryOrder> HistoryOrders { get; set; }
+        public DbSet<HistoryOrderDetails> HistoryOrderDetails { get; set; }
+        public DbSet<HistoryTag> HistoryTags { get; set; }
+        public DbSet<HistoryCategory> HistoryCategories { get; set; }
 
 
         public ShopContext(DbContextOptions<ShopContext> options) : base(options)
@@ -29,9 +36,11 @@ namespace crombie_ecommerce.DataAccess.Contexts
             {
                 user.ToTable("User");
                 user.HasKey(u => u.UserId);
+                user.Property(u => u.Image);
                 user.Property(u => u.Name).IsRequired().HasMaxLength(50);
                 user.Property(u => u.Email).IsRequired();
                 user.Property(u => u.Password).IsRequired().HasMaxLength(100);
+                user.Property(u => u.Address).IsRequired(false);
                 user.Property(u => u.IsVerified).HasDefaultValue(false);
 
                 // user to orders has a one to many raltionship
@@ -49,7 +58,7 @@ namespace crombie_ecommerce.DataAccess.Contexts
 
                 product.HasKey(p => p.ProductId);
                 product.Property(p => p.Image);
-                product.Property(p => p.ProductId).HasDefaultValueSql("NEWID()");
+                product.Property(p => p.ProductId);
                 product.Property(p => p.Name).IsRequired().HasMaxLength(50);
                 product.Property(p => p.Description).HasMaxLength(100);
                 product.Property(p => p.Price).HasColumnType("decimal(18,2)");
@@ -178,7 +187,7 @@ namespace crombie_ecommerce.DataAccess.Contexts
                 order.Property(o => o.OrderId).HasDefaultValueSql("NEWID()");
                 order.Property(o => o.OrderDate).IsRequired();
                 order.Property(o=>o.Status).IsRequired();
-                order.Property(o => o.TotalAmount).IsRequired();
+                order.Property(o => o.TotalAmount).HasPrecision(18, 2).IsRequired();
                 order.Property(o => o.ShippingAddress).HasMaxLength(100);
                 order.Property(o => o.PaymentMethod).IsRequired();
 
@@ -195,8 +204,8 @@ namespace crombie_ecommerce.DataAccess.Contexts
                 orderD.HasKey(od => od.DetailId);
                 orderD.Property(od => od.OrderId).HasDefaultValueSql("NEWID()");
                 orderD.Property(od=>od.Quantity).IsRequired();
-                orderD.Property(od => od.Price).IsRequired();
-                orderD.Property(od => od.Subtotal).IsRequired();
+                orderD.Property(od => od.Price).HasPrecision(18, 2).IsRequired();
+                orderD.Property(od => od.Subtotal).HasPrecision(18, 2).IsRequired();
 
                 //relation order - orderDetails (one to many)
                 orderD.HasOne(od=>od.Order)
@@ -233,6 +242,86 @@ namespace crombie_ecommerce.DataAccess.Contexts
                     .HasForeignKey(n => n.WishlistId)
                     .OnDelete(DeleteBehavior.Cascade)
                     .IsRequired();
+            });
+
+            //builder for history wishlist entity
+            modelBuilder.Entity<HistoryWishlist>(entity =>
+            {
+                entity.ToTable("HistoryWishlist");
+                entity.HasKey(e => e.OriginalId);
+                entity.Property(e => e.EntityJson).IsRequired();
+                entity.Property(e => e.ProcessedBy).IsRequired();
+                entity.Property(e => e.ProcessedAt).IsRequired();
+            });
+
+            //builder for history user entity
+            modelBuilder.Entity<HistoryUser>(entity =>
+            {
+                entity.ToTable("HistoryUser");
+                entity.HasKey(e => e.OriginalId);
+                entity.Property(e => e.EntityJson).IsRequired();
+                entity.Property(e => e.ProcessedBy).IsRequired();
+                entity.Property(e => e.ProcessedAt).IsRequired();
+            });
+
+            //builder for history product entity
+            modelBuilder.Entity<HistoryProduct>(entity =>
+            {
+                entity.ToTable("HistoryProduct");
+                entity.HasKey(e => e.OriginalId);
+                entity.Property(e => e.EntityJson).IsRequired();
+                entity.Property(e => e.ProcessedBy).IsRequired();
+                entity.Property(e => e.ProcessedAt).IsRequired();
+            });
+
+            //builder for history brand entity
+            modelBuilder.Entity<HistoryBrand>(entity =>
+            {
+                entity.ToTable("HistoryBrand");
+                entity.HasKey(e => e.OriginalId);
+                entity.Property(e => e.EntityJson).IsRequired();
+                entity.Property(e => e.ProcessedBy).IsRequired();
+                entity.Property(e => e.ProcessedAt).IsRequired();
+            });
+
+            //builder for history order entity
+            modelBuilder.Entity<HistoryOrder>(entity =>
+            {
+                entity.ToTable("HistoryOrder");
+                entity.HasKey(e => e.OriginalId);
+                entity.Property(e => e.EntityJson).IsRequired();
+                entity.Property(e => e.ProcessedBy).IsRequired();
+                entity.Property(e => e.ProcessedAt).IsRequired();
+            });
+
+            //builder for history order details entity
+            modelBuilder.Entity<HistoryOrderDetails>(entity =>
+            {
+                entity.ToTable("HistoryOrderDetails");
+                entity.HasKey(e => e.OriginalId);
+                entity.Property(e => e.EntityJson).IsRequired();
+                entity.Property(e => e.ProcessedBy).IsRequired();
+                entity.Property(e => e.ProcessedAt).IsRequired();
+            });
+
+            //builder for history order details entity
+            modelBuilder.Entity<HistoryCategory>(entity =>
+            {
+                entity.ToTable("HistoryCategories");
+                entity.HasKey(e => e.OriginalId);
+                entity.Property(e => e.EntityJson).IsRequired();
+                entity.Property(e => e.ProcessedBy).IsRequired();
+                entity.Property(e => e.ProcessedAt).IsRequired();
+            });
+
+            //builder for history order details entity
+            modelBuilder.Entity<HistoryTag>(entity =>
+            {
+                entity.ToTable("HistoryTags");
+                entity.HasKey(e => e.OriginalId);
+                entity.Property(e => e.EntityJson).IsRequired();
+                entity.Property(e => e.ProcessedBy).IsRequired();
+                entity.Property(e => e.ProcessedAt).IsRequired();
             });
             base.OnModelCreating(modelBuilder);
         }

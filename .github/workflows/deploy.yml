@@ -1,0 +1,54 @@
+name: Build, Push and Deploy to ECS
+
+on:
+    workflow_dispatch:
+    push:
+        branches:
+            - main
+
+jobs:
+    build-push:
+        runs-on: ubuntu-latest
+
+        steps:
+            - name: Checkout code
+              uses: actions/checkout@v3
+
+            # crombie acc credentials for ECR access
+            - name: Configure AWS credentials (ECR)
+              uses: aws-actions/configure-aws-credentials@v3
+              with:
+                  aws-access-key-id: ${{ secrets.ECR_AWS_ACCESS_KEY_ID }}
+                  aws-secret-access-key: ${{ secrets.ECR_AWS_SECRET_ACCESS_KEY }}
+                  aws-region: ${{ secrets.AWS_REGION }}
+
+            - name: Docker Build and Push
+              uses: ./.github/actions/docker-build-and-push
+              with:
+                  ecr-repository: ${{ secrets.ECR_REPOSITORY }}
+                  aws-region: ${{ secrets.AWS_REGION }}
+
+    ecs-deploy:
+        needs: build-push
+        runs-on: ubuntu-latest
+
+        steps:
+            - name: Checkout code
+              uses: actions/checkout@v3
+
+            # my personal acc credentials for ECS access
+            - name: Configure AWS credentials (ECS)
+              uses: aws-actions/configure-aws-credentials@v3
+              with:
+                  aws-access-key-id: ${{ secrets.ECS_AWS_ACCESS_KEY_ID }}
+                  aws-secret-access-key: ${{ secrets.ECS_AWS_SECRET_ACCESS_KEY }}
+                  aws-region: ${{ secrets.AWS_REGION }}
+
+            - name: ECS Deploy
+              uses: ./.github/actions/ecs-deploy
+              with:
+                  cluster-name: ${{ secrets.CLUSTER_NAME }}
+                  service-name: ${{ secrets.SERVICE_NAME }}
+                  task-family: ${{ secrets.TASK_FAMILY }}
+                  aws-region: ${{ secrets.AWS_REGION }}
+                  repository-name: ${{ secrets.ECR_REPOSITORY }}

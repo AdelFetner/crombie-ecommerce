@@ -1,29 +1,34 @@
-# Consulte https://aka.ms/customizecontainer para aprender a personalizar su contenedor de depuración y cómo Visual Studio usa este Dockerfile para compilar sus imágenes para una depuración más rápida.
+# See https://aka.ms/customizecontainer to learn how to customize your debug container and how Visual Studio uses this Dockerfile to build your images for faster debugging.
 
-# Esta fase se usa cuando se ejecuta desde VS en modo rápido (valor predeterminado para la configuración de depuración)
+# This stage is used when running from VS in fast mode (Default for Debug configuration)
 FROM mcr.microsoft.com/dotnet/aspnet:8.0 AS base
-USER $APP_UID
 WORKDIR /app
-EXPOSE 8080
-EXPOSE 8081
+EXPOSE 80
+ENV ASPNETCORE_ENVIRONMENT=Production
+ENV ASPNETCORE_URLS=http://+:80
 
 
-# Esta fase se usa para compilar el proyecto de servicio
+# This stage is used to build the service project
 FROM mcr.microsoft.com/dotnet/sdk:8.0 AS build
-ARG BUILD_CONFIGURATION=Release
+
 WORKDIR /src
-COPY ["crombie-ecommerce.csproj", "."]
-RUN dotnet restore "./crombie-ecommerce.csproj"
+COPY ["crombie-ecommerce/crombie-ecommerce.csproj", "crombie-ecommerce/"]
+COPY ["crombie-ecommerce.BusinessLogic/crombie-ecommerce.BusinessLogic.csproj", "crombie-ecommerce.BusinessLogic/"]
+COPY ["crombie-ecommerce.DataAccess/crombie-ecommerce.DataAccess.csproj", "crombie-ecommerce.DataAccess/"]
+COPY ["crombie-ecommerce.Models/crombie-ecommerce.Models.csproj", "crombie-ecommerce.Models/"]
+
+RUN dotnet restore "./crombie-ecommerce/crombie-ecommerce.csproj"
+
 COPY . .
-WORKDIR "/src/."
-RUN dotnet build "./crombie-ecommerce.csproj" -c $BUILD_CONFIGURATION -o /app/build
 
-# Esta fase se usa para publicar el proyecto de servicio que se copiará en la fase final.
+WORKDIR "/src/crombie-ecommerce"
+RUN dotnet build "crombie-ecommerce.csproj" -c Release -o /app/build
+
+# This stage is used to publish the service project to be copied to the final stage
 FROM build AS publish
-ARG BUILD_CONFIGURATION=Release
-RUN dotnet publish "./crombie-ecommerce.csproj" -c $BUILD_CONFIGURATION -o /app/publish /p:UseAppHost=false
+RUN dotnet publish "./crombie-ecommerce.csproj" -c Release -o /app/publish
 
-# Esta fase se usa en producción o cuando se ejecuta desde VS en modo normal (valor predeterminado cuando no se usa la configuración de depuración)
+# This stage is used in production or when running from VS in regular mode (Default when not using the Debug configuration)
 FROM base AS final
 WORKDIR /app
 COPY --from=publish /app/publish .

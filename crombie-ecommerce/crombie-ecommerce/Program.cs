@@ -25,7 +25,9 @@ builder.Services.AddScoped<WishlistService>()
     .AddScoped<CategoryService>()
     .AddScoped<OrderDetailsService>()
     .AddScoped<OrderService>()
-    .AddScoped<CognitoAuthService>();
+    .AddScoped<CognitoAuthService>()
+    .AddScoped<s3Service>()
+    .AddScoped<NotificationService>();
 
 builder.Services.AddSqlServer<ShopContext>(builder.Configuration["ConnectionString"]);
 
@@ -91,13 +93,8 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
 
 
 var app = builder.Build();
-
-// Configure the HTTP request pipeline.
-if (app.Environment.IsDevelopment())
-{
-    app.UseSwagger();
-    app.UseSwaggerUI();
-}
+app.UseSwagger();
+app.UseSwaggerUI();
 
 using var scope = app.Services.CreateScope();
 var dbContext = scope.ServiceProvider.GetRequiredService<ShopContext>();

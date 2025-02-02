@@ -99,5 +99,32 @@ namespace crombie_ecommerce.BusinessLogic
 
             return true;
         }
+
+        // Method to delete and archive wishlist
+        public async Task<bool> ArchiveMethod(Guid wishlistId, string processedBy = "Unregistered")
+        {
+            var wishlist = await _context.Wishlists
+                .Include(w => w.Products)
+                .Include(w => w.Tags)
+                .FirstOrDefaultAsync(w => w.WishlistId == wishlistId);
+
+            if (wishlist == null)
+                return false;
+
+            var historyWishlist = new HistoryWishlist
+            {
+                OriginalId = wishlist.WishlistId,
+                UserId = wishlist.UserId,
+                ProcessedAt = DateTime.UtcNow,
+                ProcessedBy = processedBy,
+                EntityJson = wishlist.SerializeToJson()
+            };
+
+            _context.HistoryWishlists.Add(historyWishlist);
+            _context.Wishlists.Remove(wishlist);
+            await _context.SaveChangesAsync();
+
+            return true;
+        }
     }
 }

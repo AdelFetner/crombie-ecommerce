@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using crombie_ecommerce.BusinessLogic;
 using crombie_ecommerce.Models.Entities;
+using Interfaces;
 
 namespace crombie_ecommerce.Controllers
 {
@@ -68,12 +69,14 @@ namespace crombie_ecommerce.Controllers
 
         // DELETE: api/Orders/5
         [HttpDelete("{id}")]
-        public async Task<IActionResult> DeleteOrder(Guid id)
+        public async Task<IActionResult> DeleteAndArchive(Guid id)
         {
-            await _orderService.DeleteOrder(id);
-            return Ok(new { message = "The order was successfully deleted" });
+            var success = await _orderService.ArchiveMethod(id, "Unregistered");
+            if (!success)
+            {
+                return NotFound(new { message = "Order not found." });
+            }
+            return Ok(new { message = "Order deleted successfully." });
         }
-
-       
     }
 }

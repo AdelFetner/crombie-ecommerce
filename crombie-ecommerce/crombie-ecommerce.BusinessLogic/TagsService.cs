@@ -33,18 +33,28 @@ namespace crombie_ecommerce.BusinessLogic
             return await _context.Tags.ToListAsync();
         }
 
-        // Method to delete a tag
-        public async Task<List<Tag>> DeleteTag(Guid tagId)
+        public async Task<bool> ArchiveMethod(Guid tagId, string processedBy = "Unregistered")
         {
-            var tag = await _context.Tags.FindAsync(tagId);
-            if (tag == null)
-            {
-                return null;
-            }
+            var tag = await _context.Tags
+                .Include(t => t.Wishlist)
+                .FirstOrDefaultAsync(t => t.TagId == tagId);
 
+            if (tag == null)
+                return false;
+
+            var historyTag = new HistoryTag
+            {
+                OriginalId = tag.TagId,
+                ProcessedAt = DateTime.UtcNow,
+                ProcessedBy = processedBy,
+                EntityJson = tag.SerializeToJson()
+            };
+
+            _context.HistoryTags.Add(historyTag);
             _context.Tags.Remove(tag);
             await _context.SaveChangesAsync();
-            return await _context.Tags.ToListAsync();
+
+            return true;
         }
 
         // Method to associate a tag with a wishlist

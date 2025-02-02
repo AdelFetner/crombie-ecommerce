@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using Newtonsoft.Json;
+using System.ComponentModel.DataAnnotations;
 using System.Text.Json.Serialization;
 
 namespace crombie_ecommerce.Models.Entities
@@ -7,7 +8,7 @@ namespace crombie_ecommerce.Models.Entities
     {
         [Key]
 
-        public Guid ProductId { get; private set; }
+        public Guid ProductId { get; set; }
 
         [Required]
         [MinLength(4)]
@@ -26,16 +27,19 @@ namespace crombie_ecommerce.Models.Entities
         [Required]
         public string Image { get; set; }
 
-        [JsonIgnore]
         public virtual Brand Brand { get; set; }
 
         public virtual ICollection<Category> Categories { get; set; } = [];
 
-        [JsonIgnore]
         public virtual ICollection<Wishlist>? Wishlists { get; set; } = [];
 
         public ICollection<OrderDetail> OrderDetails { get; set; }
 
         public virtual ICollection<Notification>? Notifications { get; set; } = [];
+        public Guid Id => ProductId;
+        public string SerializeToJson()
+        {
+            return JsonConvert.SerializeObject(this);
+        }
     }
 }

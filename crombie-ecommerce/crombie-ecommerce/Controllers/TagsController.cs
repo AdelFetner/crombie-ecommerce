@@ -1,6 +1,7 @@
 ﻿using crombie_ecommerce.Models.Entities;
 using crombie_ecommerce.BusinessLogic;
 using Microsoft.AspNetCore.Mvc;
+using Interfaces;
 
 namespace crombie_ecommerce.Controllers
 {
@@ -49,15 +50,15 @@ namespace crombie_ecommerce.Controllers
         }
 
         // Delete a tag
-        [HttpDelete("{tagId:guid}")]
-        public async Task<IActionResult> DeleteTag(Guid tagId)
+        [HttpDelete("{id}")]
+        public async Task<IActionResult> DeleteAndArchive(Guid id)
         {
-            var tags = await _tagsService.DeleteTag(tagId);
-            if (tags == null)
+            var success = await _tagsService.ArchiveMethod(id, "Unregistered");
+            if (!success)
             {
-                return NotFound(new { message = "Tag not found" });
+                return NotFound(new { message = "Tag not found." });
             }
-            return Ok(tags);
+            return Ok(new { message = "Tag deleted successfully." });
         }
 
         // Associate a tag with a wishlist

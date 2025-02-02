@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using crombie_ecommerce.DataAccess.Contexts;
 
@@ -11,9 +12,11 @@ using crombie_ecommerce.DataAccess.Contexts;
 namespace crombie_ecommerce.DataAccess.Migrations
 {
     [DbContext(typeof(ShopContext))]
-    partial class ShopContextModelSnapshot : ModelSnapshot
+    [Migration("20250130000527_fixOrderAndOrderDetails")]
+    partial class fixOrderAndOrderDetails
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -39,7 +42,7 @@ namespace crombie_ecommerce.DataAccess.Migrations
 
                     b.HasIndex("CategoryId");
 
-                    b.ToTable("ProductCategory", (string)null);
+                    b.ToTable("ProductCategory");
                 });
 
             modelBuilder.Entity("WishlistProduct", b =>
@@ -59,7 +62,7 @@ namespace crombie_ecommerce.DataAccess.Migrations
 
                     b.HasIndex("WishlistId");
 
-                    b.ToTable("WishlistProduct", (string)null);
+                    b.ToTable("WishlistProduct");
                 });
 
             modelBuilder.Entity("crombie_ecommerce.Models.Entities.Brand", b =>
@@ -108,106 +111,6 @@ namespace crombie_ecommerce.DataAccess.Migrations
                     b.ToTable("Category", (string)null);
                 });
 
-            modelBuilder.Entity("crombie_ecommerce.Models.Entities.HistoryBrand", b =>
-                {
-                    b.Property<Guid>("OriginalId")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<string>("EntityJson")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<DateTime>("ProcessedAt")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("ProcessedBy")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<Guid>("UserId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.HasKey("OriginalId");
-
-                    b.ToTable("HistoryBrand", (string)null);
-                });
-
-            modelBuilder.Entity("crombie_ecommerce.Models.Entities.HistoryCategory", b =>
-                {
-                    b.Property<Guid>("OriginalId")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<string>("EntityJson")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<DateTime>("ProcessedAt")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("ProcessedBy")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<Guid>("UserId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.HasKey("OriginalId");
-
-                    b.ToTable("HistoryCategories", (string)null);
-                });
-
-            modelBuilder.Entity("crombie_ecommerce.Models.Entities.HistoryOrder", b =>
-                {
-                    b.Property<Guid>("OriginalId")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<string>("EntityJson")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<DateTime>("ProcessedAt")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("ProcessedBy")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<Guid>("UserId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.HasKey("OriginalId");
-
-                    b.ToTable("HistoryOrder", (string)null);
-                });
-
-            modelBuilder.Entity("crombie_ecommerce.Models.Entities.HistoryOrderDetails", b =>
-                {
-                    b.Property<Guid>("OriginalId")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<string>("EntityJson")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<DateTime>("ProcessedAt")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("ProcessedBy")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<Guid>("UserId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.HasKey("OriginalId");
-
-                    b.ToTable("HistoryOrderDetails", (string)null);
-                });
-
             modelBuilder.Entity("crombie_ecommerce.Models.Entities.HistoryProduct", b =>
                 {
                     b.Property<Guid>("OriginalId")
@@ -231,31 +134,6 @@ namespace crombie_ecommerce.DataAccess.Migrations
                     b.HasKey("OriginalId");
 
                     b.ToTable("HistoryProduct", (string)null);
-                });
-
-            modelBuilder.Entity("crombie_ecommerce.Models.Entities.HistoryTag", b =>
-                {
-                    b.Property<Guid>("OriginalId")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<string>("EntityJson")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<DateTime>("ProcessedAt")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("ProcessedBy")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<Guid>("UserId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.HasKey("OriginalId");
-
-                    b.ToTable("HistoryTags", (string)null);
                 });
 
             modelBuilder.Entity("crombie_ecommerce.Models.Entities.HistoryUser", b =>
@@ -346,7 +224,7 @@ namespace crombie_ecommerce.DataAccess.Migrations
 
                     b.HasIndex("WishlistId");
 
-                    b.ToTable("Notification", (string)null);
+                    b.ToTable("Notification");
                 });
 
             modelBuilder.Entity("crombie_ecommerce.Models.Entities.Order", b =>

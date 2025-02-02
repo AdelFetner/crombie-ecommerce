@@ -1,24 +1,47 @@
 ﻿using crombie_ecommerce.DataAccess.Contexts;
 using Microsoft.EntityFrameworkCore;
 using crombie_ecommerce.Models.Entities;
+using Microsoft.AspNetCore.Http;
+using Interfaces;
+using crombie_ecommerce.Models.Dto;
 
 namespace crombie_ecommerce.BusinessLogic
 {
     public class UserService
     {
         private readonly ShopContext _context;
+        private readonly s3Service _s3Service;
+        private readonly string _bucketFolder = "users";
 
-        public UserService (ShopContext context)
+        public UserService (ShopContext context, s3Service s3Service)
         {
             _context = context;
+            _s3Service = s3Service;
         }
 
 
          //Create a new user:
-        public async Task<User> PostUser(User user) { 
-           
+        public async Task<User> CreateUser(UserDto userDto, IFormFile fileImage) {
+
+            var userId = Guid.NewGuid();
+
+            var user = new User
+            {
+                UserId = userId,
+                Name = userDto.Name,
+                Email = userDto.Email,
+                Password = userDto.Password,
+                Address = userDto.Address,
+                IsVerified = userDto.IsVerified,
+                Image = $"{_bucketFolder}/{userId}/{fileImage.FileName}"
+            };
+
+            using var stream = fileImage.OpenReadStream();
+
+            var upload = await _s3Service.UploadFileAsync(stream, fileImage.FileName, fileImage.ContentType, $"{_bucketFolder}/{user.UserId}");
+
             _context.Users.Add(user);
-            _context.SaveChanges();
+            await _context.SaveChangesAsync();
             return user;
             
         }
@@ -72,6 +95,33 @@ namespace crombie_ecommerce.BusinessLogic
                 
             }
             
+        }
+
+        // Method to delete and archive user
+        public async Task<bool> ArchiveMethod(Guid userId, string processedBy = "Unregistered")
+        {
+            var user = await _context.Users
+                .Include(u => u.Wishlists)
+                .Include(u => u.Orders)
+                .FirstOrDefaultAsync(u => u.UserId == userId);
+
+            if (user == null)
+                return false;
+
+            var historyUser = new HistoryUser
+            {
+                OriginalId = user.UserId,
+                UserId = user.UserId,
+                ProcessedAt = DateTime.UtcNow,
+                ProcessedBy = processedBy,
+                EntityJson = user.SerializeToJson()
+            };
+
+            _context.HistoryUsers.Add(historyUser);
+            _context.Users.Remove(user);
+            await _context.SaveChangesAsync();
+
+            return true;
         }
     }
 }
