@@ -17,6 +17,7 @@ namespace crombie_ecommerce.DataAccess.Contexts
         public DbSet<OrderDetail> OrderDetails { get; set; }
 
         public DbSet<Notification> Notifications { get; set; }
+        public DbSet<Stock> Stock { get; set; }
 
         public DbSet<HistoryWishlist> HistoryWishlists { get; set; }
         public DbSet<HistoryUser> HistoryUsers { get; set; }
@@ -98,6 +99,11 @@ namespace crombie_ecommerce.DataAccess.Contexts
                             j.HasKey("ProductId", "CategoryId");
                         }
                     );
+                // product to stock
+                product.HasOne(p => p.Stock)
+                       .WithOne(s => s.Product)
+                       .HasForeignKey<Stock>(s => s.ProductId)
+                       .OnDelete(DeleteBehavior.Cascade);
             });
 
             // builder for wishlist entity
@@ -248,6 +254,22 @@ namespace crombie_ecommerce.DataAccess.Contexts
                 entity.HasOne(n => n.Wishlist)
                     .WithMany(w => w.Notifications)
                     .HasForeignKey(n => n.WishlistId)
+                    .OnDelete(DeleteBehavior.Cascade)
+                    .IsRequired();
+            });
+
+            //builder for stock entity
+            modelBuilder.Entity<Stock>(stock =>
+            {
+                stock.ToTable("Stock");
+                stock.HasKey(s => s.StockId);
+                stock.Property(s => s.Quantity).IsRequired();
+                stock.Property(s => s.LastUpdated).IsRequired();
+
+                // relation stock - product (one to one)
+                stock.HasOne(s => s.Product)
+                    .WithOne(p => p.Stock)
+                    .HasForeignKey<Stock>(s => s.ProductId)
                     .OnDelete(DeleteBehavior.Cascade)
                     .IsRequired();
             });

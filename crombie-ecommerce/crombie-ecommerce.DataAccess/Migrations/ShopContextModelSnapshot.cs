@@ -470,7 +470,6 @@ namespace crombie_ecommerce.DataAccess.Migrations
                     b.HasIndex("WishlistId");
 
                     b.ToTable("Notification");
-
                     b.HasData(
                         new
                         {
@@ -797,6 +796,29 @@ namespace crombie_ecommerce.DataAccess.Migrations
                         });
                 });
 
+            modelBuilder.Entity("crombie_ecommerce.Models.Entities.Stock", b =>
+                {
+                    b.Property<Guid>("StockId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<DateTime>("LastUpdated")
+                        .HasColumnType("datetime2");
+
+                    b.Property<Guid>("ProductId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<int>("Quantity")
+                        .HasColumnType("int");
+
+                    b.HasKey("StockId");
+
+                    b.HasIndex("ProductId")
+                        .IsUnique();
+
+                    b.ToTable("Stock", (string)null);
+                });
+
             modelBuilder.Entity("crombie_ecommerce.Models.Entities.Tag", b =>
                 {
                     b.Property<Guid>("TagId")
@@ -1106,6 +1128,17 @@ namespace crombie_ecommerce.DataAccess.Migrations
                     b.Navigation("Brand");
                 });
 
+            modelBuilder.Entity("crombie_ecommerce.Models.Entities.Stock", b =>
+                {
+                    b.HasOne("crombie_ecommerce.Models.Entities.Product", "Product")
+                        .WithOne("Stock")
+                        .HasForeignKey("crombie_ecommerce.Models.Entities.Stock", "ProductId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Product");
+                });
+
             modelBuilder.Entity("crombie_ecommerce.Models.Entities.Tag", b =>
                 {
                     b.HasOne("crombie_ecommerce.Models.Entities.Wishlist", "Wishlist")
@@ -1154,6 +1187,9 @@ namespace crombie_ecommerce.DataAccess.Migrations
                     b.Navigation("Notifications");
 
                     b.Navigation("OrderDetails");
+
+                    b.Navigation("Stock")
+                        .IsRequired();
                 });
 
             modelBuilder.Entity("crombie_ecommerce.Models.Entities.Role", b =>

@@ -28,6 +28,8 @@ namespace crombie_ecommerce.Models.Entities
 
         public virtual Brand Brand { get; set; }
 
+        public virtual Stock Stock { get; set; }
+
         public virtual ICollection<Category> Categories { get; set; } = [];
 
         public virtual ICollection<Wishlist>? Wishlists { get; set; } = [];

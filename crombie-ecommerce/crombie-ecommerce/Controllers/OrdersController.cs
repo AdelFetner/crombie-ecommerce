@@ -11,10 +11,12 @@ namespace crombie_ecommerce.Controllers
     public class OrdersController : ControllerBase
     {
         private readonly OrderService _orderService;
+        private readonly StockService _stockService;
 
-        public OrdersController(OrderService orderService)
+        public OrdersController(OrderService orderService, StockService stockService)
         {
             _orderService = orderService;
+            _stockService = stockService;
         }
 
        
@@ -68,9 +70,21 @@ namespace crombie_ecommerce.Controllers
         [Authorize]
         public async Task<ActionResult<Order>> PostOrder(Order order)
         {
-            var createdOrder =  await _orderService.CreateOrder(order);
-            return CreatedAtAction(nameof(GetOrderById), new {id = createdOrder.OrderId}, createdOrder);    
-            
+            // validate stock before creating the order
+            if (!await _stockService.ValidateStockAsync(order.OrderDetails.ToList()))
+            {
+                return BadRequest(new { message = "Insufficient stock." });
+            }
+
+            // process the order and update stock
+            if (!await _stockService.ProcessOrderAsync(order, order.OrderDetails.ToList()))
+            {
+                return BadRequest(new { message = "Failed to process the order." });
+            }
+
+            // create the order
+            var createdOrder = await _orderService.CreateOrder(order);
+            return CreatedAtAction(nameof(GetOrderById), new { id = createdOrder.OrderId }, createdOrder);
         }
 
         // DELETE: api/Orders/5
@@ -78,12 +92,19 @@ namespace crombie_ecommerce.Controllers
         [Authorize(Roles ="Admin")]
         public async Task<IActionResult> DeleteAndArchive(Guid id)
         {
-            var success = await _orderService.ArchiveMethod(id, "Unregistered");
-            if (!success)
+            var cancelSuccess = await _stockService.CancelOrderAsync(id);
+            if (!cancelSuccess)
             {
                 return NotFound(new { message = "Order not found." });
             }
-            return Ok(new { message = "Order deleted successfully." });
+
+            var archiveSuccess = await _orderService.ArchiveMethod(id, "Unregistered");
+            if (!archiveSuccess)
+            {
+                return BadRequest(new { message = "Order stock restored but failed to delete the order." });
+            }
+
+            return Ok(new { message = "Order canceled, stock restored, and deleted successfully." });
         }
     }
 }

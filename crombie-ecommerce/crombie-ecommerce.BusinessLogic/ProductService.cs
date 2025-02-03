@@ -23,6 +23,7 @@ namespace crombie_ecommerce.BusinessLogic
         {
             return await _context.Products
                 .Include(p => p.Categories)
+                .Include(p => p.Stock) // added stock to the include
                 .ToListAsync();
         }
 
@@ -30,6 +31,7 @@ namespace crombie_ecommerce.BusinessLogic
         {
             return await _context.Products
                 .Include(p => p.Categories)
+                .Include(p => p.Stock)
                 .FirstOrDefaultAsync(p => p.ProductId == id); // Couldn't make previous FindAsync work 
         }
 
@@ -50,7 +52,14 @@ namespace crombie_ecommerce.BusinessLogic
                 Price = productDto.Price,
                 BrandId = productDto.BrandId,
                 Categories = categories,
-                Image = $"{_bucketFolder}/{productId}/{fileImage.FileName}"
+                Image = $"{_bucketFolder}/{productId}/{fileImage.FileName}",
+                Stock = new Stock
+                {
+                    StockId = Guid.NewGuid(),
+                    ProductId = productId,
+                    Quantity = 0, 
+                    LastUpdated = DateTime.UtcNow
+                }
             };
 
             using var stream = fileImage.OpenReadStream();
@@ -109,6 +118,7 @@ namespace crombie_ecommerce.BusinessLogic
                 .Skip((page - 1) * quantity)
                 .Take(quantity)
                 .Include(p => p.Categories)
+                .Include(p => p.Stock)
                 .ToListAsync();
         }
 
@@ -120,6 +130,7 @@ namespace crombie_ecommerce.BusinessLogic
             .Include(p => p.Categories)
             .Include(p => p.Brand)
             .Include(p => p.Wishlists)
+            .Include(p => p.Stock)
             .AsQueryable();
 
             // price filtering (min max)
@@ -158,7 +169,13 @@ namespace crombie_ecommerce.BusinessLogic
                     p.Name.Contains(filter.SearchTerm) ||
                     p.Description.Contains(filter.SearchTerm));
             }
-                
+
+            // stock filtering
+            if (filter.InStock.HasValue && filter.InStock.Value)
+            {
+                query = query.Where(p => p.Stock.Quantity > 0);
+            }
+
 
             return await query.ToListAsync();
         }
