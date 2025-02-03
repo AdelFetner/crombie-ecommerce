@@ -12,8 +12,8 @@ using crombie_ecommerce.DataAccess.Contexts;
 namespace crombie_ecommerce.DataAccess.Migrations
 {
     [DbContext(typeof(ShopContext))]
-    [Migration("20250203192511_FixOrders")]
-    partial class FixOrders
+    [Migration("20250203231600_FixNulleables")]
+    partial class FixNulleables
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -478,7 +478,7 @@ namespace crombie_ecommerce.DataAccess.Migrations
                         new
                         {
                             NotificationId = new Guid("1b2c3d4e-5f6a-7b8c-9d0e-1f2a3b4c5d6e"),
-                            CreatedDate = new DateTime(2025, 2, 1, 19, 25, 10, 442, DateTimeKind.Utc).AddTicks(5139),
+                            CreatedDate = new DateTime(2025, 2, 1, 23, 15, 59, 703, DateTimeKind.Utc).AddTicks(1728),
                             IsRead = false,
                             Message = "Price dropped on ElectroTech X10 Pro!",
                             NotificationType = "Price Alert",
@@ -488,7 +488,7 @@ namespace crombie_ecommerce.DataAccess.Migrations
                         new
                         {
                             NotificationId = new Guid("2c3d4e5f-6a7b-8c9d-0e1f-2a3b4c5d6e7f"),
-                            CreatedDate = new DateTime(2025, 2, 3, 7, 25, 10, 442, DateTimeKind.Utc).AddTicks(5144),
+                            CreatedDate = new DateTime(2025, 2, 3, 11, 15, 59, 703, DateTimeKind.Utc).AddTicks(1732),
                             IsRead = true,
                             Message = "Urban Denim Jacket back in stock",
                             NotificationType = "Restock",
@@ -498,7 +498,7 @@ namespace crombie_ecommerce.DataAccess.Migrations
                         new
                         {
                             NotificationId = new Guid("3d4e5f6a-7b8c-9d0e-1f2a-3b4c5d6e7f8a"),
-                            CreatedDate = new DateTime(2025, 2, 2, 19, 25, 10, 442, DateTimeKind.Utc).AddTicks(5147),
+                            CreatedDate = new DateTime(2025, 2, 2, 23, 15, 59, 703, DateTimeKind.Utc).AddTicks(1734),
                             IsRead = false,
                             Message = "New item added to Kitchen Upgrades",
                             NotificationType = "Wishlist Update",
@@ -508,7 +508,7 @@ namespace crombie_ecommerce.DataAccess.Migrations
                         new
                         {
                             NotificationId = new Guid("5f6a7b8c-9d0e-1f2a-3b4c-5d6e7f8a9b0c"),
-                            CreatedDate = new DateTime(2025, 2, 3, 18, 25, 10, 442, DateTimeKind.Utc).AddTicks(5149),
+                            CreatedDate = new DateTime(2025, 2, 3, 22, 15, 59, 703, DateTimeKind.Utc).AddTicks(1736),
                             IsRead = false,
                             Message = "20% off all books this week!",
                             NotificationType = "Special Offer",
@@ -528,16 +528,13 @@ namespace crombie_ecommerce.DataAccess.Migrations
                         .HasColumnType("datetime2");
 
                     b.Property<string>("PaymentMethod")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("ShippingAddress")
-                        .IsRequired()
                         .HasMaxLength(100)
                         .HasColumnType("nvarchar(100)");
 
                     b.Property<string>("Status")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<decimal>("TotalAmount")
@@ -557,7 +554,7 @@ namespace crombie_ecommerce.DataAccess.Migrations
                         new
                         {
                             OrderId = new Guid("6d5e4f3a-2b1c-0d9e-8f7a-6b5c4d3e2f1a"),
-                            OrderDate = new DateTime(2025, 1, 27, 19, 25, 10, 442, DateTimeKind.Utc).AddTicks(4482),
+                            OrderDate = new DateTime(2025, 1, 27, 23, 15, 59, 703, DateTimeKind.Utc).AddTicks(1052),
                             PaymentMethod = "Credit Card",
                             ShippingAddress = "123 Main St, TechCity",
                             Status = "Delivered",
@@ -567,7 +564,7 @@ namespace crombie_ecommerce.DataAccess.Migrations
                         new
                         {
                             OrderId = new Guid("7e8f9a0b-1c2d-3e4f-5a6b-7c8d9e0f1a2b"),
-                            OrderDate = new DateTime(2025, 1, 31, 19, 25, 10, 442, DateTimeKind.Utc).AddTicks(4497),
+                            OrderDate = new DateTime(2025, 1, 31, 23, 15, 59, 703, DateTimeKind.Utc).AddTicks(1063),
                             PaymentMethod = "PayPal",
                             ShippingAddress = "456 Oak St, MetroCity",
                             Status = "Processing",
@@ -577,7 +574,7 @@ namespace crombie_ecommerce.DataAccess.Migrations
                         new
                         {
                             OrderId = new Guid("8a9b0c1d-2e3f-4a5b-6c7d-8e9f0a1b2c3d"),
-                            OrderDate = new DateTime(2025, 2, 2, 19, 25, 10, 442, DateTimeKind.Utc).AddTicks(4500),
+                            OrderDate = new DateTime(2025, 2, 2, 23, 15, 59, 703, DateTimeKind.Utc).AddTicks(1066),
                             PaymentMethod = "Debit Card",
                             ShippingAddress = "789 Pine Rd, VillageTown",
                             Status = "Shipped",
@@ -587,7 +584,7 @@ namespace crombie_ecommerce.DataAccess.Migrations
                         new
                         {
                             OrderId = new Guid("9b0c1d2e-3f4a-5b6c-7d8e-9f0a1b2c3d4e"),
-                            OrderDate = new DateTime(2025, 2, 3, 7, 25, 10, 442, DateTimeKind.Utc).AddTicks(4502),
+                            OrderDate = new DateTime(2025, 2, 3, 11, 15, 59, 703, DateTimeKind.Utc).AddTicks(1068),
                             PaymentMethod = "Apple Pay",
                             ShippingAddress = "La bombonera",
                             Status = "Pending",
@@ -597,7 +594,7 @@ namespace crombie_ecommerce.DataAccess.Migrations
                         new
                         {
                             OrderId = new Guid("0c1d2e3f-4a5b-6c7d-8e9f-0a1b2c3d4e5f"),
-                            OrderDate = new DateTime(2025, 2, 3, 17, 25, 10, 442, DateTimeKind.Utc).AddTicks(4504),
+                            OrderDate = new DateTime(2025, 2, 3, 21, 15, 59, 703, DateTimeKind.Utc).AddTicks(1071),
                             PaymentMethod = "Google Pay",
                             ShippingAddress = "321 Elm St, Bookville",
                             Status = "Canceled",

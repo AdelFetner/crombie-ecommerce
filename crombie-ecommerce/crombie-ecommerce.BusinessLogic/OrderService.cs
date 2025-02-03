@@ -39,7 +39,7 @@ namespace crombie_ecommerce.BusinessLogic
         //get order by id
         public async Task<Order> GetOrderById(Guid orderId) 
         {
-            return await _context.Orders.FindAsync();
+            return await _context.Orders.FindAsync(orderId);
         }
 
         //get all orders from an user id
