@@ -216,10 +216,10 @@ namespace crombie_ecommerce.DataAccess.Contexts
                 order.HasKey(o => o.OrderId);
                 order.Property(o => o.OrderId).HasDefaultValueSql("NEWID()");
                 order.Property(o => o.OrderDate).IsRequired();
-                order.Property(o=>o.Status).IsRequired();
+                order.Property(o=>o.Status);
                 order.Property(o => o.TotalAmount).HasPrecision(18, 2).IsRequired();
                 order.Property(o => o.ShippingAddress).HasMaxLength(100);
-                order.Property(o => o.PaymentMethod).IsRequired();
+                order.Property(o => o.PaymentMethod);
 
                 //relation user - order (one to many)
                 order.HasOne(o => o.User)

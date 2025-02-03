@@ -8,7 +8,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace crombie_ecommerce.DataAccess.Migrations
 {
     /// <inheritdoc />
-    public partial class FixOrders : Migration
+    public partial class FixNulleables : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -171,8 +171,7 @@ namespace crombie_ecommerce.DataAccess.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Roles", x => x.RoleId);
-            });
-
+                });
 
             migrationBuilder.CreateTable(
                 name: "Product",
@@ -271,10 +270,10 @@ namespace crombie_ecommerce.DataAccess.Migrations
                 {
                     OrderId = table.Column<Guid>(type: "uniqueidentifier", nullable: false, defaultValueSql: "NEWID()"),
                     OrderDate = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    Status = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Status = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     TotalAmount = table.Column<decimal>(type: "decimal(18,2)", precision: 18, scale: 2, nullable: false),
-                    ShippingAddress = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
-                    PaymentMethod = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    ShippingAddress = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: true),
+                    PaymentMethod = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     UserId = table.Column<Guid>(type: "uniqueidentifier", nullable: true)
                 },
                 constraints: table =>
@@ -467,11 +466,11 @@ namespace crombie_ecommerce.DataAccess.Migrations
                 columns: new[] { "OrderId", "OrderDate", "PaymentMethod", "ShippingAddress", "Status", "TotalAmount", "UserId" },
                 values: new object[,]
                 {
-                    { new Guid("0c1d2e3f-4a5b-6c7d-8e9f-0a1b2c3d4e5f"), new DateTime(2025, 2, 3, 17, 25, 10, 442, DateTimeKind.Utc).AddTicks(4504), "Google Pay", "321 Elm St, Bookville", "Canceled", 24.99m, new Guid("5b3d9f1a-7e2c-48d9-9a1b-4f6c3e2d0a5b") },
-                    { new Guid("6d5e4f3a-2b1c-0d9e-8f7a-6b5c4d3e2f1a"), new DateTime(2025, 1, 27, 19, 25, 10, 442, DateTimeKind.Utc).AddTicks(4482), "Credit Card", "123 Main St, TechCity", "Delivered", 999.99m, new Guid("3d4a7c9f-2e1b-4a8d-9c3f-6b2e1d0a4c7b") },
-                    { new Guid("7e8f9a0b-1c2d-3e4f-5a6b-7c8d9e0f1a2b"), new DateTime(2025, 1, 31, 19, 25, 10, 442, DateTimeKind.Utc).AddTicks(4497), "PayPal", "456 Oak St, MetroCity", "Processing", 129.95m, new Guid("a1b8f45c-9d32-4e67-82f1-0c3d5e7f9a2b") },
-                    { new Guid("8a9b0c1d-2e3f-4a5b-6c7d-8e9f0a1b2c3d"), new DateTime(2025, 2, 2, 19, 25, 10, 442, DateTimeKind.Utc).AddTicks(4500), "Debit Card", "789 Pine Rd, VillageTown", "Shipped", 89.99m, new Guid("e6f9d287-5c34-4a1b-89d0-3b7a2c4e5f1a") },
-                    { new Guid("9b0c1d2e-3f4a-5b6c-7d8e-9f0a1b2c3d4e"), new DateTime(2025, 2, 3, 7, 25, 10, 442, DateTimeKind.Utc).AddTicks(4502), "Apple Pay", "La bombonera", "Pending", 69.00m, new Guid("8c2d1f9a-4b3e-4567-8910-3f6e5d4c2b1a") }
+                    { new Guid("0c1d2e3f-4a5b-6c7d-8e9f-0a1b2c3d4e5f"), new DateTime(2025, 2, 3, 21, 15, 59, 703, DateTimeKind.Utc).AddTicks(1071), "Google Pay", "321 Elm St, Bookville", "Canceled", 24.99m, new Guid("5b3d9f1a-7e2c-48d9-9a1b-4f6c3e2d0a5b") },
+                    { new Guid("6d5e4f3a-2b1c-0d9e-8f7a-6b5c4d3e2f1a"), new DateTime(2025, 1, 27, 23, 15, 59, 703, DateTimeKind.Utc).AddTicks(1052), "Credit Card", "123 Main St, TechCity", "Delivered", 999.99m, new Guid("3d4a7c9f-2e1b-4a8d-9c3f-6b2e1d0a4c7b") },
+                    { new Guid("7e8f9a0b-1c2d-3e4f-5a6b-7c8d9e0f1a2b"), new DateTime(2025, 1, 31, 23, 15, 59, 703, DateTimeKind.Utc).AddTicks(1063), "PayPal", "456 Oak St, MetroCity", "Processing", 129.95m, new Guid("a1b8f45c-9d32-4e67-82f1-0c3d5e7f9a2b") },
+                    { new Guid("8a9b0c1d-2e3f-4a5b-6c7d-8e9f0a1b2c3d"), new DateTime(2025, 2, 2, 23, 15, 59, 703, DateTimeKind.Utc).AddTicks(1066), "Debit Card", "789 Pine Rd, VillageTown", "Shipped", 89.99m, new Guid("e6f9d287-5c34-4a1b-89d0-3b7a2c4e5f1a") },
+                    { new Guid("9b0c1d2e-3f4a-5b6c-7d8e-9f0a1b2c3d4e"), new DateTime(2025, 2, 3, 11, 15, 59, 703, DateTimeKind.Utc).AddTicks(1068), "Apple Pay", "La bombonera", "Pending", 69.00m, new Guid("8c2d1f9a-4b3e-4567-8910-3f6e5d4c2b1a") }
                 });
 
             migrationBuilder.InsertData(
@@ -501,20 +500,20 @@ namespace crombie_ecommerce.DataAccess.Migrations
             migrationBuilder.InsertData(
                 table: "Notification",
                 columns: new[] { "NotificationId", "CreatedDate", "Message", "NotificationType", "ProductId", "WishlistId" },
-                values: new object[] { new Guid("1b2c3d4e-5f6a-7b8c-9d0e-1f2a3b4c5d6e"), new DateTime(2025, 2, 1, 19, 25, 10, 442, DateTimeKind.Utc).AddTicks(5139), "Price dropped on ElectroTech X10 Pro!", "Price Alert", new Guid("f8a7b6c5-6789-0123-4abc-def56789abcd"), new Guid("9a8b7c6d-5e4f-3a2b-1c0d-9e8f7a6b5c4d") });
+                values: new object[] { new Guid("1b2c3d4e-5f6a-7b8c-9d0e-1f2a3b4c5d6e"), new DateTime(2025, 2, 1, 23, 15, 59, 703, DateTimeKind.Utc).AddTicks(1728), "Price dropped on ElectroTech X10 Pro!", "Price Alert", new Guid("f8a7b6c5-6789-0123-4abc-def56789abcd"), new Guid("9a8b7c6d-5e4f-3a2b-1c0d-9e8f7a6b5c4d") });
 
             migrationBuilder.InsertData(
                 table: "Notification",
                 columns: new[] { "NotificationId", "CreatedDate", "IsRead", "Message", "NotificationType", "ProductId", "WishlistId" },
-                values: new object[] { new Guid("2c3d4e5f-6a7b-8c9d-0e1f-2a3b4c5d6e7f"), new DateTime(2025, 2, 3, 7, 25, 10, 442, DateTimeKind.Utc).AddTicks(5144), true, "Urban Denim Jacket back in stock", "Restock", new Guid("e7f6a5b4-5678-9012-3abc-def456789abc"), new Guid("1b2c3d4e-5f6a-7b8c-9d0e-1f2a3b4c5d6e") });
+                values: new object[] { new Guid("2c3d4e5f-6a7b-8c9d-0e1f-2a3b4c5d6e7f"), new DateTime(2025, 2, 3, 11, 15, 59, 703, DateTimeKind.Utc).AddTicks(1732), true, "Urban Denim Jacket back in stock", "Restock", new Guid("e7f6a5b4-5678-9012-3abc-def456789abc"), new Guid("1b2c3d4e-5f6a-7b8c-9d0e-1f2a3b4c5d6e") });
 
             migrationBuilder.InsertData(
                 table: "Notification",
                 columns: new[] { "NotificationId", "CreatedDate", "Message", "NotificationType", "ProductId", "WishlistId" },
                 values: new object[,]
                 {
-                    { new Guid("3d4e5f6a-7b8c-9d0e-1f2a-3b4c5d6e7f8a"), new DateTime(2025, 2, 2, 19, 25, 10, 442, DateTimeKind.Utc).AddTicks(5147), "New item added to Kitchen Upgrades", "Wishlist Update", new Guid("d6e5f4d3-4567-8901-2abc-def3456789ab"), new Guid("2c3d4e5f-6a7b-8c9d-0e1f-2a3b4c5d6e7f") },
-                    { new Guid("5f6a7b8c-9d0e-1f2a-3b4c-5d6e7f8a9b0c"), new DateTime(2025, 2, 3, 18, 25, 10, 442, DateTimeKind.Utc).AddTicks(5149), "20% off all books this week!", "Special Offer", new Guid("b4c3d2e1-2345-6789-0abc-def123456789"), new Guid("4e5f6a7b-8c9d-0e1f-2a3b-4c5d6e7f8a9b") }
+                    { new Guid("3d4e5f6a-7b8c-9d0e-1f2a-3b4c5d6e7f8a"), new DateTime(2025, 2, 2, 23, 15, 59, 703, DateTimeKind.Utc).AddTicks(1734), "New item added to Kitchen Upgrades", "Wishlist Update", new Guid("d6e5f4d3-4567-8901-2abc-def3456789ab"), new Guid("2c3d4e5f-6a7b-8c9d-0e1f-2a3b4c5d6e7f") },
+                    { new Guid("5f6a7b8c-9d0e-1f2a-3b4c-5d6e7f8a9b0c"), new DateTime(2025, 2, 3, 22, 15, 59, 703, DateTimeKind.Utc).AddTicks(1736), "20% off all books this week!", "Special Offer", new Guid("b4c3d2e1-2345-6789-0abc-def123456789"), new Guid("4e5f6a7b-8c9d-0e1f-2a3b-4c5d6e7f8a9b") }
                 });
 
             migrationBuilder.InsertData(
@@ -692,11 +691,6 @@ namespace crombie_ecommerce.DataAccess.Migrations
 
             migrationBuilder.DropTable(
                 name: "Roles");
-            migrationBuilder.DeleteData(
-               table: "Roles",
-               keyColumn: "RoleId",
-               keyValues: new object[] { 1, 2 }
-            );
         }
     }
 }
