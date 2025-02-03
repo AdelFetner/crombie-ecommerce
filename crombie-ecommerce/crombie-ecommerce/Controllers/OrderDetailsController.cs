@@ -3,6 +3,7 @@ using crombie_ecommerce.BusinessLogic;
 using crombie_ecommerce.Models.Entities;
 using Interfaces;
 using Microsoft.AspNetCore.Authorization;
+using crombie_ecommerce.Models.Dto;
 
 namespace crombie_ecommerce.Controllers
 {
@@ -45,11 +46,11 @@ namespace crombie_ecommerce.Controllers
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPut("{id}")]
         [Authorize]
-        public async Task<IActionResult> PutOrderDetail(Guid id, [FromBody]OrderDetail orderDetail)
+        public async Task<IActionResult> PutOrderDetail(Guid id, [FromBody]OrderDetailsDto orderDetailsDto)
         {
             try
             {
-                var updatedOrderDetail = await _orderDetailService.UpdateDetails(id, orderDetail);
+                var updatedOrderDetail = await _orderDetailService.UpdateDetails(id, orderDetailsDto);
                 return Ok(updatedOrderDetail);
             }
             catch (Exception ex)
@@ -63,9 +64,9 @@ namespace crombie_ecommerce.Controllers
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPost]
         [Authorize]
-        public async Task<ActionResult<OrderDetail>> PostOrderDetail(OrderDetail orderDetail)
+        public async Task<ActionResult<OrderDetail>> PostOrderDetail(OrderDetailsDto orderDetailsDto)
         {
-            var createdDetail = await _orderDetailService.CreateDetails(orderDetail);
+            var createdDetail = await _orderDetailService.CreateDetails(orderDetailsDto);
             return CreatedAtAction(nameof(GetOrderDetailById), new {id = createdDetail.DetailId}, createdDetail);
             
         }

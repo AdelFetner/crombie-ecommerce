@@ -1,4 +1,5 @@
 ﻿using crombie_ecommerce.DataAccess.Contexts;
+using crombie_ecommerce.Models.Dto;
 using crombie_ecommerce.Models.Entities;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Hosting;
@@ -59,8 +60,9 @@ namespace crombie_ecommerce.BusinessLogic
         }
 
         // process an order and update stock
-        public async Task<bool> ProcessOrderAsync(Order order, List<OrderDetail> orderDetails)
+        public async Task<bool> ProcessOrderAsync(OrderDto orderDto, List<OrderDetail> orderDetails)
         {
+            var order = new Order();
             if (!await ValidateStockAsync(orderDetails))
             {
                 return false;

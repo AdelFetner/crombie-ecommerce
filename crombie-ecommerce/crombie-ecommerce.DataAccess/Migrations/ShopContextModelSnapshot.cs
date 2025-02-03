@@ -470,11 +470,12 @@ namespace crombie_ecommerce.DataAccess.Migrations
                     b.HasIndex("WishlistId");
 
                     b.ToTable("Notification");
+
                     b.HasData(
                         new
                         {
                             NotificationId = new Guid("1b2c3d4e-5f6a-7b8c-9d0e-1f2a3b4c5d6e"),
-                            CreatedDate = new DateTime(2025, 1, 31, 2, 13, 34, 269, DateTimeKind.Utc).AddTicks(9364),
+                            CreatedDate = new DateTime(2025, 2, 1, 19, 25, 10, 442, DateTimeKind.Utc).AddTicks(5139),
                             IsRead = false,
                             Message = "Price dropped on ElectroTech X10 Pro!",
                             NotificationType = "Price Alert",
@@ -484,7 +485,7 @@ namespace crombie_ecommerce.DataAccess.Migrations
                         new
                         {
                             NotificationId = new Guid("2c3d4e5f-6a7b-8c9d-0e1f-2a3b4c5d6e7f"),
-                            CreatedDate = new DateTime(2025, 2, 1, 14, 13, 34, 269, DateTimeKind.Utc).AddTicks(9366),
+                            CreatedDate = new DateTime(2025, 2, 3, 7, 25, 10, 442, DateTimeKind.Utc).AddTicks(5144),
                             IsRead = true,
                             Message = "Urban Denim Jacket back in stock",
                             NotificationType = "Restock",
@@ -494,7 +495,7 @@ namespace crombie_ecommerce.DataAccess.Migrations
                         new
                         {
                             NotificationId = new Guid("3d4e5f6a-7b8c-9d0e-1f2a-3b4c5d6e7f8a"),
-                            CreatedDate = new DateTime(2025, 2, 1, 2, 13, 34, 269, DateTimeKind.Utc).AddTicks(9368),
+                            CreatedDate = new DateTime(2025, 2, 2, 19, 25, 10, 442, DateTimeKind.Utc).AddTicks(5147),
                             IsRead = false,
                             Message = "New item added to Kitchen Upgrades",
                             NotificationType = "Wishlist Update",
@@ -504,7 +505,7 @@ namespace crombie_ecommerce.DataAccess.Migrations
                         new
                         {
                             NotificationId = new Guid("5f6a7b8c-9d0e-1f2a-3b4c-5d6e7f8a9b0c"),
-                            CreatedDate = new DateTime(2025, 2, 2, 1, 13, 34, 269, DateTimeKind.Utc).AddTicks(9369),
+                            CreatedDate = new DateTime(2025, 2, 3, 18, 25, 10, 442, DateTimeKind.Utc).AddTicks(5149),
                             IsRead = false,
                             Message = "20% off all books this week!",
                             NotificationType = "Special Offer",
@@ -553,7 +554,7 @@ namespace crombie_ecommerce.DataAccess.Migrations
                         new
                         {
                             OrderId = new Guid("6d5e4f3a-2b1c-0d9e-8f7a-6b5c4d3e2f1a"),
-                            OrderDate = new DateTime(2025, 1, 26, 2, 13, 34, 269, DateTimeKind.Utc).AddTicks(8998),
+                            OrderDate = new DateTime(2025, 1, 27, 19, 25, 10, 442, DateTimeKind.Utc).AddTicks(4482),
                             PaymentMethod = "Credit Card",
                             ShippingAddress = "123 Main St, TechCity",
                             Status = "Delivered",
@@ -563,7 +564,7 @@ namespace crombie_ecommerce.DataAccess.Migrations
                         new
                         {
                             OrderId = new Guid("7e8f9a0b-1c2d-3e4f-5a6b-7c8d9e0f1a2b"),
-                            OrderDate = new DateTime(2025, 1, 30, 2, 13, 34, 269, DateTimeKind.Utc).AddTicks(9009),
+                            OrderDate = new DateTime(2025, 1, 31, 19, 25, 10, 442, DateTimeKind.Utc).AddTicks(4497),
                             PaymentMethod = "PayPal",
                             ShippingAddress = "456 Oak St, MetroCity",
                             Status = "Processing",
@@ -573,7 +574,7 @@ namespace crombie_ecommerce.DataAccess.Migrations
                         new
                         {
                             OrderId = new Guid("8a9b0c1d-2e3f-4a5b-6c7d-8e9f0a1b2c3d"),
-                            OrderDate = new DateTime(2025, 2, 1, 2, 13, 34, 269, DateTimeKind.Utc).AddTicks(9011),
+                            OrderDate = new DateTime(2025, 2, 2, 19, 25, 10, 442, DateTimeKind.Utc).AddTicks(4500),
                             PaymentMethod = "Debit Card",
                             ShippingAddress = "789 Pine Rd, VillageTown",
                             Status = "Shipped",
@@ -583,7 +584,7 @@ namespace crombie_ecommerce.DataAccess.Migrations
                         new
                         {
                             OrderId = new Guid("9b0c1d2e-3f4a-5b6c-7d8e-9f0a1b2c3d4e"),
-                            OrderDate = new DateTime(2025, 2, 1, 14, 13, 34, 269, DateTimeKind.Utc).AddTicks(9013),
+                            OrderDate = new DateTime(2025, 2, 3, 7, 25, 10, 442, DateTimeKind.Utc).AddTicks(4502),
                             PaymentMethod = "Apple Pay",
                             ShippingAddress = "La bombonera",
                             Status = "Pending",
@@ -593,7 +594,7 @@ namespace crombie_ecommerce.DataAccess.Migrations
                         new
                         {
                             OrderId = new Guid("0c1d2e3f-4a5b-6c7d-8e9f-0a1b2c3d4e5f"),
-                            OrderDate = new DateTime(2025, 2, 2, 0, 13, 34, 269, DateTimeKind.Utc).AddTicks(9015),
+                            OrderDate = new DateTime(2025, 2, 3, 17, 25, 10, 442, DateTimeKind.Utc).AddTicks(4504),
                             PaymentMethod = "Google Pay",
                             ShippingAddress = "321 Elm St, Bookville",
                             Status = "Canceled",
@@ -609,7 +610,9 @@ namespace crombie_ecommerce.DataAccess.Migrations
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<Guid>("OrderId")
-                        .HasColumnType("uniqueidentifier");
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier")
+                        .HasDefaultValueSql("NEWID()");
 
                     b.Property<decimal>("Price")
                         .HasPrecision(18, 2)
@@ -836,7 +839,6 @@ namespace crombie_ecommerce.DataAccess.Migrations
                         .HasColumnType("nvarchar(50)");
 
                     b.Property<Guid?>("WishlistId")
-                        .IsRequired()
                         .HasColumnType("uniqueidentifier");
 
                     b.HasKey("TagId");
@@ -932,7 +934,8 @@ namespace crombie_ecommerce.DataAccess.Migrations
                             Image = "user-alex.jpg",
                             IsVerified = true,
                             Name = "Alex Johnson",
-                            Password = "SecurePass123!"
+                            Password = "SecurePass123!",
+                            RoleId = 0
                         },
                         new
                         {
@@ -942,7 +945,8 @@ namespace crombie_ecommerce.DataAccess.Migrations
                             Image = "user-maria.jpg",
                             IsVerified = false,
                             Name = "Maria Gomez",
-                            Password = "MariaG0mez!"
+                            Password = "MariaG0mez!",
+                            RoleId = 0
                         },
                         new
                         {
@@ -952,7 +956,8 @@ namespace crombie_ecommerce.DataAccess.Migrations
                             Image = "user-john.jpg",
                             IsVerified = false,
                             Name = "John Doe",
-                            Password = "DoeJ0hn!"
+                            Password = "DoeJ0hn!",
+                            RoleId = 0
                         },
                         new
                         {
@@ -962,7 +967,8 @@ namespace crombie_ecommerce.DataAccess.Migrations
                             Image = "user-emma.jpg",
                             IsVerified = false,
                             Name = "Emma Wilson",
-                            Password = "Emm@2024!"
+                            Password = "Emm@2024!",
+                            RoleId = 0
                         },
                         new
                         {
@@ -972,7 +978,8 @@ namespace crombie_ecommerce.DataAccess.Migrations
                             Image = "user-liam.jpg",
                             IsVerified = true,
                             Name = "Liam Brown",
-                            Password = "L1amBrown!"
+                            Password = "L1amBrown!",
+                            RoleId = 0
                         });
                 });
 
@@ -1144,8 +1151,7 @@ namespace crombie_ecommerce.DataAccess.Migrations
                     b.HasOne("crombie_ecommerce.Models.Entities.Wishlist", "Wishlist")
                         .WithMany("Tags")
                         .HasForeignKey("WishlistId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .OnDelete(DeleteBehavior.Cascade);
 
                     b.Navigation("Wishlist");
                 });
