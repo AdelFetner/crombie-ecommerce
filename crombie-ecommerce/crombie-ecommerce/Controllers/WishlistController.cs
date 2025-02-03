@@ -2,6 +2,7 @@
 using crombie_ecommerce.BusinessLogic;
 using crombie_ecommerce.Models.Dto;
 using crombie_ecommerce.Models.Entities;
+using Microsoft.AspNetCore.Authorization;
 
 namespace crombie_ecommerce.Controllers
 {
@@ -18,6 +19,7 @@ namespace crombie_ecommerce.Controllers
 
         // Get all wishlists
         [HttpGet]
+        [Authorize]
         public async Task<ActionResult<List<Wishlist>>> GetAllWishlists()
         {
             var wishlists = await _wishlistService.GetAllWishlists();
@@ -26,6 +28,7 @@ namespace crombie_ecommerce.Controllers
 
         // Get wishlist by ID
         [HttpGet("{id}")]
+        [Authorize]
         public async Task<ActionResult<Wishlist>> GetWishlistById(Guid id)
         {
             var wishlist = await _wishlistService.GetWishlistById(id);
@@ -38,6 +41,7 @@ namespace crombie_ecommerce.Controllers
 
         // Create a new wishlist
         [HttpPost]
+        [Authorize]
         public async Task<IActionResult> CreateWishlist([FromBody] WishlistDto wishlistDto)
         {
             if (!ModelState.IsValid)
@@ -68,6 +72,7 @@ namespace crombie_ecommerce.Controllers
 
         // Delete a wishlist and move it to the archive
         [HttpDelete("{id}")]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> DeleteAndArchive(Guid id)
         {
             var success = await _wishlistService.ArchiveMethod(id, "Unregistered");
@@ -80,6 +85,7 @@ namespace crombie_ecommerce.Controllers
 
         // Add a product to a wishlist
         [HttpPost("{wishlistId}/AddProduct/{productId}")]
+        [Authorize]
         public async Task<ActionResult> AddProductToWishlist(Guid wishlistId, Guid productId)
         {
             var result = await _wishlistService.AddProductToWishlist(wishlistId, productId);
@@ -92,6 +98,7 @@ namespace crombie_ecommerce.Controllers
 
         // Remove a product from a wishlist
         [HttpDelete("{wishlistId}/RemoveProduct/{productId}")]
+        [Authorize]
         public async Task<IActionResult> RemoveProductFromWishlist(Guid wishlistId, Guid productId)
         {
             var result = await _wishlistService.RemoveProductFromWishlist(wishlistId, productId);

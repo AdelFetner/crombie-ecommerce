@@ -4,12 +4,14 @@ using Microsoft.EntityFrameworkCore;
 
 namespace crombie_ecommerce.BusinessLogic
 {
-    public class OrderDetailsService
+    public class OrderDetailService
     {
         private readonly ShopContext _context;
+        private readonly OrderService _orderService;
 
-        public OrderDetailsService(ShopContext context) 
+        public OrderDetailService(ShopContext context, OrderService orderService) 
         {
+            _orderService = orderService;
             _context = context;
         }
 
@@ -17,10 +19,10 @@ namespace crombie_ecommerce.BusinessLogic
         public async Task<OrderDetail> CreateDetails(OrderDetail detail)
         {
             detail.DetailId = Guid.NewGuid();
-            detail.Subtotal= detail.Quantity * detail.Price;
+            detail.Subtotal = detail.Quantity * detail.Price;
 
             _context.OrderDetails.Add(detail);
-            _context.SaveChanges();
+            await _context.SaveChangesAsync();
             return detail;
         }
 
@@ -40,20 +42,17 @@ namespace crombie_ecommerce.BusinessLogic
         public async Task<OrderDetail> UpdateDetails(Guid id, OrderDetail orderd)
         {
             var details = await _context.OrderDetails.FindAsync(id);
-            
 
             details.Quantity = orderd.Quantity;
             details.Price = orderd.Price;
-            details.Subtotal = orderd.Subtotal;
-            
+            details.Subtotal = details.Quantity * details.Price;
+
             _context.OrderDetails.Update(details);
-            await _context.SaveChangesAsync().ConfigureAwait(false);
+            await _context.SaveChangesAsync();
 
+            await _orderService.RecalculateOrderTotal(details.OrderId);
             return details;
-
-
         }
-
 
         //delete order detail
         public async Task<bool> ArchiveMethod(Guid detailId, string processedBy = "Unregistered")

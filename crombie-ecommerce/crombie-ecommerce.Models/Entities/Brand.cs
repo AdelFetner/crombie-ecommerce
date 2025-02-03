@@ -1,13 +1,13 @@
 ﻿using Newtonsoft.Json;
 using System.ComponentModel.DataAnnotations;
-using System.Text.Json.Serialization;
 
 namespace crombie_ecommerce.Models.Entities
 {
     public class Brand
     {
         [Key]
-        public Guid BrandId { get; private set; }
+        [JsonIgnore]
+        public Guid BrandId { get; set; }
 
         [Required]
         [MaxLength(100)]
