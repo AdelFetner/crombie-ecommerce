@@ -1,4 +1,5 @@
 ﻿using crombie_ecommerce.BusinessLogic;
+using crombie_ecommerce.Models.Dto;
 using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Threading.Tasks;
@@ -14,6 +15,21 @@ namespace crombie_ecommerce.Controllers
         public StockController(StockService stockService)
         {
             _stockService = stockService;
+        }
+
+        [HttpPost("add")]
+        public async Task<IActionResult> AddStock([FromBody] StockDto stockDto)
+        {
+            try
+            {
+                bool success = await _stockService.AddStockAsync(stockDto.ProductId, stockDto.Quantity);
+                if (!success) return BadRequest("Stock record already exists for this product");
+                return Ok("Stock added successfully");
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
         }
 
         [HttpPut("update/{productId}")]

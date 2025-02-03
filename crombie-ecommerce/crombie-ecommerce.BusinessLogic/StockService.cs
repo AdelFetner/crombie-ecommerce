@@ -20,6 +20,26 @@ namespace crombie_ecommerce.BusinessLogic
             _context = context;
         }
 
+        public async Task<bool> AddStockAsync(Guid productId, int initialQuantity)
+        {
+            var existingStock = await _context.Stock.FirstOrDefaultAsync(s => s.ProductId == productId);
+            if (existingStock != null)
+            {
+                return false; 
+            }
+
+            var newStock = new Stock
+            {
+                ProductId = productId,
+                Quantity = initialQuantity,
+                LastUpdated = DateTime.UtcNow
+            };
+
+            _context.Stock.Add(newStock);
+            await _context.SaveChangesAsync();
+            return true;
+        }
+
         public async Task<bool> UpdateStockAsync(Guid productId, int quantityChange)
         {
             var stock = await _context.Stock.FirstOrDefaultAsync(s => s.ProductId == productId);
