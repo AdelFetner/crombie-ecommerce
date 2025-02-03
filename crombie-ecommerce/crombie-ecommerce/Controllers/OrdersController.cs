@@ -3,6 +3,7 @@ using crombie_ecommerce.BusinessLogic;
 using crombie_ecommerce.Models.Entities;
 using Interfaces;
 using Microsoft.AspNetCore.Authorization;
+using crombie_ecommerce.Models.Dto;
 
 namespace crombie_ecommerce.Controllers
 {
@@ -48,11 +49,11 @@ namespace crombie_ecommerce.Controllers
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPut("{id}")]
         [Authorize]
-        public async Task<IActionResult> PutOrder(Guid id, [FromBody]Order order)
+        public async Task<IActionResult> PutOrder(Guid id, [FromBody]OrderDto orderDto)
         {
             try
             {
-                var updatedOrder = await _orderService.UpdateOrder(id, order);
+                var updatedOrder = await _orderService.UpdateOrder(id, orderDto);
                 return Ok(updatedOrder);
             }
             catch (Exception ex)
@@ -68,7 +69,7 @@ namespace crombie_ecommerce.Controllers
         
         [HttpPost]
         [Authorize]
-        public async Task<ActionResult<Order>> PostOrder(Order order)
+        public async Task<ActionResult<Order>> PostOrder([FromBody]OrderDto order)
         {
             // validate stock before creating the order
             if (!await _stockService.ValidateStockAsync(order.OrderDetails.ToList()))
@@ -77,7 +78,7 @@ namespace crombie_ecommerce.Controllers
             }
 
             // process the order and update stock
-            if (!await _stockService.ProcessOrderAsync(order, order.OrderDetails.ToList()))
+            if (!await _stockService.ProcessOrderAsync(order,order.OrderDetails.ToList()))
             {
                 return BadRequest(new { message = "Failed to process the order." });
             }

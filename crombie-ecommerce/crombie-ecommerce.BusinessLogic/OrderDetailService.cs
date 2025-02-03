@@ -1,4 +1,5 @@
 ﻿using crombie_ecommerce.DataAccess.Contexts;
+using crombie_ecommerce.Models.Dto;
 using crombie_ecommerce.Models.Entities;
 using Microsoft.EntityFrameworkCore;
 
@@ -16,14 +17,21 @@ namespace crombie_ecommerce.BusinessLogic
         }
 
         //create order detail
-        public async Task<OrderDetail> CreateDetails(OrderDetail detail)
+        public async Task<OrderDetail> CreateDetails(OrderDetailsDto detail)
         {
-            detail.DetailId = Guid.NewGuid();
-            detail.Subtotal = detail.Quantity * detail.Price;
+            var details= new OrderDetail
+            {
+                DetailId = Guid.NewGuid(),
+                OrderId = detail.OrderId,
+                ProductId = detail.ProductId,
+                Quantity = detail.Quantity, 
+                Price = detail.Price,
+                Subtotal = detail.Subtotal,
+            };
 
-            _context.OrderDetails.Add(detail);
+            _context.OrderDetails.Add(details);
             await _context.SaveChangesAsync();
-            return detail;
+            return details;
         }
 
         //get all order detail  
@@ -39,12 +47,12 @@ namespace crombie_ecommerce.BusinessLogic
         }
 
         //update order detail
-        public async Task<OrderDetail> UpdateDetails(Guid id, OrderDetail orderd)
+        public async Task<OrderDetail> UpdateDetails(Guid id, OrderDetailsDto orderDetailsDto)
         {
             var details = await _context.OrderDetails.FindAsync(id);
 
-            details.Quantity = orderd.Quantity;
-            details.Price = orderd.Price;
+            details.Quantity = orderDetailsDto.Quantity;
+            details.Price = orderDetailsDto.Price;
             details.Subtotal = details.Quantity * details.Price;
 
             _context.OrderDetails.Update(details);

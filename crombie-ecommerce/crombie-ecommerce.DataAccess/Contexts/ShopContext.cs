@@ -6,6 +6,8 @@ namespace crombie_ecommerce.DataAccess.Contexts
 {
     public class ShopContext : DbContext
     {
+        public DbSet<Role> Roles { get; set; }
+
         public DbSet<User> Users { get; set; }
         public DbSet<Product> Products { get; set; }
         public DbSet<Wishlist> Wishlists { get; set; }
@@ -28,8 +30,7 @@ namespace crombie_ecommerce.DataAccess.Contexts
         public DbSet<HistoryTag> HistoryTags { get; set; }
         public DbSet<HistoryCategory> HistoryCategories { get; set; }
         
-        public DbSet<Role> Roles { get; set; }
-
+        
 
 
         public ShopContext(DbContextOptions<ShopContext> options) : base(options)
@@ -37,6 +38,21 @@ namespace crombie_ecommerce.DataAccess.Contexts
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
+
+            //builder for role entity
+            modelBuilder.Entity<Role>(entity =>
+            {
+                entity.ToTable("Roles");
+                entity.HasKey(r => r.RoleId);
+                entity.Property(r => r.RoleId).ValueGeneratedNever();
+                entity.Property(r => r.Name).IsRequired();
+                entity.Property(r => r.Description).HasMaxLength(500);
+                entity.HasData(
+                        new Role { RoleId = 1, Name = "User", Description = "Default user role" },
+                        new Role { RoleId = 2, Name = "Admin", Description = "Administrator role" }
+                );
+
+            });
             // builder for user entity
             modelBuilder.Entity<User>(user =>
             {
@@ -344,20 +360,7 @@ namespace crombie_ecommerce.DataAccess.Contexts
                 entity.Property(e => e.ProcessedAt).IsRequired();
             });
             
-            //builder for role entity
-            modelBuilder.Entity<Role>(entity =>
-            {
-                entity.ToTable("Roles");
-                entity.HasKey(r=>r.RoleId);
-                entity.Property(e => e.RoleId).ValueGeneratedNever();
-                entity.Property(r => r.Name).IsRequired();
-                entity.Property(r => r.Description).HasMaxLength(500);
-                entity.HasData(
-                        new Role { RoleId = 1, Name = "User", Description = "Default user role" },
-                        new Role { RoleId = 2, Name = "Admin", Description = "Administrator role" }
-                );
-
-            });
+            
 
             //builder for history order details entity
             modelBuilder.Entity<HistoryTag>(entity =>

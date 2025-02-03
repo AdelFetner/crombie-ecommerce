@@ -8,6 +8,7 @@ using crombie_ecommerce.Models.Dto;
 using crombie_ecommerce.Models.Dto.Password;
 using crombie_ecommerce.Models.Entities;
 using Microsoft.AspNetCore.Http.HttpResults;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
@@ -69,7 +70,7 @@ public class CognitoAuthService
             {
                 ClientId = _clientId,
                 Username = userDto.Email,
-                Password = hashedPassword,
+                Password = userDto.Password,//trying sending the password without hash
                 SecretHash = CalculateSecretHash(_clientId, _clientSecret, userDto.Email),
                 UserAttributes = new List<AttributeType>
             {
@@ -181,10 +182,9 @@ public class CognitoAuthService
             AuthFlow = AuthFlowType.USER_PASSWORD_AUTH,
 
         };
-
-        var response = await _provider.InitiateAuthAsync(authRequest);
-
-        return response;
+            var response = await _provider.InitiateAuthAsync(authRequest);
+            return response;
+        
     }
 
     //change password:

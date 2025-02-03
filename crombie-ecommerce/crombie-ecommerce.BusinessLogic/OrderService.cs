@@ -1,5 +1,7 @@
 ﻿using crombie_ecommerce.DataAccess.Contexts;
+using crombie_ecommerce.Models.Dto;
 using crombie_ecommerce.Models.Entities;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
 namespace crombie_ecommerce.BusinessLogic
@@ -15,22 +17,29 @@ namespace crombie_ecommerce.BusinessLogic
 
 
         //create a order
-        public async Task<Order> CreateOrder(Order order)
+        public async Task<Order> CreateOrder(OrderDto orderDto)
         {
-            if (order.OrderDetails != null)
+            var order = new Order
             {
-                order.TotalAmount = order.OrderDetails.Sum(od => od.Subtotal);
-            }
+                OrderId = Guid.NewGuid(),
+                UserId = orderDto.UserId,
+                OrderDate = orderDto.OrderDate,
+                Status = orderDto.Status,
+                TotalAmount = orderDto.OrderDetails?.Sum(od => od.Subtotal) ?? 0m,
+                ShippingAddress = orderDto.ShippingAddress,
+                PaymentMethod = orderDto.PaymentMethod,
+            };
 
             _context.Orders.Add(order);
             await _context.SaveChangesAsync();
             return order;
+        
         }
 
         //get order by id
-        public async Task<Order> GetOrderById(Guid id) 
+        public async Task<Order> GetOrderById(Guid orderId) 
         {
-            return await _context.Orders.FindAsync(id);
+            return await _context.Orders.FindAsync();
         }
 
         //get all orders from an user id
@@ -40,23 +49,20 @@ namespace crombie_ecommerce.BusinessLogic
         }
 
         //update order status
-        public async Task<Order> UpdateOrder(Guid id, Order order)
+        public async Task<Order> UpdateOrder(Guid id,[FromBody] OrderDto orderdto)
         {
             var existingOrder = await _context.Orders
                 .Include(o => o.OrderDetails)
                 .FirstOrDefaultAsync(o => o.OrderId == id);
 
             // Update fields
-            existingOrder.Status = order.Status;
-            existingOrder.ShippingAddress = order.ShippingAddress;
-            existingOrder.PaymentMethod = order.PaymentMethod;
+            existingOrder.Status = orderdto.Status;
+            existingOrder.ShippingAddress = orderdto.ShippingAddress;
+            existingOrder.PaymentMethod = orderdto.PaymentMethod;
 
             await _context.SaveChangesAsync();
             return existingOrder;
         }
-
-
-        // this serves as to recalculate when details change
         public async Task RecalculateOrderTotal(Guid orderId)
         {
             var order = await _context.Orders
@@ -71,7 +77,6 @@ namespace crombie_ecommerce.BusinessLogic
             order.TotalAmount = order.OrderDetails?.Sum(od => od.Subtotal) ?? 0m;
             await _context.SaveChangesAsync();
         }
-
         //delete order
         public async Task<bool> ArchiveMethod(Guid orderId, string processedBy = "Unregistered")
         {
