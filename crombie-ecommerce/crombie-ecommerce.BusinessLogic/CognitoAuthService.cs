@@ -48,8 +48,7 @@ public class CognitoAuthService
 
     public async Task<string> RegisterAsync(UserDto userDto)
     {
-        try
-        {
+       
             var clientId = _configuration["AWS:ClientId"];
             var clientSecret = _configuration["AWS:ClientSecret"];
            
@@ -86,8 +85,6 @@ public class CognitoAuthService
             // if cognito register is success, add the user 
             if (cognitoResponse.HttpStatusCode == System.Net.HttpStatusCode.OK)
             {
-               
-
                 // new user
                 var newUser = new User
                 {
@@ -95,7 +92,7 @@ public class CognitoAuthService
                     Name = userDto.Name,
                     Email = userDto.Email,
                     // Hash
-                    Password = hashedPassword,
+                    Password = userDto.Password,//trying without hash(for test)
                     Address = userDto.Address,
                     IsVerified = false,
                     Image=null,
@@ -111,14 +108,7 @@ public class CognitoAuthService
                 return "Registration successful. Please confirm your email.";
             }
             return cognitoResponse.UserSub;
-        }
-        catch (Exception ex)
-        {
-            
-            throw new Exception("A problem occurred while registering the user. Try again.");
-        }
-        
-        
+       
     }
     public async Task<CodeDeliveryDetailsType> ResendConfirmationCodeAsync(string userName)
     {
@@ -184,7 +174,6 @@ public class CognitoAuthService
         };
             var response = await _provider.InitiateAuthAsync(authRequest);
             return response;
-        
     }
 
     //change password:
