@@ -1,5 +1,7 @@
 ﻿using crombie_ecommerce.DataAccess.Contexts;
+using crombie_ecommerce.Models.Dto;
 using crombie_ecommerce.Models.Entities;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using System.Text.Json;
 
@@ -14,7 +16,31 @@ namespace crombie_ecommerce.BusinessLogic
             _shopContext = shopContext;
         }
 
-        public async Task<Cart> GetOrCreateCartAsync(Guid userId)
+
+        //Create a cart
+        public async Task<Cart> CreateCartAsync(Guid userId)
+        {
+            
+            var existingCart = await _shopContext.Carts
+                .FirstOrDefaultAsync(c => c.UserId == userId);
+
+            if (existingCart != null)
+                throw new InvalidOperationException("This User already has an active cart");
+
+            var cart = new Cart
+            {
+                UserId = userId,
+                Items = new List<CartItem>()
+            };
+
+            _shopContext.Carts.Add(cart);
+            await _shopContext.SaveChangesAsync();
+
+            return cart;
+        }
+
+        //Get a cart (already exist):
+        public async Task<Cart> GetCartAsync(Guid userId)
         {
             var cart = await _shopContext.Carts
                 .Include(c => c.Items)
@@ -22,47 +48,39 @@ namespace crombie_ecommerce.BusinessLogic
                 .FirstOrDefaultAsync(c => c.UserId == userId);
 
             if (cart == null)
-            {
-                cart = new Cart
-                {
-                    UserId = userId,
-                    Items = new List<CartItem>()
-                };
-                _shopContext.Carts.Add(cart);
-                await _shopContext.SaveChangesAsync();
-            }
+                throw new Exception("Cart not found for that user.");
 
             return cart;
         }
 
-        public async Task<Cart> AddToCartAsync(Guid userId, Guid productId, int quantity)
+        public async Task<Cart> AddToCartAsync(Guid userId, CartItemDto cartItemDto)
         {
-            if (quantity <= 0)
+            if (cartItemDto.Quantity <= 0)
                 throw new ArgumentException("Quantity must be greater than zero");
 
-            var cart = await GetOrCreateCartAsync(userId);
-            var product = await _shopContext.Products.FindAsync(productId);
+            var cart = await GetCartAsync(userId);
+            var product = await _shopContext.Products.FindAsync(cartItemDto.ProductId);
 
             if (product == null)
                 throw new ArgumentException("Product not found");
 
-            var cartItem = cart.Items.FirstOrDefault(i => i.ProductId == productId);
+            var cartItem = cart.Items.FirstOrDefault(i => i.ProductId == cartItemDto.ProductId);
 
             if (cartItem == null)
             {
                 cartItem = new CartItem
                 {
                     CartId = cart.CartId,
-                    ProductId = productId,
-                    Quantity = quantity,
+                    ProductId = cartItemDto.ProductId,
+                    Quantity = cartItemDto.Quantity,
                     Price = product.Price,
-                    Total = product.Price * quantity
+                    Total = product.Price * cartItemDto.Quantity,
                 };
                 cart.Items.Add(cartItem);
             }
             else
             {
-                cartItem.Quantity += quantity;
+                cartItem.Quantity += cartItemDto.Quantity;
                 cartItem.Price = product.Price;
                 cartItem.Total = cartItem.Price * cartItem.Quantity;
             }
@@ -75,7 +93,7 @@ namespace crombie_ecommerce.BusinessLogic
 
         public async Task<Cart> RemoveFromCartAsync(Guid userId, Guid productId)
         {
-            var cart = await GetOrCreateCartAsync(userId);
+            var cart = await GetCartAsync(userId);
             var cartItem = cart.Items.FirstOrDefault(i => i.ProductId == productId);
 
             if (cartItem != null)
@@ -88,22 +106,22 @@ namespace crombie_ecommerce.BusinessLogic
             return cart;
         }
 
-        public async Task<Cart> UpdateQuantityAsync(Guid userId, Guid productId, int quantity)
+        public async Task<Cart> UpdateQuantityAsync(Guid userId, CartItemDto cartItemDto)
         {
-            if (quantity <= 0)
+            if (cartItemDto.Quantity <= 0)
                 throw new ArgumentException("Quantity must be greater than zero");
 
-            var cart = await GetOrCreateCartAsync(userId);
-            var product = await _shopContext.Products.FindAsync(productId);
+            var cart = await GetCartAsync(userId);
+            var product = await _shopContext.Products.FindAsync(cartItemDto.ProductId);
 
             if (product == null)
                 throw new ArgumentException("Product not found");
 
-            var cartItem = cart.Items.FirstOrDefault(i => i.ProductId == productId);
+            var cartItem = cart.Items.FirstOrDefault(i => i.ProductId == cartItemDto.ProductId);
 
             if (cartItem != null)
             {
-                cartItem.Quantity = quantity;
+                cartItem.Quantity = cartItemDto.Quantity;
                 cartItem.Price = product.Price;
                 cartItem.Total = cartItem.Price * cartItem.Quantity;
 
@@ -116,7 +134,7 @@ namespace crombie_ecommerce.BusinessLogic
 
         public async Task<Cart> ClearCartAsync(Guid userId)
         {
-            var cart = await GetOrCreateCartAsync(userId);
+            var cart = await GetCartAsync(userId);
             cart.Items.Clear();
             cart.TotalAmount = 0;
 
