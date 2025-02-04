@@ -1,6 +1,9 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using crombie_ecommerce.BusinessLogic;
 using crombie_ecommerce.Models.Entities;
+using Interfaces;
+using Microsoft.AspNetCore.Authorization;
+using crombie_ecommerce.Models.Dto;
 
 namespace crombie_ecommerce.Controllers
 {
@@ -17,6 +20,7 @@ namespace crombie_ecommerce.Controllers
 
         // GET: api/Brands
         [HttpGet]
+        
         public async Task<ActionResult<List<Brand>>> GetBrands()
         {
             var brands = await _brandService.GetAllBrands();
@@ -25,6 +29,7 @@ namespace crombie_ecommerce.Controllers
 
         // GET: api/Brands/5
         [HttpGet("{id}")]
+        
         public async Task<ActionResult<Brand>> GetBrand(Guid id)
         {
             var brand = await _brandService.GetBrandById(id);
@@ -39,11 +44,12 @@ namespace crombie_ecommerce.Controllers
         // PUT: api/Brands/5
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPost]
-        public async Task<ActionResult<Brand>> PostBrand([FromBody] Brand brand)
+        [Authorize]
+        public async Task<ActionResult<Brand>> PostBrand([FromBody] BrandDto brandDto)
         {
             try
             {
-                var createdBrand = await _brandService.CreateBrand(brand);
+                var createdBrand = await _brandService.CreateBrand(brandDto);
                 return CreatedAtAction(nameof(GetBrand), new { id = createdBrand.BrandId }, createdBrand);
             }
             catch (Exception ex)
@@ -55,6 +61,7 @@ namespace crombie_ecommerce.Controllers
         // POST: api/Brands
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPut("{id}")]
+        [Authorize]
         public async Task<ActionResult<Brand>> PutBrand(Guid id, [FromBody] Brand brand)
         {
             try
@@ -71,17 +78,15 @@ namespace crombie_ecommerce.Controllers
 
         // DELETE: api/Brands/5
         [HttpDelete("{id}")]
-        public async Task<IActionResult> DeleteBrand(Guid id)
+        [Authorize(Roles ="Admin")]
+        public async Task<IActionResult> DeleteAndArchive(Guid id)
         {
-            try
+            var success = await _brandService.ArchiveMethod(id, "Unregistered");
+            if (!success)
             {
-                await _brandService.DeleteBrand(id);
-                return NoContent();
+                return NotFound(new { message = "Brand not found." });
             }
-            catch (Exception ex)
-            {
-                return BadRequest(ex.Message);
-            }
+            return Ok(new { message = "Brand deleted successfully." });
         }
     }
 }

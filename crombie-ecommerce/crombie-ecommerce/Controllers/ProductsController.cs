@@ -2,6 +2,7 @@
 using crombie_ecommerce.BusinessLogic;
 using crombie_ecommerce.Models.Dto;
 using crombie_ecommerce.Models.Entities;
+using Microsoft.AspNetCore.Authorization;
 
 namespace crombie_ecommerce.Controllers
 {
@@ -25,6 +26,7 @@ namespace crombie_ecommerce.Controllers
 
         // GET: api/Products/5
         [HttpGet("{id}")]
+        [Authorize]
         public async Task<ActionResult<Product>> GetProduct(Guid id)
         {
             var product = await _productService.GetProductById(id);
@@ -38,6 +40,7 @@ namespace crombie_ecommerce.Controllers
 
         // POST: api/Products
         [HttpPost]
+        [Authorize]
         public async Task<ActionResult<Product>> PostProduct([FromForm] ProductDto productDto, IFormFile fileImage)
         {
             try
@@ -53,6 +56,7 @@ namespace crombie_ecommerce.Controllers
 
         // PUT: api/Products/5
         [HttpPut("{id}")]
+        [Authorize]
         public async Task<IActionResult> PutProduct(Guid id, ProductDto productDto)
         {
             try
@@ -68,6 +72,7 @@ namespace crombie_ecommerce.Controllers
 
         // DELETE: api/Products/5
         [HttpDelete("{id}")]
+        [Authorize(Roles ="Admin")]
         public async Task<IActionResult> DeleteAndArchive(Guid id)
         {
             var success = await _productService.ArchiveMethod(id, "Unregistered");

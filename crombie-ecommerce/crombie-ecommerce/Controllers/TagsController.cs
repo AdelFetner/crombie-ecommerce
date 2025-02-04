@@ -1,6 +1,8 @@
 ﻿using crombie_ecommerce.Models.Entities;
 using crombie_ecommerce.BusinessLogic;
 using Microsoft.AspNetCore.Mvc;
+using Interfaces;
+using Microsoft.AspNetCore.Authorization;
 
 namespace crombie_ecommerce.Controllers
 {
@@ -17,6 +19,7 @@ namespace crombie_ecommerce.Controllers
 
         // Get all tags
         [HttpGet]
+        [Authorize]
         public async Task<IActionResult> GetAllTags()
         {
             var tags = await _tagsService.GetAllTags();
@@ -25,6 +28,7 @@ namespace crombie_ecommerce.Controllers
 
         // Get a tag by its ID
         [HttpGet("{tagId:guid}")]
+        [Authorize]
         public async Task<IActionResult> GetTagById(Guid tagId)
         {
             var tag = await _tagsService.GetTagById(tagId);
@@ -37,6 +41,7 @@ namespace crombie_ecommerce.Controllers
 
         // Create a new tag
         [HttpPost]
+        [Authorize]
         public async Task<IActionResult> CreateTag([FromBody] Tag tag)
         {
             if (!ModelState.IsValid)
@@ -49,19 +54,21 @@ namespace crombie_ecommerce.Controllers
         }
 
         // Delete a tag
-        [HttpDelete("{tagId:guid}")]
-        public async Task<IActionResult> DeleteTag(Guid tagId)
+        [HttpDelete("{id}")]
+        [Authorize]
+        public async Task<IActionResult> DeleteAndArchive(Guid id)
         {
-            var tags = await _tagsService.DeleteTag(tagId);
-            if (tags == null)
+            var success = await _tagsService.ArchiveMethod(id, "Unregistered");
+            if (!success)
             {
-                return NotFound(new { message = "Tag not found" });
+                return NotFound(new { message = "Tag not found." });
             }
-            return Ok(tags);
+            return Ok(new { message = "Tag deleted successfully." });
         }
 
         // Associate a tag with a wishlist
         [HttpPost("{tagId:guid}/wishlist/{wishlistId:guid}")]
+        [Authorize]
         public async Task<IActionResult> AddTagToWishlist(Guid tagId, Guid wishlistId)
         {
             var result = await _tagsService.AddTagToWishlist(tagId, wishlistId);
@@ -74,6 +81,7 @@ namespace crombie_ecommerce.Controllers
 
         // Disassociate a tag from a wishlist
         [HttpDelete("{tagId:guid}/wishlist")]
+        [Authorize]
         public async Task<IActionResult> RemoveTagFromWishlist(Guid tagId)
         {
             var result = await _tagsService.RemoveTagFromWishlist(tagId);

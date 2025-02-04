@@ -1,4 +1,5 @@
 ﻿using crombie_ecommerce.DataAccess.Contexts;
+using crombie_ecommerce.Models.Dto;
 using crombie_ecommerce.Models.Entities;
 using Interfaces;
 using Microsoft.EntityFrameworkCore;
@@ -24,8 +25,16 @@ namespace crombie_ecommerce.BusinessLogic
             return await _context.Brands.FindAsync(id);
         }
 
-        public async Task<Brand> CreateBrand(Brand brand)
+        public async Task<Brand> CreateBrand(BrandDto brandDto)
         {
+            var brand = new Brand
+            {
+                BrandId = Guid.NewGuid(),
+                Name = brandDto.Name,
+                Description = brandDto.Description,
+                WebsiteUrl = brandDto.WebsiteUrl
+            };
+
             _context.Brands.Add(brand);
             await _context.SaveChangesAsync();
             return brand;
@@ -49,16 +58,28 @@ namespace crombie_ecommerce.BusinessLogic
             return existingBrand;
         }
 
-        public async Task DeleteBrand(Guid id)
+        // Method to delete and archive brand
+        public async Task<bool> ArchiveMethod(Guid brandId, string processedBy = "Unregistered")
         {
-            var brand = await GetBrandById(id);
-            if (brand == null)
-            {
-                throw new Exception("Brand not found");
-            }
+            var brand = await _context.Brands
+                .FirstOrDefaultAsync(b => b.BrandId == brandId);
 
+            if (brand == null)
+                return false;
+
+            var historyBrand = new HistoryBrand
+            {
+                OriginalId = brand.BrandId,
+                ProcessedAt = DateTime.UtcNow,
+                ProcessedBy = processedBy,
+                EntityJson = brand.SerializeToJson()
+            };
+
+            _context.HistoryBrands.Add(historyBrand);
             _context.Brands.Remove(brand);
             await _context.SaveChangesAsync();
+
+            return true;
         }
     }
 }

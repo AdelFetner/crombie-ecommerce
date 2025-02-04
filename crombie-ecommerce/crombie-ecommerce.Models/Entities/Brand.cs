@@ -1,12 +1,13 @@
-﻿using System.ComponentModel.DataAnnotations;
-using System.Text.Json.Serialization;
+﻿using Newtonsoft.Json;
+using System.ComponentModel.DataAnnotations;
 
 namespace crombie_ecommerce.Models.Entities
 {
     public class Brand
     {
         [Key]
-        public Guid BrandId { get; private set; }
+        [JsonIgnore]
+        public Guid BrandId { get; set; }
 
         [Required]
         [MaxLength(100)]
@@ -19,7 +20,12 @@ namespace crombie_ecommerce.Models.Entities
         [MaxLength(255)]
         public string? WebsiteUrl { get; set; }
 
-        [JsonIgnore]
         public virtual ICollection<Product> Products { get; set; } = new List<Product>();
+
+        public Guid Id => BrandId;
+        public string SerializeToJson()
+        {
+            return JsonConvert.SerializeObject(this);
+        }
     }
 }

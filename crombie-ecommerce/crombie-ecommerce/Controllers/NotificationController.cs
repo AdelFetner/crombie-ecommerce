@@ -4,6 +4,7 @@ using Microsoft.EntityFrameworkCore;
 using crombie_ecommerce.DataAccess.Contexts;
 using crombie_ecommerce.Models.Dto;
 using crombie_ecommerce.Models.Entities;
+using Microsoft.AspNetCore.Authorization;
 
 namespace crombie_ecommerce.Controllers
 {
@@ -22,6 +23,7 @@ namespace crombie_ecommerce.Controllers
 
         // get all notifications
         [HttpGet]
+        [Authorize]
         public async Task<ActionResult<List<Notification>>> GetAllNotifications()
         {
             return Ok(await _notificationService.GetAllNotifications());
@@ -29,6 +31,7 @@ namespace crombie_ecommerce.Controllers
 
         // create notification
         [HttpPost]
+        [Authorize]
         public async Task<IActionResult> CreateNotification([FromBody] NotificationDTO notificationDto)
         {
             try
@@ -47,7 +50,7 @@ namespace crombie_ecommerce.Controllers
 
                 var notification = new Notification
                 {
-                    NotfId = Guid.NewGuid(),
+                    NotificationId = Guid.NewGuid(),
                     NotificationType = notificationDto.NotificationType,
                     Message = notificationDto.Message,
                     ProductId = notificationDto.ProductId,
@@ -71,6 +74,7 @@ namespace crombie_ecommerce.Controllers
 
         // assign notification to wishlist or product
         [HttpPost("assign/{notificationId}")]
+        [Authorize]
         public async Task<ActionResult> AssignNotification(Guid notificationId, [FromQuery] Guid? wishlistId, [FromQuery] Guid? productId)
         {
             if (wishlistId == null && productId == null)
@@ -89,6 +93,7 @@ namespace crombie_ecommerce.Controllers
 
         // delete notification
         [HttpDelete("{notificationId}")]
+        [Authorize]
         public async Task<ActionResult> DeleteNotification(Guid notificationId)
         {
             var success = await _notificationService.DeleteNotification(notificationId);

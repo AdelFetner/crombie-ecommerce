@@ -7,7 +7,6 @@ namespace crombie_ecommerce.Models.Entities
     public class Product
     {
         [Key]
-
         public Guid ProductId { get; set; }
 
         [Required]
@@ -28,6 +27,8 @@ namespace crombie_ecommerce.Models.Entities
         public string Image { get; set; }
 
         public virtual Brand Brand { get; set; }
+
+        public virtual Stock Stock { get; set; }
 
         public virtual ICollection<Category> Categories { get; set; } = [];
 

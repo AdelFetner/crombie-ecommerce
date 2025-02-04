@@ -1,4 +1,5 @@
 ﻿using crombie_ecommerce.DataAccess.Contexts;
+using crombie_ecommerce.Models.Dto;
 using crombie_ecommerce.Models.Entities;
 using Interfaces;
 using Microsoft.EntityFrameworkCore;
@@ -24,8 +25,15 @@ namespace crombie_ecommerce.BusinessLogic
             return await _context.Categories.FindAsync(id);
         }
 
-        public async Task<Category> CreateCategory(Category category)
+        public async Task<Category> CreateCategory(CategoryDto categoryDto)
         {
+            var category = new Category
+            {
+                CategoryId = Guid.NewGuid(),
+                Name = categoryDto.Name,
+                Description = categoryDto.Description
+            };
+
             _context.Categories.Add(category);
             await _context.SaveChangesAsync();
             return category;
@@ -51,16 +59,28 @@ namespace crombie_ecommerce.BusinessLogic
 
         }
 
-        public async Task DeleteCategory(Guid id)
+        public async Task<bool> ArchiveMethod(Guid categoryId, string processedBy = "Unregistered")
         {
-            var existingCategory = await GetCategoryById(id);
-            if (existingCategory == null)
-            {
-                throw new Exception("Category not found");
-            }
+            var category = await _context.Categories
+                .Include(c => c.Products)
+                .FirstOrDefaultAsync(c => c.CategoryId == categoryId);
 
-            _context.Categories.Remove(existingCategory);
+            if (category == null)
+                return false;
+
+            var historyCategory = new HistoryCategory
+            {
+                OriginalId = category.CategoryId,
+                ProcessedAt = DateTime.UtcNow,
+                ProcessedBy = processedBy,
+                EntityJson = category.SerializeToJson()
+            };
+
+            _context.HistoryCategories.Add(historyCategory);
+            _context.Categories.Remove(category);
             await _context.SaveChangesAsync();
+
+            return true;
         }
     }
 }

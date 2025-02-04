@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations.Schema;
 using System.ComponentModel.DataAnnotations;
-using System.Text.Json.Serialization;
+using Newtonsoft.Json;
 
 namespace crombie_ecommerce.Models.Entities
 {
@@ -17,9 +17,14 @@ namespace crombie_ecommerce.Models.Entities
         [MaxLength(100)]
         public string Description { get; set; }
 
-        [JsonIgnore]
         public Guid? WishlistId { get; set; }
+
         [JsonIgnore]
         public virtual Wishlist? Wishlist { get; set; }
+        public Guid Id => TagId;
+        public string SerializeToJson()
+        {
+            return JsonConvert.SerializeObject(this);
+        }
     }
 }

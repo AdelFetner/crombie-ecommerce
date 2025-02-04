@@ -40,6 +40,33 @@ namespace crombie_ecommerce.DataAccess.Migrations
                     b.HasIndex("CategoryId");
 
                     b.ToTable("ProductCategory");
+
+                    b.HasData(
+                        new
+                        {
+                            ProductId = new Guid("f8a7b6c5-6789-0123-4abc-def56789abcd"),
+                            CategoryId = new Guid("f8a7b6c5-6789-0123-4abc-def56789abcd")
+                        },
+                        new
+                        {
+                            ProductId = new Guid("e7f6a5b4-5678-9012-3abc-def456789abc"),
+                            CategoryId = new Guid("e7f6a5b4-5678-9012-3abc-def456789abc")
+                        },
+                        new
+                        {
+                            ProductId = new Guid("d6e5f4d3-4567-8901-2abc-def3456789ab"),
+                            CategoryId = new Guid("d6e5f4d3-4567-8901-2abc-def3456789ab")
+                        },
+                        new
+                        {
+                            ProductId = new Guid("c5d4e3f2-3456-7890-1abc-def23456789a"),
+                            CategoryId = new Guid("c5d4e3f2-3456-7890-1abc-def23456789a")
+                        },
+                        new
+                        {
+                            ProductId = new Guid("b4c3d2e1-2345-6789-0abc-def123456789"),
+                            CategoryId = new Guid("b4c3d2e1-2345-6789-0abc-def123456789")
+                        });
                 });
 
             modelBuilder.Entity("WishlistProduct", b =>
@@ -60,6 +87,33 @@ namespace crombie_ecommerce.DataAccess.Migrations
                     b.HasIndex("WishlistId");
 
                     b.ToTable("WishlistProduct");
+
+                    b.HasData(
+                        new
+                        {
+                            ProductId = new Guid("f8a7b6c5-6789-0123-4abc-def56789abcd"),
+                            WishlistId = new Guid("9a8b7c6d-5e4f-3a2b-1c0d-9e8f7a6b5c4d")
+                        },
+                        new
+                        {
+                            ProductId = new Guid("e7f6a5b4-5678-9012-3abc-def456789abc"),
+                            WishlistId = new Guid("1b2c3d4e-5f6a-7b8c-9d0e-1f2a3b4c5d6e")
+                        },
+                        new
+                        {
+                            ProductId = new Guid("d6e5f4d3-4567-8901-2abc-def3456789ab"),
+                            WishlistId = new Guid("2c3d4e5f-6a7b-8c9d-0e1f-2a3b4c5d6e7f")
+                        },
+                        new
+                        {
+                            ProductId = new Guid("c5d4e3f2-3456-7890-1abc-def23456789a"),
+                            WishlistId = new Guid("3d4e5f6a-7b8c-9d0e-1f2a-3b4c5d6e7f8a")
+                        },
+                        new
+                        {
+                            ProductId = new Guid("b4c3d2e1-2345-6789-0abc-def123456789"),
+                            WishlistId = new Guid("4e5f6a7b-8c9d-0e1f-2a3b-4c5d6e7f8a9b")
+                        });
                 });
 
             modelBuilder.Entity("crombie_ecommerce.Models.Entities.Brand", b =>
@@ -85,6 +139,43 @@ namespace crombie_ecommerce.DataAccess.Migrations
                     b.HasKey("BrandId");
 
                     b.ToTable("Brand", (string)null);
+
+                    b.HasData(
+                        new
+                        {
+                            BrandId = new Guid("a3b2c1d0-1234-5678-9abc-def012345678"),
+                            Description = "Consumer electronics innovator",
+                            Name = "ElectroTech",
+                            WebsiteUrl = "https://electrotech.com"
+                        },
+                        new
+                        {
+                            BrandId = new Guid("b4c3d2e1-2345-6789-0abc-def123456789"),
+                            Description = "Contemporary street fashion",
+                            Name = "UrbanWear",
+                            WebsiteUrl = "https://urbanwear.style"
+                        },
+                        new
+                        {
+                            BrandId = new Guid("c5d4e3f2-3456-7890-1abc-def23456789a"),
+                            Description = "Premium homeware solutions",
+                            Name = "HomeEssentials",
+                            WebsiteUrl = "https://homeessentials.co"
+                        },
+                        new
+                        {
+                            BrandId = new Guid("d6e5f4d3-4567-8901-2abc-def3456789ab"),
+                            Description = "High-performance athletic gear",
+                            Name = "SportFlex",
+                            WebsiteUrl = "https://sportflex.com"
+                        },
+                        new
+                        {
+                            BrandId = new Guid("e7f6f5e4-5678-9012-3abc-def456789abc"),
+                            Description = "Literary classics & new releases",
+                            Name = "BookHaven",
+                            WebsiteUrl = "https://bookhaven.store"
+                        });
                 });
 
             modelBuilder.Entity("crombie_ecommerce.Models.Entities.Category", b =>
@@ -106,6 +197,138 @@ namespace crombie_ecommerce.DataAccess.Migrations
                     b.HasKey("CategoryId");
 
                     b.ToTable("Category", (string)null);
+
+                    b.HasData(
+                        new
+                        {
+                            CategoryId = new Guid("f8a7b6c5-6789-0123-4abc-def56789abcd"),
+                            Description = "Devices, gadgets, and tech accessories",
+                            Name = "Electronics"
+                        },
+                        new
+                        {
+                            CategoryId = new Guid("e7f6a5b4-5678-9012-3abc-def456789abc"),
+                            Description = "Clothing and fashion items",
+                            Name = "Apparel"
+                        },
+                        new
+                        {
+                            CategoryId = new Guid("d6e5f4d3-4567-8901-2abc-def3456789ab"),
+                            Description = "Furniture and home decor",
+                            Name = "Home & Living"
+                        },
+                        new
+                        {
+                            CategoryId = new Guid("c5d4e3f2-3456-7890-1abc-def23456789a"),
+                            Description = "Athletic gear and outdoor equipment",
+                            Name = "Sports & Outdoors"
+                        },
+                        new
+                        {
+                            CategoryId = new Guid("b4c3d2e1-2345-6789-0abc-def123456789"),
+                            Description = "Physical and digital media",
+                            Name = "Books & Media"
+                        });
+                });
+
+            modelBuilder.Entity("crombie_ecommerce.Models.Entities.HistoryBrand", b =>
+                {
+                    b.Property<Guid>("OriginalId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("EntityJson")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime>("ProcessedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("ProcessedBy")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<Guid>("UserId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.HasKey("OriginalId");
+
+                    b.ToTable("HistoryBrand", (string)null);
+                });
+
+            modelBuilder.Entity("crombie_ecommerce.Models.Entities.HistoryCategory", b =>
+                {
+                    b.Property<Guid>("OriginalId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("EntityJson")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime>("ProcessedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("ProcessedBy")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<Guid>("UserId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.HasKey("OriginalId");
+
+                    b.ToTable("HistoryCategories", (string)null);
+                });
+
+            modelBuilder.Entity("crombie_ecommerce.Models.Entities.HistoryOrder", b =>
+                {
+                    b.Property<Guid>("OriginalId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("EntityJson")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime>("ProcessedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("ProcessedBy")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<Guid>("UserId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.HasKey("OriginalId");
+
+                    b.ToTable("HistoryOrder", (string)null);
+                });
+
+            modelBuilder.Entity("crombie_ecommerce.Models.Entities.HistoryOrderDetails", b =>
+                {
+                    b.Property<Guid>("OriginalId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("EntityJson")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime>("ProcessedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("ProcessedBy")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<Guid>("UserId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.HasKey("OriginalId");
+
+                    b.ToTable("HistoryOrderDetails", (string)null);
                 });
 
             modelBuilder.Entity("crombie_ecommerce.Models.Entities.HistoryProduct", b =>
@@ -131,6 +354,31 @@ namespace crombie_ecommerce.DataAccess.Migrations
                     b.HasKey("OriginalId");
 
                     b.ToTable("HistoryProduct", (string)null);
+                });
+
+            modelBuilder.Entity("crombie_ecommerce.Models.Entities.HistoryTag", b =>
+                {
+                    b.Property<Guid>("OriginalId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("EntityJson")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime>("ProcessedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("ProcessedBy")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<Guid>("UserId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.HasKey("OriginalId");
+
+                    b.ToTable("HistoryTags", (string)null);
                 });
 
             modelBuilder.Entity("crombie_ecommerce.Models.Entities.HistoryUser", b =>
@@ -185,7 +433,7 @@ namespace crombie_ecommerce.DataAccess.Migrations
 
             modelBuilder.Entity("crombie_ecommerce.Models.Entities.Notification", b =>
                 {
-                    b.Property<Guid>("NotfId")
+                    b.Property<Guid>("NotificationId")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
 
@@ -215,13 +463,55 @@ namespace crombie_ecommerce.DataAccess.Migrations
                     b.Property<Guid>("WishlistId")
                         .HasColumnType("uniqueidentifier");
 
-                    b.HasKey("NotfId");
+                    b.HasKey("NotificationId");
 
                     b.HasIndex("ProductId");
 
                     b.HasIndex("WishlistId");
 
                     b.ToTable("Notification");
+
+                    b.HasData(
+                        new
+                        {
+                            NotificationId = new Guid("1b2c3d4e-5f6a-7b8c-9d0e-1f2a3b4c5d6e"),
+                            CreatedDate = new DateTime(2025, 2, 1, 23, 15, 59, 703, DateTimeKind.Utc).AddTicks(1728),
+                            IsRead = false,
+                            Message = "Price dropped on ElectroTech X10 Pro!",
+                            NotificationType = "Price Alert",
+                            ProductId = new Guid("f8a7b6c5-6789-0123-4abc-def56789abcd"),
+                            WishlistId = new Guid("9a8b7c6d-5e4f-3a2b-1c0d-9e8f7a6b5c4d")
+                        },
+                        new
+                        {
+                            NotificationId = new Guid("2c3d4e5f-6a7b-8c9d-0e1f-2a3b4c5d6e7f"),
+                            CreatedDate = new DateTime(2025, 2, 3, 11, 15, 59, 703, DateTimeKind.Utc).AddTicks(1732),
+                            IsRead = true,
+                            Message = "Urban Denim Jacket back in stock",
+                            NotificationType = "Restock",
+                            ProductId = new Guid("e7f6a5b4-5678-9012-3abc-def456789abc"),
+                            WishlistId = new Guid("1b2c3d4e-5f6a-7b8c-9d0e-1f2a3b4c5d6e")
+                        },
+                        new
+                        {
+                            NotificationId = new Guid("3d4e5f6a-7b8c-9d0e-1f2a-3b4c5d6e7f8a"),
+                            CreatedDate = new DateTime(2025, 2, 2, 23, 15, 59, 703, DateTimeKind.Utc).AddTicks(1734),
+                            IsRead = false,
+                            Message = "New item added to Kitchen Upgrades",
+                            NotificationType = "Wishlist Update",
+                            ProductId = new Guid("d6e5f4d3-4567-8901-2abc-def3456789ab"),
+                            WishlistId = new Guid("2c3d4e5f-6a7b-8c9d-0e1f-2a3b4c5d6e7f")
+                        },
+                        new
+                        {
+                            NotificationId = new Guid("5f6a7b8c-9d0e-1f2a-3b4c-5d6e7f8a9b0c"),
+                            CreatedDate = new DateTime(2025, 2, 3, 22, 15, 59, 703, DateTimeKind.Utc).AddTicks(1736),
+                            IsRead = false,
+                            Message = "20% off all books this week!",
+                            NotificationType = "Special Offer",
+                            ProductId = new Guid("b4c3d2e1-2345-6789-0abc-def123456789"),
+                            WishlistId = new Guid("4e5f6a7b-8c9d-0e1f-2a3b-4c5d6e7f8a9b")
+                        });
                 });
 
             modelBuilder.Entity("crombie_ecommerce.Models.Entities.Order", b =>
@@ -235,16 +525,13 @@ namespace crombie_ecommerce.DataAccess.Migrations
                         .HasColumnType("datetime2");
 
                     b.Property<string>("PaymentMethod")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("ShippingAddress")
-                        .IsRequired()
                         .HasMaxLength(100)
                         .HasColumnType("nvarchar(100)");
 
                     b.Property<string>("Status")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<decimal>("TotalAmount")
@@ -259,6 +546,58 @@ namespace crombie_ecommerce.DataAccess.Migrations
                     b.HasIndex("UserId");
 
                     b.ToTable("Order", (string)null);
+
+                    b.HasData(
+                        new
+                        {
+                            OrderId = new Guid("6d5e4f3a-2b1c-0d9e-8f7a-6b5c4d3e2f1a"),
+                            OrderDate = new DateTime(2025, 1, 27, 23, 15, 59, 703, DateTimeKind.Utc).AddTicks(1052),
+                            PaymentMethod = "Credit Card",
+                            ShippingAddress = "123 Main St, TechCity",
+                            Status = "Delivered",
+                            TotalAmount = 999.99m,
+                            UserId = new Guid("3d4a7c9f-2e1b-4a8d-9c3f-6b2e1d0a4c7b")
+                        },
+                        new
+                        {
+                            OrderId = new Guid("7e8f9a0b-1c2d-3e4f-5a6b-7c8d9e0f1a2b"),
+                            OrderDate = new DateTime(2025, 1, 31, 23, 15, 59, 703, DateTimeKind.Utc).AddTicks(1063),
+                            PaymentMethod = "PayPal",
+                            ShippingAddress = "456 Oak St, MetroCity",
+                            Status = "Processing",
+                            TotalAmount = 129.95m,
+                            UserId = new Guid("a1b8f45c-9d32-4e67-82f1-0c3d5e7f9a2b")
+                        },
+                        new
+                        {
+                            OrderId = new Guid("8a9b0c1d-2e3f-4a5b-6c7d-8e9f0a1b2c3d"),
+                            OrderDate = new DateTime(2025, 2, 2, 23, 15, 59, 703, DateTimeKind.Utc).AddTicks(1066),
+                            PaymentMethod = "Debit Card",
+                            ShippingAddress = "789 Pine Rd, VillageTown",
+                            Status = "Shipped",
+                            TotalAmount = 89.99m,
+                            UserId = new Guid("e6f9d287-5c34-4a1b-89d0-3b7a2c4e5f1a")
+                        },
+                        new
+                        {
+                            OrderId = new Guid("9b0c1d2e-3f4a-5b6c-7d8e-9f0a1b2c3d4e"),
+                            OrderDate = new DateTime(2025, 2, 3, 11, 15, 59, 703, DateTimeKind.Utc).AddTicks(1068),
+                            PaymentMethod = "Apple Pay",
+                            ShippingAddress = "La bombonera",
+                            Status = "Pending",
+                            TotalAmount = 69.00m,
+                            UserId = new Guid("8c2d1f9a-4b3e-4567-8910-3f6e5d4c2b1a")
+                        },
+                        new
+                        {
+                            OrderId = new Guid("0c1d2e3f-4a5b-6c7d-8e9f-0a1b2c3d4e5f"),
+                            OrderDate = new DateTime(2025, 2, 3, 21, 15, 59, 703, DateTimeKind.Utc).AddTicks(1071),
+                            PaymentMethod = "Google Pay",
+                            ShippingAddress = "321 Elm St, Bookville",
+                            Status = "Canceled",
+                            TotalAmount = 24.99m,
+                            UserId = new Guid("5b3d9f1a-7e2c-48d9-9a1b-4f6c3e2d0a5b")
+                        });
                 });
 
             modelBuilder.Entity("crombie_ecommerce.Models.Entities.OrderDetail", b =>
@@ -267,7 +606,7 @@ namespace crombie_ecommerce.DataAccess.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<Guid?>("OrderId")
+                    b.Property<Guid>("OrderId")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier")
                         .HasDefaultValueSql("NEWID()");
@@ -276,15 +615,17 @@ namespace crombie_ecommerce.DataAccess.Migrations
                         .HasPrecision(18, 2)
                         .HasColumnType("decimal(18,2)");
 
-                    b.Property<Guid?>("ProductId")
+                    b.Property<Guid>("ProductId")
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<int>("Quantity")
                         .HasColumnType("int");
 
                     b.Property<decimal>("Subtotal")
+                        .ValueGeneratedOnAddOrUpdate()
                         .HasPrecision(18, 2)
-                        .HasColumnType("decimal(18,2)");
+                        .HasColumnType("decimal(18,2)")
+                        .HasComputedColumnSql("[Quantity] * [Price]");
 
                     b.HasKey("DetailId");
 
@@ -293,6 +634,53 @@ namespace crombie_ecommerce.DataAccess.Migrations
                     b.HasIndex("ProductId");
 
                     b.ToTable("OrderDetail", (string)null);
+
+                    b.HasData(
+                        new
+                        {
+                            DetailId = new Guid("1d2e3f4a-5b6c-7d8e-9f0a-1b2c3d4e5f6a"),
+                            OrderId = new Guid("6d5e4f3a-2b1c-0d9e-8f7a-6b5c4d3e2f1a"),
+                            Price = 999.99m,
+                            ProductId = new Guid("f8a7b6c5-6789-0123-4abc-def56789abcd"),
+                            Quantity = 1,
+                            Subtotal = 0m
+                        },
+                        new
+                        {
+                            DetailId = new Guid("2e3f4a5b-6c7d-8e9f-0a1b-2c3d4e5f6a7b"),
+                            OrderId = new Guid("7e8f9a0b-1c2d-3e4f-5a6b-7c8d9e0f1a2b"),
+                            Price = 129.95m,
+                            ProductId = new Guid("e7f6a5b4-5678-9012-3abc-def456789abc"),
+                            Quantity = 1,
+                            Subtotal = 0m
+                        },
+                        new
+                        {
+                            DetailId = new Guid("3f4a5b6c-7d8e-9f0a-1b2c-3d4e5f6a7b8c"),
+                            OrderId = new Guid("8a9b0c1d-2e3f-4a5b-6c7d-8e9f0a1b2c3d"),
+                            Price = 89.99m,
+                            ProductId = new Guid("d6e5f4d3-4567-8901-2abc-def3456789ab"),
+                            Quantity = 1,
+                            Subtotal = 0m
+                        },
+                        new
+                        {
+                            DetailId = new Guid("4a5b6c7d-8e9f-0a1b-2c3d-4e5f6a7b8c9d"),
+                            OrderId = new Guid("9b0c1d2e-3f4a-5b6c-7d8e-9f0a1b2c3d4e"),
+                            Price = 34.50m,
+                            ProductId = new Guid("c5d4e3f2-3456-7890-1abc-def23456789a"),
+                            Quantity = 2,
+                            Subtotal = 0m
+                        },
+                        new
+                        {
+                            DetailId = new Guid("5b6c7d8e-9f0a-1b2c-3d4e-5f6a7b8c9d0e"),
+                            OrderId = new Guid("0c1d2e3f-4a5b-6c7d-8e9f-0a1b2c3d4e5f"),
+                            Price = 24.99m,
+                            ProductId = new Guid("b4c3d2e1-2345-6789-0abc-def123456789"),
+                            Quantity = 1,
+                            Subtotal = 0m
+                        });
                 });
 
             modelBuilder.Entity("crombie_ecommerce.Models.Entities.Product", b =>
@@ -326,6 +714,109 @@ namespace crombie_ecommerce.DataAccess.Migrations
                     b.HasIndex("BrandId");
 
                     b.ToTable("Product", (string)null);
+
+                    b.HasData(
+                        new
+                        {
+                            ProductId = new Guid("f8a7b6c5-6789-0123-4abc-def56789abcd"),
+                            BrandId = new Guid("a3b2c1d0-1234-5678-9abc-def012345678"),
+                            Description = "6.8\" AMOLED, 256GB Storage",
+                            Image = "smartphone-x10.jpg",
+                            Name = "ElectroTech X10 Pro",
+                            Price = 999.99m
+                        },
+                        new
+                        {
+                            ProductId = new Guid("e7f6a5b4-5678-9012-3abc-def456789abc"),
+                            BrandId = new Guid("b4c3d2e1-2345-6789-0abc-def123456789"),
+                            Description = "Slim-fit washed denim",
+                            Image = "denim-jacket-urban.jpg",
+                            Name = "Urban Classic Denim Jacket",
+                            Price = 129.95m
+                        },
+                        new
+                        {
+                            ProductId = new Guid("d6e5f4d3-4567-8901-2abc-def3456789ab"),
+                            BrandId = new Guid("c5d4e3f2-3456-7890-1abc-def23456789a"),
+                            Description = "1500W 8-Speed Countertop Blender",
+                            Image = "blender-pro.jpg",
+                            Name = "Essentials Blender Pro",
+                            Price = 89.99m
+                        },
+                        new
+                        {
+                            ProductId = new Guid("c5d4e3f2-3456-7890-1abc-def23456789a"),
+                            BrandId = new Guid("d6e5f4d3-4567-8901-2abc-def3456789ab"),
+                            Description = "Non-slip 6mm thick mat",
+                            Image = "yoga-mat-eco.jpg",
+                            Name = "SportFlex Eco Yoga Mat",
+                            Price = 34.50m
+                        },
+                        new
+                        {
+                            ProductId = new Guid("b4c3d2e1-2345-6789-0abc-def123456789"),
+                            BrandId = new Guid("e7f6f5e4-5678-9012-3abc-def456789abc"),
+                            Description = "Hardcover bestseller novel",
+                            Image = "midnight-library.jpg",
+                            Name = "Midnight Library: Special Edition",
+                            Price = 24.99m
+                        });
+                });
+
+            modelBuilder.Entity("crombie_ecommerce.Models.Entities.Role", b =>
+                {
+                    b.Property<int>("RoleId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Description")
+                        .IsRequired()
+                        .HasMaxLength(500)
+                        .HasColumnType("nvarchar(500)");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("RoleId");
+
+                    b.ToTable("Roles", (string)null);
+
+                    b.HasData(
+                        new
+                        {
+                            RoleId = 1,
+                            Description = "Default user role",
+                            Name = "User"
+                        },
+                        new
+                        {
+                            RoleId = 2,
+                            Description = "Administrator role",
+                            Name = "Admin"
+                        });
+                });
+
+            modelBuilder.Entity("crombie_ecommerce.Models.Entities.Stock", b =>
+                {
+                    b.Property<Guid>("StockId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<DateTime>("LastUpdated")
+                        .HasColumnType("datetime2");
+
+                    b.Property<Guid>("ProductId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<int>("Quantity")
+                        .HasColumnType("int");
+
+                    b.HasKey("StockId");
+
+                    b.HasIndex("ProductId")
+                        .IsUnique();
+
+                    b.ToTable("Stock", (string)null);
                 });
 
             modelBuilder.Entity("crombie_ecommerce.Models.Entities.Tag", b =>
@@ -352,6 +843,43 @@ namespace crombie_ecommerce.DataAccess.Migrations
                     b.HasIndex("WishlistId");
 
                     b.ToTable("Tag", (string)null);
+
+                    b.HasData(
+                        new
+                        {
+                            TagId = new Guid("6a5b4c3d-2e1f-4a8b-9c7d-3e6f5a4b2c1d"),
+                            Description = "Latest technology products",
+                            Name = "Tech",
+                            WishlistId = new Guid("9a8b7c6d-5e4f-3a2b-1c0d-9e8f7a6b5c4d")
+                        },
+                        new
+                        {
+                            TagId = new Guid("7b6c5d4e-3f2a-5b9a-8d7c-4f6e5a3b2c1e"),
+                            Description = "Trending fashion items",
+                            Name = "Fashion",
+                            WishlistId = new Guid("1b2c3d4e-5f6a-7b8c-9d0e-1f2a3b4c5d6e")
+                        },
+                        new
+                        {
+                            TagId = new Guid("8c7d6e5f-4a3b-6c0b-9e8d-5f7e6b4c3a2d"),
+                            Description = "Essential kitchen tools",
+                            Name = "Kitchen",
+                            WishlistId = new Guid("2c3d4e5f-6a7b-8c9d-0e1f-2a3b4c5d6e7f")
+                        },
+                        new
+                        {
+                            TagId = new Guid("9d8e7f0a-5b4c-7d1c-0a9e-6d8f7c5b3a2e"),
+                            Description = "Workout and exercise gear",
+                            Name = "Fitness",
+                            WishlistId = new Guid("3d4e5f6a-7b8c-9d0e-1f2a-3b4c5d6e7f8a")
+                        },
+                        new
+                        {
+                            TagId = new Guid("0a9b8c7d-6c5d-8e2d-1b0f-7e9a8d6c4b3a"),
+                            Description = "Books and literature",
+                            Name = "Reading",
+                            WishlistId = new Guid("4e5f6a7b-8c9d-0e1f-2a3b-4c5d6e7f8a9b")
+                        });
                 });
 
             modelBuilder.Entity("crombie_ecommerce.Models.Entities.User", b =>
@@ -368,7 +896,6 @@ namespace crombie_ecommerce.DataAccess.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Image")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<bool>("IsVerified")
@@ -386,9 +913,71 @@ namespace crombie_ecommerce.DataAccess.Migrations
                         .HasMaxLength(100)
                         .HasColumnType("nvarchar(100)");
 
+                    b.Property<int>("RoleId")
+                        .HasColumnType("int");
+
                     b.HasKey("UserId");
 
+                    b.HasIndex("RoleId");
+
                     b.ToTable("User", (string)null);
+
+                    b.HasData(
+                        new
+                        {
+                            UserId = new Guid("3d4a7c9f-2e1b-4a8d-9c3f-6b2e1d0a4c7b"),
+                            Address = "La casa de los olmedo",
+                            Email = "alex.j@example.com",
+                            Image = "user-alex.jpg",
+                            IsVerified = true,
+                            Name = "Alex Johnson",
+                            Password = "SecurePass123!",
+                            RoleId = 0
+                        },
+                        new
+                        {
+                            UserId = new Guid("a1b8f45c-9d32-4e67-82f1-0c3d5e7f9a2b"),
+                            Address = "123 Main St, TechCity",
+                            Email = "maria.g@example.com",
+                            Image = "user-maria.jpg",
+                            IsVerified = false,
+                            Name = "Maria Gomez",
+                            Password = "MariaG0mez!",
+                            RoleId = 0
+                        },
+                        new
+                        {
+                            UserId = new Guid("e6f9d287-5c34-4a1b-89d0-3b7a2c4e5f1a"),
+                            Address = "456 Oak St, MetroCity",
+                            Email = "john.d@example.com",
+                            Image = "user-john.jpg",
+                            IsVerified = false,
+                            Name = "John Doe",
+                            Password = "DoeJ0hn!",
+                            RoleId = 0
+                        },
+                        new
+                        {
+                            UserId = new Guid("8c2d1f9a-4b3e-4567-8910-3f6e5d4c2b1a"),
+                            Address = "Palito Santo 2040",
+                            Email = "emma.w@example.com",
+                            Image = "user-emma.jpg",
+                            IsVerified = false,
+                            Name = "Emma Wilson",
+                            Password = "Emm@2024!",
+                            RoleId = 0
+                        },
+                        new
+                        {
+                            UserId = new Guid("5b3d9f1a-7e2c-48d9-9a1b-4f6c3e2d0a5b"),
+                            Address = "321 Elm St, Bookville",
+                            Email = "liam.b@example.com",
+                            Image = "user-liam.jpg",
+                            IsVerified = true,
+                            Name = "Liam Brown",
+                            Password = "L1amBrown!",
+                            RoleId = 0
+                        });
                 });
 
             modelBuilder.Entity("crombie_ecommerce.Models.Entities.Wishlist", b =>
@@ -407,12 +996,6 @@ namespace crombie_ecommerce.DataAccess.Migrations
                         .HasMaxLength(50)
                         .HasColumnType("nvarchar(50)");
 
-                    b.Property<Guid?>("NotfId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<Guid?>("TagsId")
-                        .HasColumnType("uniqueidentifier");
-
                     b.Property<Guid>("UserId")
                         .HasColumnType("uniqueidentifier");
 
@@ -421,6 +1004,43 @@ namespace crombie_ecommerce.DataAccess.Migrations
                     b.HasIndex("UserId");
 
                     b.ToTable("Wishlist", (string)null);
+
+                    b.HasData(
+                        new
+                        {
+                            WishlistId = new Guid("9a8b7c6d-5e4f-3a2b-1c0d-9e8f7a6b5c4d"),
+                            Description = "Latest gadgets I want",
+                            Name = "Tech Wishlist",
+                            UserId = new Guid("3d4a7c9f-2e1b-4a8d-9c3f-6b2e1d0a4c7b")
+                        },
+                        new
+                        {
+                            WishlistId = new Guid("1b2c3d4e-5f6a-7b8c-9d0e-1f2a3b4c5d6e"),
+                            Description = "Seasonal outfits",
+                            Name = "Fashion Picks",
+                            UserId = new Guid("a1b8f45c-9d32-4e67-82f1-0c3d5e7f9a2b")
+                        },
+                        new
+                        {
+                            WishlistId = new Guid("2c3d4e5f-6a7b-8c9d-0e1f-2a3b4c5d6e7f"),
+                            Description = "Cooking essentials",
+                            Name = "Kitchen Upgrades",
+                            UserId = new Guid("e6f9d287-5c34-4a1b-89d0-3b7a2c4e5f1a")
+                        },
+                        new
+                        {
+                            WishlistId = new Guid("3d4e5f6a-7b8c-9d0e-1f2a-3b4c5d6e7f8a"),
+                            Description = "Workout equipment",
+                            Name = "Fitness Gear",
+                            UserId = new Guid("8c2d1f9a-4b3e-4567-8910-3f6e5d4c2b1a")
+                        },
+                        new
+                        {
+                            WishlistId = new Guid("4e5f6a7b-8c9d-0e1f-2a3b-4c5d6e7f8a9b"),
+                            Description = "2024 reading list",
+                            Name = "Book Wishlist",
+                            UserId = new Guid("5b3d9f1a-7e2c-48d9-9a1b-4f6c3e2d0a5b")
+                        });
                 });
 
             modelBuilder.Entity("ProductCategory", b =>
@@ -486,11 +1106,15 @@ namespace crombie_ecommerce.DataAccess.Migrations
                 {
                     b.HasOne("crombie_ecommerce.Models.Entities.Order", "Order")
                         .WithMany("OrderDetails")
-                        .HasForeignKey("OrderId");
+                        .HasForeignKey("OrderId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.HasOne("crombie_ecommerce.Models.Entities.Product", "Product")
                         .WithMany("OrderDetails")
-                        .HasForeignKey("ProductId");
+                        .HasForeignKey("ProductId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.Navigation("Order");
 
@@ -508,6 +1132,17 @@ namespace crombie_ecommerce.DataAccess.Migrations
                     b.Navigation("Brand");
                 });
 
+            modelBuilder.Entity("crombie_ecommerce.Models.Entities.Stock", b =>
+                {
+                    b.HasOne("crombie_ecommerce.Models.Entities.Product", "Product")
+                        .WithOne("Stock")
+                        .HasForeignKey("crombie_ecommerce.Models.Entities.Stock", "ProductId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Product");
+                });
+
             modelBuilder.Entity("crombie_ecommerce.Models.Entities.Tag", b =>
                 {
                     b.HasOne("crombie_ecommerce.Models.Entities.Wishlist", "Wishlist")
@@ -516,6 +1151,17 @@ namespace crombie_ecommerce.DataAccess.Migrations
                         .OnDelete(DeleteBehavior.Cascade);
 
                     b.Navigation("Wishlist");
+                });
+
+            modelBuilder.Entity("crombie_ecommerce.Models.Entities.User", b =>
+                {
+                    b.HasOne("crombie_ecommerce.Models.Entities.Role", "Role")
+                        .WithMany("Users")
+                        .HasForeignKey("RoleId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Role");
                 });
 
             modelBuilder.Entity("crombie_ecommerce.Models.Entities.Wishlist", b =>
@@ -544,6 +1190,14 @@ namespace crombie_ecommerce.DataAccess.Migrations
                     b.Navigation("Notifications");
 
                     b.Navigation("OrderDetails");
+
+                    b.Navigation("Stock")
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("crombie_ecommerce.Models.Entities.Role", b =>
+                {
+                    b.Navigation("Users");
                 });
 
             modelBuilder.Entity("crombie_ecommerce.Models.Entities.User", b =>
