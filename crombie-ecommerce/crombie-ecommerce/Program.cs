@@ -6,9 +6,30 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Amazon;
 using Amazon.Extensions.CognitoAuthentication;
 using Microsoft.OpenApi.Models;
+using Serilog;
+using Serilog.Formatting.Compact;
+using CrombieEcommerce.Middleware;
+using Serilog.Events;
+using Microsoft.AspNetCore.Components;
 
 
 var builder = WebApplication.CreateBuilder(args);
+
+// logic for log 
+
+builder.Host.UseSerilog((context, config) =>
+{
+    config
+        .ReadFrom.Configuration(context.Configuration)
+        .Enrich.FromLogContext()
+        .WriteTo.Async(async =>
+        {
+            async.Console(
+                new CompactJsonFormatter(),
+                restrictedToMinimumLevel: LogEventLevel.Warning
+            );
+        });
+});
 
 // Add services to the container.
 
@@ -89,22 +110,26 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
 
         options.Events = new JwtBearerEvents
         {
-            OnTokenValidated = context =>
+            OnTokenValidated = async context =>
             {
                 var claims = context.Principal.Claims;
                 var clientIdClaim = claims.FirstOrDefault(c => c.Type == "client_id")?.Value;
+
                 if (string.IsNullOrEmpty(clientIdClaim))
                 {
                     Console.WriteLine("Missing client_id claim");
                     context.Fail("Missing client_id claim");
+                    await Task.CompletedTask;
+                    return;
                 }
 
                 if (clientIdClaim != builder.Configuration["AWS:ClientId"])
                 {
                     context.Fail("Invalid client_id");
+                    return;
                 }
 
-                return Task.CompletedTask;
+                await Task.CompletedTask;
             }
         };
     });
@@ -157,19 +182,39 @@ var app = builder.Build();
 app.UseSwagger();
 app.UseSwaggerUI();
 
-using var scope = app.Services.CreateScope();
-var dbContext = scope.ServiceProvider.GetRequiredService<ShopContext>();
+// middleware for exception handling
+app.UseMiddleware<ExceptionMiddleware>();
 
-if (dbContext.Database.CanConnect())
-    dbContext.Database.EnsureCreated();
-else
-    Console.WriteLine("Couldn't connect to database");
+// Replace sync database check with async:
+await using (var scope = app.Services.CreateAsyncScope())
+{
+    var dbContext = scope.ServiceProvider.GetRequiredService<ShopContext>();
+    await dbContext.Database.EnsureCreatedAsync();
+}
 
 app.UseHttpsRedirection();
 
 app.UseAuthentication();
-
 app.UseAuthorization();
+
+app.UseSerilogRequestLogging(options =>
+{
+    // This logs only responses with status code 400 and higher, E,G: not found, unauthorized. And logs requests that took + 2secs
+    options.GetLevel = (ctx, elapsed, exception) =>
+    {
+        if (exception != null) return LogEventLevel.Error;
+        if (ctx.Response.StatusCode >= 400) return LogEventLevel.Warning;
+        return LogEventLevel.Information;
+    };
+
+    options.EnrichDiagnosticContext = (diagnosticContext, httpContext) =>
+    {
+        diagnosticContext.Set("http.route", httpContext.GetEndpoint()?.Metadata.GetMetadata<RouteAttribute>()?.Template);
+        diagnosticContext.Set("http.client_ip", httpContext.Connection.RemoteIpAddress?.ToString());
+        diagnosticContext.Set("http.user_agent", httpContext.Request.Headers.UserAgent);
+        diagnosticContext.Set("error.type", httpContext.Response.StatusCode >= 500 ? "server_error" : "client_error");
+    };
+});
 
 app.MapControllers();
 
