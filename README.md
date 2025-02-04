@@ -4,7 +4,7 @@ An eCommerce application built with C# .NET, using **AWS S3** for static object 
 ## Architecture  
 <div align="center">
 
-![Diagram](https://github.com/user-attachments/assets/77d3e459-338e-4ecc-ae57-20bb92d84342)
+![diagramarch](https://github.com/user-attachments/assets/40ee2979-1f15-443d-844b-c832265ee2f4)
 
 </div>
 
@@ -32,7 +32,11 @@ An eCommerce application built with C# .NET, using **AWS S3** for static object 
 - **feature/***: Feature-specific branches (e.g., `feature/addCart`).  
 - **hotfix/***: Emergency fixes (e.g., `hotfix/securityPatch`).  
 
----  
+--- 
+
+## User Flow
+
+![userflow](https://github.com/user-attachments/assets/2073e29c-04ea-4ce8-8371-85a345fd4f2b)
 
 ## Prerequisites  
 - [.NET SDK](https://dotnet.microsoft.com/download)  
